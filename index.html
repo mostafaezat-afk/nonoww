@@ -1,477 +1,341 @@
 <!DOCTYPE html>
-<html dir="rtl" lang="ar">
+<html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🏥 نظام حجز المواعيد الطبية</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap');
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        :root {
-            --primary-color: #d32f2f;      /* ✅ أحمر بدل أزرق */
-            --primary-light: #f44336;
-            --primary-dark: #b71c1c;
-            --success: #4caf50;
-            --danger: #f44336;
-        }
-        
-        body {
-            font-family: 'Cairo', sans-serif;
-            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-dark) 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-        
-        /* ✅ رسالة التأكيد في الأعلى (Fixed) */
-        .alert {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            left: 20px;
-            max-width: 500px;
-            z-index: 9999;
-            padding: 16px 20px;
-            border-radius: 12px;
-            display: none;
-            animation: slideDown 0.5s ease;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-        }
-        
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-100px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        .alert-success {
-            background: #4caf50;
-            color: white;
-            border: 2px solid #45a049;
-        }
-        
-        .alert-error {
-            background: #f44336;
-            color: white;
-            border: 2px solid #d32f2f;
-        }
-        
-        .alert-info {
-            background: #2196f3;
-            color: white;
-            border: 2px solid #1976d2;
-        }
-        
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            margin-top: 80px;  /* ✅ مسافة للرسالة في الأعلى */
-        }
-        
-        .header-card {
-            background: white;
-            padding: 40px 20px;
-            border-radius: 20px 20px 0 0;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
-            text-align: center;
-        }
-        
-        .logo {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-bottom: 20px;
-            border: 5px solid var(--primary-color);
-            display: none;
-        }
-        
-        .header-card h1 {
-            font-size: 28px;
-            color: var(--primary-color);
-            margin-bottom: 10px;
-            font-weight: 700;
-        }
-        
-        .header-card p {
-            color: #666;
-            font-size: 16px;
-            line-height: 1.6;
-        }
-        
-        .booking-card {
-            background: white;
-            padding: 30px 20px;
-            border-radius: 0 0 20px 20px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
-        }
-        
-        .selector-btn {
-            padding: 14px 12px;
-            border: 2px solid #e0e0e0;
-            border-radius: 12px;
-            background: #f8f9fa;
-            color: #333;
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: center;
-            font-family: 'Cairo', sans-serif;
-            word-wrap: break-word;
-        }
-        
-        .selector-btn:hover {
-            border-color: var(--primary-color);
-            background: #fff3e0;
-            transform: translateY(-2px);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        
-        .selector-btn.selected {
-            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-dark) 100%);
-            color: white;
-            border-color: var(--primary-color);
-            box-shadow: 0 4px 12px rgba(211,47,47,0.3);
-        }
-        
-        /* ✅ نص يظل واضح حتى عند التحديد */
-        .doctor-info {
-            font-size: 11px;
-            color: rgba(255,255,255,0.9);
-            margin-top: 4px;
-            background: rgba(0,0,0,0.1);
-            padding: 2px 4px;
-            border-radius: 4px;
-        }
-        
-        .selector-btn.selected .doctor-info {
-            color: rgba(255,255,255,0.95);
-            background: rgba(0,0,0,0.15);
-        }
-        
-        /* ✅ موبايل responsive */
-        @media (max-width: 768px) {
-            body {
-                padding: 10px;
-            }
-            
-            .container {
-                margin-top: 100px;
-            }
-            
-            .header-card, .booking-card {
-                padding: 20px;
-                border-radius: 16px;
-            }
-            
-            .header-card h1 {
-                font-size: 24px;
-            }
-            
-            .selector-group {
-                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)) !important;
-            }
-            
-            .selector-btn {
-                padding: 12px 8px;
-                font-size: 13px;
-            }
-            
-            .alert {
-                right: 10px;
-                left: 10px;
-                top: 10px;
-            }
-        }
-        
-        /* ✅ نافذة الدخول المنبثقة */
-        .login-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.7);
-            z-index: 10000;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .login-modal.active {
-            display: flex;
-        }
-        
-        .login-content {
-            background: white;
-            padding: 40px;
-            border-radius: 16px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-            max-width: 400px;
-            width: 90%;
-            text-align: center;
-        }
-        
-        .login-content h2 {
-            color: var(--primary-color);
-            margin-bottom: 20px;
-            font-size: 24px;
-        }
-        
-        .login-content input {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 16px;
-            font-family: 'Cairo', sans-serif;
-        }
-        
-        .login-content button {
-            width: 100%;
-            padding: 12px;
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            font-family: 'Cairo', sans-serif;
-        }
-        
-        .btn-submit {
-            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-dark) 100%);
-            width: 100%;
-            padding: 16px;
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 18px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-top: 20px;
-            font-family: 'Cairo', sans-serif;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🏥 نظام الحجز الإلكتروني للعيادات</title>
+  <style>
+    * { 
+      margin: 0; 
+      padding: 0; 
+      box-sizing: border-box; 
+    }
+    
+    :root {
+      --primary-red: #d32f2f;       /* ✅ أحمر الهلال */
+      --primary-light: #f44336;
+      --primary-dark: #b71c1c;
+      --success: #4caf50;
+      --warning: #ff9800;
+    }
+    
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-dark) 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      position: relative;
+      overflow-x: hidden;
+    }
+    
+    /* ✅ تأثير خلفية متحركة */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="80" r="2" fill="rgba(255,255,255,0.1)"/></svg>');
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      background: white;
+      padding: 50px 40px;
+      border-radius: 25px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+      max-width: 520px;
+      width: 100%;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      animation: slideUp 0.6s ease-out;
+    }
+    
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .logo-section {
+      margin-bottom: 30px;
+    }
+
+    .logo-icon {
+      font-size: 60px;
+      margin-bottom: 15px;
+      animation: bounce 2s infinite;
+    }
+    
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    h1 {
+      color: var(--primary-red);
+      font-size: 32px;
+      margin-bottom: 10px;
+      font-weight: 700;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .subtitle {
+      color: #666;
+      font-size: 16px;
+      margin-bottom: 40px;
+      line-height: 1.5;
+    }
+
+    .button-group {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    button, a {
+      font-size: 16px;
+      padding: 16px 30px;
+      border: none;
+      border-radius: 14px;
+      cursor: pointer;
+      font-weight: 600;
+      font-family: 'Cairo', sans-serif;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    button:before, a:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: rgba(255,255,255,0.2);
+      transition: left 0.3s ease;
+      z-index: -1;
+    }
+
+    button:hover, a:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+    }
+
+    button:hover:before, a:hover:before {
+      left: 100%;
+    }
+
+    /* ✅ زر الحجز - أحمر */
+    .btn-book {
+      background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-dark) 100%);
+      color: white;
+      font-size: 17px;
+      font-weight: 700;
+    }
+
+    .btn-book:hover {
+      background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%);
+      box-shadow: 0 12px 35px rgba(211, 47, 47, 0.4);
+    }
+
+    /* ✅ زر المدير - أخضر */
+    .btn-admin {
+      background: linear-gradient(135deg, #4caf50 0%, #388e3c 100%);
+      color: white;
+    }
+
+    .btn-admin:hover {
+      background: linear-gradient(135deg, #45a049 0%, #2e7d32 100%);
+      box-shadow: 0 12px 35px rgba(76, 175, 80, 0.4);
+    }
+
+    /* ✅ زر الإعدادات - برتقالي */
+    .btn-settings {
+      background: linear-gradient(135deg, #ff9800 0%, #e65100 100%);
+      color: white;
+    }
+
+    .btn-settings:hover {
+      background: linear-gradient(135deg, #fb8c00 0%, #d84315 100%);
+      box-shadow: 0 12px 35px rgba(255, 152, 0, 0.4);
+    }
+
+    .divider {
+      margin: 25px 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #e0e0e0, transparent);
+    }
+
+    .features {
+      background: #f9f9f9;
+      padding: 20px;
+      border-radius: 12px;
+      margin: 20px 0;
+      font-size: 13px;
+      color: #666;
+      line-height: 1.8;
+    }
+
+    .features-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      text-align: right;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: #555;
+    }
+
+    .feature-item::before {
+      content: '✓';
+      color: var(--primary-red);
+      font-weight: 700;
+      font-size: 16px;
+    }
+
+    .footer {
+      color: #999;
+      font-size: 12px;
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid #eee;
+    }
+
+    .contact-hint {
+      font-size: 12px;
+      color: #aaa;
+      margin-top: 10px;
+      font-style: italic;
+    }
+
+    /* ✅ موبايل responsive */
+    @media (max-width: 768px) {
+      body {
+        padding: 15px;
+      }
+
+      .container {
+        padding: 35px 25px;
+        border-radius: 18px;
+      }
+
+      h1 {
+        font-size: 26px;
+      }
+
+      .logo-icon {
+        font-size: 50px;
+      }
+
+      button, a {
+        font-size: 15px;
+        padding: 14px 20px;
+      }
+
+      .features-list {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* ✅ تأثير لطيف عند التحميل */
+    button, a {
+      animation: fadeInUp 0.5s ease-out forwards;
+      opacity: 0;
+    }
+
+    .btn-book {
+      animation-delay: 0.1s;
+    }
+
+    .btn-admin {
+      animation-delay: 0.2s;
+    }
+
+    .btn-settings {
+      animation-delay: 0.3s;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
 </head>
 <body>
-    <!-- ✅ نافذة الدخول المنبثقة -->
-    <div class="login-modal" id="loginModal">
-        <div class="login-content">
-            <h2>🔐 دخول المدير</h2>
-            <input type="password" id="adminPassword" placeholder="أدخل كلمة المرور">
-            <button onclick="verifyAdminPassword()">دخول</button>
-            <div style="color: red; margin-top: 10px; font-size: 12px;" id="loginError"></div>
-        </div>
-    </div>
-    
-    <!-- ✅ رسالة التأكيد في الأعلى -->
-    <div class="alert" id="status"></div>
-    
-    <div class="container">
-        <div class="header-card">
-            <img src="" id="logo" class="logo" alt="Logo">
-            <h1>🏥 <span id="placeName">جارٍ التحميل...</span></h1>
-            <p id="placeDescription"></p>
-        </div>
-        
-        <div class="booking-card">
-            <form id="bookingForm">
-                <!-- اختيار الطبيب -->
-                <div class="form-section">
-                    <h2 style="font-size: 18px; color: var(--primary-color); margin-bottom: 15px;">👨‍⚕️ اختر الطبيب</h2>
-                    <div id="doctor-selector" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px;"></div>
-                    <input type="hidden" id="selectedDoctor" name="doctorName" required>
-                </div>
-
-                <!-- معلومات المريض -->
-                <div class="form-section" style="margin-top: 30px;">
-                    <h2 style="font-size: 18px; color: var(--primary-color); margin-bottom: 15px;">👤 معلوماتك</h2>
-                    <input type="text" id="name" placeholder="الاسم بالكامل *" required style="width: 100%; padding: 12px; margin-bottom: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-family: Cairo;">
-                    <input type="tel" id="phone" placeholder="رقم الهاتف *" required style="width: 100%; padding: 12px; margin-bottom: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-family: Cairo;">
-                </div>
-
-                <!-- اختيار اليوم والوقت -->
-                <div id="day-section" style="display: none; margin-top: 30px;">
-                    <h2 style="font-size: 18px; color: var(--primary-color); margin-bottom: 15px;">📅 اختر الموعد</h2>
-                    <div id="day-selector" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px;"></div>
-                </div>
-
-                <div id="time-section" style="display: none; margin-top: 20px;">
-                    <div id="time-selector" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 12px;"></div>
-                </div>
-
-                <input type="hidden" id="appointmentTime" name="appointmentTime">
-                <button type="submit" class="btn-submit" id="submitButton" disabled>🎯 احجز موعدك</button>
-            </form>
-        </div>
+  <div class="container">
+    <!-- ✅ شعار الهلال الأحمر -->
+    <div class="logo-section">
+      <div class="logo-icon">🏥</div>
+      <h1>نظام الحجز الإلكتروني</h1>
     </div>
 
-    <script>
-        let selectedDoctor = null;
-        let slotsByDate = {};
-        
-        // ✅ التحقق من كلمة المرور
-        function verifyAdminPassword() {
-            const password = document.getElementById('adminPassword').value;
-            if (password === '1111') {  // ✅ غيّر هذا الرقم
-                document.getElementById('loginModal').classList.remove('active');
-                alert('تم تسجيل الدخول بنجاح');
-            } else {
-                document.getElementById('loginError').textContent = 'كلمة مرور خاطئة';
-            }
-        }
-        
-        document.addEventListener('DOMContentLoaded', function() {
-            loadSettings();
-            loadDoctors();
-        });
-        
-        function loadSettings() {
-            google.script.run.withSuccessHandler(function(data) {
-                document.getElementById('placeName').textContent = data['اسم المكان'] || 'نظام الحجز';
-                document.getElementById('placeDescription').textContent = data['نبذة مختصرة'] || '';
-            }).getSettings();
-        }
-        
-        function loadDoctors() {
-            google.script.run.withSuccessHandler(function(doctors) {
-                const selector = document.getElementById('doctor-selector');
-                selector.innerHTML = '';
-                doctors.forEach(doc => {
-                    const btn = document.createElement('button');
-                    btn.type = 'button';
-                    btn.className = 'selector-btn';
-                    btn.innerHTML = `<strong>${doc.name}</strong><div class="doctor-info">${doc.specialty}</div>`;
-                    btn.onclick = (e) => {
-                        e.preventDefault();
-                        selectDoctor(doc.name);
-                    };
-                    selector.appendChild(btn);
-                });
-            }).getDoctors();
-        }
-        
-        function selectDoctor(name) {
-            selectedDoctor = name;
-            document.getElementById('selectedDoctor').value = name;
-            document.querySelectorAll('#doctor-selector .selector-btn').forEach(btn => btn.classList.remove('selected'));
-            event.target.closest('.selector-btn').classList.add('selected');
-            loadSlots(name);
-        }
-        
-        function loadSlots(doctorName) {
-            google.script.run.withSuccessHandler(function(slots) {
-                processSlots(slots);
-            }).getAvailableSlotsForDoctor(doctorName);
-        }
-        
-        function processSlots(allSlots) {
-            slotsByDate = {};
-            const daySelector = document.getElementById('day-selector');
-            daySelector.innerHTML = '';
-            
-            allSlots.forEach(slot => {
-                const date = new Date(slot);
-                // ✅ بداية الأسبوع من السبت بدل الأحد
-                const dateStr = date.toLocaleDateString('ar-EG', { weekday: 'long', day: 'numeric', month: 'long' });
-                if (!slotsByDate[dateStr]) slotsByDate[dateStr] = [];
-                slotsByDate[dateStr].push(slot);
-            });
-            
-            Object.keys(slotsByDate).forEach(dateStr => {
-                const btn = document.createElement('button');
-                btn.type = 'button';
-                btn.className = 'selector-btn';
-                btn.textContent = dateStr;
-                btn.onclick = (e) => {
-                    e.preventDefault();
-                    selectDay(dateStr);
-                };
-                daySelector.appendChild(btn);
-            });
-            
-            document.getElementById('day-section').style.display = 'block';
-        }
-        
-        function selectDay(dateStr) {
-            document.querySelectorAll('#day-selector .selector-btn').forEach(btn => btn.classList.remove('selected'));
-            event.target.closest('.selector-btn').classList.add('selected');
-            
-            const timeSelector = document.getElementById('time-selector');
-            timeSelector.innerHTML = '';
-            
-            slotsByDate[dateStr].forEach(slot => {
-                const time = new Date(slot).toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
-                const btn = document.createElement('button');
-                btn.type = 'button';
-                btn.className = 'selector-btn';
-                btn.textContent = time;
-                btn.onclick = (e) => {
-                    e.preventDefault();
-                    selectTime(slot);
-                };
-                timeSelector.appendChild(btn);
-            });
-            
-            document.getElementById('time-section').style.display = 'block';
-        }
-        
-        function selectTime(slot) {
-            document.querySelectorAll('#time-selector .selector-btn').forEach(btn => btn.classList.remove('selected'));
-            event.target.closest('.selector-btn').classList.add('selected');
-            document.getElementById('appointmentTime').value = slot;
-            document.getElementById('submitButton').disabled = false;
-        }
-        
-        document.getElementById('bookingForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const statusDiv = document.getElementById('status');
-            statusDiv.textContent = '⏳ جارٍ الحجز...';
-            statusDiv.className = 'alert alert-info';
-            statusDiv.style.display = 'block';
-            
-            const formData = {
-                name: document.getElementById('name').value,
-                phone: document.getElementById('phone').value,
-                notes: '',
-                appointmentTime: document.getElementById('appointmentTime').value,
-                doctorName: selectedDoctor
-            };
-            
-            google.script.run
-                .withSuccessHandler(function(response) {
-                    if (response.success) {
-                        statusDiv.textContent = '✅ ' + response.message;
-                        statusDiv.className = 'alert alert-success';
-                        // ✅ بدل reload: امسح الفورم فقط
-                        document.getElementById('bookingForm').reset();
-                        setTimeout(() => {
-                            statusDiv.style.display = 'none';
-                            location.reload();
-                        }, 2000);
-                    } else {
-                        statusDiv.textContent = '❌ ' + response.message;
-                        statusDiv.className = 'alert alert-error';
-                    }
-                })
-                .bookAppointmentWithDoctor(formData);
-        });
-    </script>
+    <p class="subtitle">
+      نظام متقدم لحجز مواعيد الأطباء والعيادات<br>
+      بسهولة وكفاءة عالية
+    </p>
+
+    <!-- ✅ قائمة المميزات -->
+    <div class="features">
+      <div class="features-list">
+        <div class="feature-item">حجز سريع وآمن</div>
+        <div class="feature-item">أطباء متعددون</div>
+        <div class="feature-item">مواعيد مرنة</div>
+        <div class="feature-item">تذكيرات تلقائية</div>
+      </div>
+    </div>
+
+    <div class="button-group">
+      <!-- ✅ زر الحجز -->
+      <button class="btn-book" onclick="window.location.href='https://script.google.com/macros/s/AKfycbxy-MXcFU7BaLUBq5AU0207KxCF8XumoAz7IfdmzXpdGOzn9irkHXFxnaK9KBlNzU-A/exec'">
+        📅 حجز موعد جديد
+      </button>
+
+      <!-- ✅ زر لوحة الحجوزات -->
+      <button class="btn-admin" onclick="window.location.href='https://script.google.com/macros/s/AKfycbxy-MXcFU7BaLUBq5AU0207KxCF8XumoAz7IfdmzXpdGOzn9irkHXFxnaK9KBlNzU-A/exec?page=bookings'">
+        📋 لوحة إدارة الحجوزات
+      </button>
+
+      <!-- ✅ زر الإعدادات -->
+      <button class="btn-settings" onclick="window.location.href='https://script.google.com/macros/s/AKfycbxy-MXcFU7BaLUBq5AU0207KxCF8XumoAz7IfdmzXpdGOzn9irkHXFxnaK9KBlNzU-A/exec?page=settings'">
+        ⚙️ الإعدادات والأطباء
+      </button>
+    </div>
+
+    <p class="contact-hint">هل تحتاج للمساعدة؟ تواصل معنا عبر الدعم الفني</p>
+
+    <div class="footer">
+      <p>© 2025 نظام حجز المواعيد الطبية</p>
+      <p>جميع الحقوق محفوظة</p>
+    </div>
+  </div>
 </body>
 </html>
