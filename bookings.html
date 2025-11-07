@@ -53,7 +53,7 @@
     function renderBookings(data) {
       const table = document.getElementById('bookingTable');
       if (!Array.isArray(data) || data.length === 0) {
-        table.innerHTML = `<tr><td colspan="6" class="center">لا توجد بيانات حجوزات</td></tr>`;
+        table.innerHTML = `<tr><td colspan="6" class="center">لا توجد بيانات2 حجوزات</td></tr>`;
         return;
       }
       table.innerHTML = data.map(row =>
@@ -72,6 +72,7 @@
   </script>
 </body>
 </html>
+
 
 
 
