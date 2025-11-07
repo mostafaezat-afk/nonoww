@@ -400,180 +400,199 @@
   </div>
 
   <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbxS8ctkpW1Knr-3jsp5RzGonTDow9IwY2-AnMls9O1-ExvWoGJoSLhS1VmmMi4nftuh/exec";
-    const PASSWORD = "1111"; // ضع نفس كلمة السر هنا
+  const API_URL = "https://script.google.com/macros/s/YOUR_DEPLOY_ID/exec"; // ⚠️ غيّر هنا
+  const PASSWORD = "1111";
 
-    let allBookings = [];
-    let isLoggedIn = false;
+  let allBookings = [];
+  let isLoggedIn = false;
 
-    function handleLogin() {
-      const password = document.getElementById('passwordInput').value;
-      const errorDiv = document.getElementById('loginError');
+  function handleLogin() {
+    const password = document.getElementById('passwordInput').value;
+    const errorDiv = document.getElementById('loginError');
 
-      if (password === PASSWORD) {
-        isLoggedIn = true;
-        document.getElementById('loginModal').classList.add('hidden');
-        document.getElementById('mainContent').classList.add('active');
-        document.getElementById('logoutBtn').style.display = 'block';
-        loadBookings();
-      } else {
-        errorDiv.textContent = 'كلمة المرور غير صحيحة';
-        errorDiv.style.display = 'block';
-        setTimeout(() => { errorDiv.style.display = 'none'; }, 3000);
+    if (password === PASSWORD) {
+      isLoggedIn = true;
+      document.getElementById('loginModal').classList.add('hidden');
+      document.getElementById('mainContent').classList.add('active');
+      document.getElementById('logoutBtn').style.display = 'block';
+      loadBookings();
+    } else {
+      errorDiv.textContent = 'كلمة المرور غير صحيحة';
+      errorDiv.style.display = 'block';
+      setTimeout(() => { errorDiv.style.display = 'none'; }, 3000);
+    }
+  }
+
+  function logout() {
+    isLoggedIn = false;
+    document.getElementById('loginModal').classList.remove('hidden');
+    document.getElementById('mainContent').classList.remove('active');
+    document.getElementById('logoutBtn').style.display = 'none';
+    document.getElementById('passwordInput').value = '';
+    document.getElementById('bookingTable').innerHTML = '<tr><td colspan="7" class="center">جاري التحميل ...</td></tr>';
+  }
+
+  // ✅ دالة JSONP محسّنة
+  function jsonpRequest(action, callback) {
+    const cbFunc = 'cb_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    
+    console.log('📡 محاولة الاتصال بـ:', action);
+    
+    window[cbFunc] = function(data) {
+      console.log('✅ تم استقبال البيانات:', data);
+      callback(data);
+      delete window[cbFunc];
+      if (script.parentNode) {
+        script.parentNode.removeChild(script);
       }
-    }
-
-    function logout() {
-      isLoggedIn = false;
-      document.getElementById('loginModal').classList.remove('hidden');
-      document.getElementById('mainContent').classList.remove('active');
-      document.getElementById('logoutBtn').style.display = 'none';
-      document.getElementById('passwordInput').value = '';
-      document.getElementById('bookingTable').innerHTML = '<tr><td colspan="7" class="center">جاري التحميل ...</td></tr>';
-    }
-
-    function jsonpRequest(action, callback) {
-      const cbFunc = 'cb_' + Date.now();
-      window[cbFunc] = function(data) {
-        callback(data);
-        delete window[cbFunc];
-        script.remove();
-      };
-      const script = document.createElement('script');
-      script.src = `${API_URL}?action=${action}&callback=${cbFunc}`;
-      script.onerror = function() {
-        callback([]);
-        script.remove();
-      };
-      document.body.appendChild(script);
-    }
-
-    function loadBookings() {
-      jsonpRequest('getBookings', function(data) {
-        allBookings = Array.isArray(data) ? data : [];
-        loadDoctorFilter();
-        applyFilters();
-      });
-    }
-
-    function loadDoctorFilter() {
-      const doctors = [...new Set(allBookings.map(b => b['اسم_الطبيب']).filter(Boolean))];
-      const select = document.getElementById('doctorFilter');
-      const currentValue = select.value;
-
-      doctors.forEach(doctor => {
-        if (!Array.from(select.options).some(opt => opt.value === doctor)) {
-          const option = document.createElement('option');
-          option.value = doctor;
-          option.textContent = doctor;
-          select.appendChild(option);
-        }
-      });
-
-      select.value = currentValue;
-    }
-
-    function applyFilters() {
-      const doctorFilter = document.getElementById('doctorFilter').value;
-      const statusFilter = document.getElementById('statusFilter').value;
-      const dateFrom = document.getElementById('dateFromFilter').value;
-      const dateTo = document.getElementById('dateToFilter').value;
-
-      let filtered = allBookings.filter(booking => {
-        let match = true;
-
-        if (doctorFilter && booking['اسم_الطبيب'] !== doctorFilter) match = false;
-        if (statusFilter && booking['الحالة'] !== statusFilter) match = false;
-
-        if (dateFrom) {
-          const bookingDate = new Date(booking['موعد_الحضور']);
-          if (bookingDate < new Date(dateFrom)) match = false;
-        }
-
-        if (dateTo) {
-          const bookingDate = new Date(booking['موعد_الحضور']);
-          if (bookingDate > new Date(dateTo)) match = false;
-        }
-
-        return match;
-      });
-
-      renderBookings(filtered);
-      renderStats(filtered);
-    }
-
-    function renderBookings(data) {
-      const table = document.getElementById('bookingTable');
-      if (!Array.isArray(data) || data.length === 0) {
-        table.innerHTML = `<tr><td colspan="7" class="center">لا توجد بيانات</td></tr>`;
-        return;
+    };
+    
+    const script = document.createElement('script');
+    script.src = `${API_URL}?action=${action}&callback=${cbFunc}`;
+    script.charset = 'utf-8';
+    
+    script.onerror = function() {
+      console.error('❌ خطأ في الاتصال للإجراء:', action);
+      console.error('الرابط المستخدم:', `${API_URL}?action=${action}&callback=${cbFunc}`);
+      callback([]);
+      delete window[cbFunc];
+      if (script.parentNode) {
+        script.parentNode.removeChild(script);
       }
+    };
+    
+    script.onload = function() {
+      console.log('✓ تم تحميل السكريبت بنجاح');
+    };
+    
+    document.head.appendChild(script);
+  }
 
-      table.innerHTML = data.map(row => {
-        const statusClass = 
-          row['الحالة'] === 'مؤكد' ? 'badge-success' :
-          row['الحالة'] === 'قيد الانتظار' ? 'badge-warning' : 'badge-danger';
-
-        return `<tr>
-          <td>${row['التاريخ'] ? new Date(row['التاريخ']).toLocaleDateString('ar-EG') : ''}</td>
-          <td>${row['اسم_الطبيب'] || ''}</td>
-          <td>${row['الاسم'] || ''}</td>
-          <td>${row['الهاتف'] || ''}</td>
-          <td>${row['موعد_الحضور'] ? new Date(row['موعد_الحضور']).toLocaleString('ar-EG') : ''}</td>
-          <td><span class="badge ${statusClass}">${row['الحالة'] || ''}</span></td>
-          <td>${row['ملاحظات'] || '-'}</td>
-        </tr>`;
-      }).join('');
-    }
-
-    function renderStats(data) {
-      const statsDiv = document.getElementById('statsSection');
-      const total = data.length;
-      const confirmed = data.filter(b => b['الحالة'] === 'مؤكد').length;
-      const pending = data.filter(b => b['الحالة'] === 'قيد الانتظار').length;
-      const doctors = new Set(data.map(b => b['اسم_الطبيب'])).size;
-
-      statsDiv.innerHTML = `
-        <div class="stat-card">
-          <h3>${total}</h3>
-          <p>إجمالي الحجوزات</p>
-        </div>
-        <div class="stat-card">
-          <h3>${confirmed}</h3>
-          <p>حجوزات مؤكدة</p>
-        </div>
-        <div class="stat-card">
-          <h3>${pending}</h3>
-          <p>حجوزات قيد الانتظار</p>
-        </div>
-        <div class="stat-card">
-          <h3>${doctors}</h3>
-          <p>عدد الأطباء</p>
-        </div>
-      `;
-    }
-
-    function resetFilters() {
-      document.getElementById('doctorFilter').value = '';
-      document.getElementById('statusFilter').value = '';
-      document.getElementById('dateFromFilter').value = '';
-      document.getElementById('dateToFilter').value = '';
+  function loadBookings() {
+    console.log('جاري تحميل الحجوزات...');
+    jsonpRequest('getBookings', function(data) {
+      console.log('البيانات المستقبلة:', data);
+      allBookings = Array.isArray(data) ? data : [];
+      loadDoctorFilter();
       applyFilters();
-    }
+    });
+  }
 
-    function printReport() {
-      window.print();
-    }
+  function loadDoctorFilter() {
+    const doctors = [...new Set(allBookings.map(b => b['اسم_الطبيب']).filter(Boolean))];
+    const select = document.getElementById('doctorFilter');
+    const currentValue = select.value;
 
-    // تحميل البيانات عند فتح الصفحة
-    window.addEventListener('load', function() {
-      if (isLoggedIn) {
-        loadBookings();
+    doctors.forEach(doctor => {
+      if (!Array.from(select.options).some(opt => opt.value === doctor)) {
+        const option = document.createElement('option');
+        option.value = doctor;
+        option.textContent = doctor;
+        select.appendChild(option);
       }
     });
-  </script>
-</body>
-</html>
+
+    select.value = currentValue;
+  }
+
+  function applyFilters() {
+    const doctorFilter = document.getElementById('doctorFilter').value;
+    const statusFilter = document.getElementById('statusFilter').value;
+    const dateFrom = document.getElementById('dateFromFilter').value;
+    const dateTo = document.getElementById('dateToFilter').value;
+
+    let filtered = allBookings.filter(booking => {
+      let match = true;
+
+      if (doctorFilter && booking['اسم_الطبيب'] !== doctorFilter) match = false;
+      if (statusFilter && booking['الحالة'] !== statusFilter) match = false;
+
+      if (dateFrom) {
+        const bookingDate = new Date(booking['موعد_الحضور']);
+        if (bookingDate < new Date(dateFrom)) match = false;
+      }
+
+      if (dateTo) {
+        const bookingDate = new Date(booking['موعد_الحضور']);
+        if (bookingDate > new Date(dateTo)) match = false;
+      }
+
+      return match;
+    });
+
+    renderBookings(filtered);
+    renderStats(filtered);
+  }
+
+  function renderBookings(data) {
+    const table = document.getElementById('bookingTable');
+    if (!Array.isArray(data) || data.length === 0) {
+      table.innerHTML = `<tr><td colspan="7" class="center">لا توجد بيانات</td></tr>`;
+      return;
+    }
+
+    table.innerHTML = data.map(row => {
+      const statusClass = 
+        row['الحالة'] === 'مؤكد' ? 'badge-success' :
+        row['الحالة'] === 'قيد الانتظار' ? 'badge-warning' : 'badge-danger';
+
+      return `<tr>
+        <td>${row['التاريخ'] ? new Date(row['التاريخ']).toLocaleDateString('ar-EG') : ''}</td>
+        <td>${row['اسم_الطبيب'] || ''}</td>
+        <td>${row['الاسم'] || ''}</td>
+        <td>${row['الهاتف'] || ''}</td>
+        <td>${row['موعد_الحضور'] ? new Date(row['موعد_الحضور']).toLocaleString('ar-EG') : ''}</td>
+        <td><span class="badge ${statusClass}">${row['الحالة'] || ''}</span></td>
+        <td>${row['ملاحظات'] || '-'}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  function renderStats(data) {
+    const statsDiv = document.getElementById('statsSection');
+    const total = data.length;
+    const confirmed = data.filter(b => b['الحالة'] === 'مؤكد').length;
+    const pending = data.filter(b => b['الحالة'] === 'قيد الانتظار').length;
+    const doctors = new Set(data.map(b => b['اسم_الطبيب'])).size;
+
+    statsDiv.innerHTML = `
+      <div class="stat-card">
+        <h3>${total}</h3>
+        <p>إجمالي الحجوزات</p>
+      </div>
+      <div class="stat-card">
+        <h3>${confirmed}</h3>
+        <p>حجوزات مؤكدة</p>
+      </div>
+      <div class="stat-card">
+        <h3>${pending}</h3>
+        <p>حجوزات قيد الانتظار</p>
+      </div>
+      <div class="stat-card">
+        <h3>${doctors}</h3>
+        <p>عدد الأطباء</p>
+      </div>
+    `;
+  }
+
+  function resetFilters() {
+    document.getElementById('doctorFilter').value = '';
+    document.getElementById('statusFilter').value = '';
+    document.getElementById('dateFromFilter').value = '';
+    document.getElementById('dateToFilter').value = '';
+    applyFilters();
+  }
+
+  function printReport() {
+    window.print();
+  }
+
+  window.addEventListener('load', function() {
+    console.log('🚀 تم تحميل الصفحة بنجاح');
+  });
+</script>
+
+
 
 
 
