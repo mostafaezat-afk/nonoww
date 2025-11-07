@@ -1,21 +1,135 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8" />
-<title>الصفحة الرئيسية</title>
-<style>
-  body { font-family: 'Cairo', sans-serif; text-align: center; padding: 50px; background: #f5f7fa; }
-  button { font-size: 18px; padding: 15px 30px; margin: 20px; border-radius: 10px; border: none; cursor: pointer; }
-  .btn-book { background: #667eea; color: white; }
-  .btn-admin { background: #764ba2; color: white; }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🏥 الصفحة الرئيسية - نظام الحجز</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      padding: 60px 40px;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      max-width: 500px;
+      width: 100%;
+      text-align: center;
+    }
+
+    h1 {
+      color: #667eea;
+      font-size: 32px;
+      margin-bottom: 20px;
+    }
+
+    .subtitle {
+      color: #666;
+      font-size: 16px;
+      margin-bottom: 40px;
+    }
+
+    .button-group {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    button {
+      font-size: 18px;
+      padding: 16px 30px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 600;
+      font-family: 'Cairo', sans-serif;
+      transition: all 0.3s;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-book {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .btn-book:hover {
+      background: linear-gradient(135deg, #5566c1 0%, #6a3f8f 100%);
+    }
+
+    .btn-admin {
+      background: #28a745;
+      color: white;
+    }
+
+    .btn-admin:hover {
+      background: #218838;
+    }
+
+    .btn-settings {
+      background: #ffc107;
+      color: #333;
+    }
+
+    .btn-settings:hover {
+      background: #ffb300;
+    }
+
+    .divider {
+      margin: 30px 0;
+      height: 1px;
+      background: #eee;
+    }
+
+    .footer {
+      color: #999;
+      font-size: 12px;
+      margin-top: 30px;
+    }
+  </style>
 </head>
 <body>
-  <h1>مرحبا بك في نظام الحجز الإلكتروني</h1>
-  <button class="btn-book" onclick="location.href='https://script.google.com/macros/s/AKfycbygN-E29bd_7Go-FEFE7zbaVdmDttj_cFzVtWQNnx7HGGbZSTGTtGonGGV0pruNmmKmFQ/exec'">حجز موعد</button>
-  <br />
-  <button class="btn-admin" onclick="location.href='bookings.html'">دخول المدير</button>
-   <br />
-  <button class="btn-admin" onclick="location.href='https://script.google.com/macros/s/AKfycbygN-E29bd_7Go-FEFE7zbaVdmDttj_cFzVtWQNnx7HGGbZSTGTtGonGGV0pruNmmKmFQ/exec?page=Settings'">الاعدادات</button>
+  <div class="container">
+    <h1>🏥 نظام الحجز الإلكتروني</h1>
+    <p class="subtitle">اختر الخدمة التي تريدها</p>
+
+    <div class="button-group">
+      <!-- ✅ الخطأ 1: استخدام الرابط الصحيح للحجز -->
+      <button class="btn-book" onclick="window.location.href='https://script.google.com/macros/s/AKfycbygN-E29bd_7Go-FEFE7zbaVdmDttj_cFzVtWQNnx7HGGbZSTGTtGonGGV0pruNmmKmFQ/exec'">
+        📅 حجز موعد جديد
+      </button>
+
+      <div class="divider"></div>
+
+      <!-- ✅ الخطأ 2: تم تصحيح `bookings.html` ل `?page=bookings` -->
+      <button class="btn-admin" onclick="window.location.href='https://script.google.com/macros/s/AKfycbygN-E29bd_7Go-FEFE7zbaVdmDttj_cFzVtWQNnx7HGGbZSTGTtGonGGV0pruNmmKmFQ/exec?page=bookings'">
+        📋 لوحة إدارة الحجوزات
+      </button>
+
+      <!-- ✅ الخطأ 3: تم تصحيح `Settings` ل `settings` (حروف صغيرة) -->
+      <button class="btn-settings" onclick="window.location.href='https://script.google.com/macros/s/AKfycbygN-E29bd_7Go-FEFE7zbaVdmDttj_cFzVtWQNnx7HGGbZSTGTtGonGGV0pruNmmKmFQ/exec?page=settings'">
+        ⚙️ الإعدادات والأطباء
+      </button>
+    </div>
+
+    <div class="footer">
+      <p>© 2025 جميع الحقوق محفوظة</p>
+    </div>
+  </div>
 </body>
 </html>
