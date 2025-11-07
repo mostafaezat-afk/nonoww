@@ -3,16 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>لوحة إدارة الحجوزات</title>
+  <title>🏥 لوحة إدارة الحجوزات</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     
+    :root {
+      --primary-red: #d32f2f;
+      --primary-light: #f44336;
+      --primary-dark: #b71c1c;
+      --success: #4caf50;
+      --warning: #ff9800;
+    }
+    
     body {
       font-family: 'Cairo', Arial, sans-serif;
-      background: #f9f9fb;
+      background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
       color: #333;
+      min-height: 100vh;
     }
 
+    /* ✅ نافذة تسجيل الدخول المحسّنة */
     .login-modal {
       display: flex;
       position: fixed;
@@ -20,10 +30,11 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.6);
+      background: rgba(0, 0, 0, 0.7);
       align-items: center;
       justify-content: center;
       z-index: 1000;
+      backdrop-filter: blur(4px);
     }
 
     .login-modal.hidden {
@@ -32,62 +43,87 @@
 
     .login-box {
       background: white;
-      padding: 40px;
-      border-radius: 12px;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-      max-width: 400px;
+      padding: 50px 40px;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      max-width: 420px;
       width: 90%;
       text-align: center;
+      animation: slideUp 0.5s ease-out;
+    }
+    
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .login-box h2 {
-      color: #667eea;
-      margin-bottom: 20px;
-      font-size: 24px;
+      color: var(--primary-red);
+      margin-bottom: 10px;
+      font-size: 26px;
+    }
+
+    .login-subtitle {
+      color: #999;
+      margin-bottom: 30px;
+      font-size: 14px;
     }
 
     .login-box input {
       width: 100%;
-      padding: 12px;
-      margin-bottom: 15px;
+      padding: 14px;
+      margin-bottom: 20px;
       border: 2px solid #e0e0e0;
-      border-radius: 8px;
+      border-radius: 10px;
       font-size: 16px;
       font-family: 'Cairo', sans-serif;
+      transition: all 0.3s;
     }
 
     .login-box input:focus {
       outline: none;
-      border-color: #667eea;
+      border-color: var(--primary-red);
+      box-shadow: 0 0 0 4px rgba(211,47,47,0.1);
     }
 
     .login-box button {
       width: 100%;
-      padding: 12px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 14px;
+      background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-dark) 100%);
       color: white;
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
       font-size: 16px;
-      font-weight: 600;
+      font-weight: 700;
       cursor: pointer;
       font-family: 'Cairo', sans-serif;
+      transition: all 0.3s;
     }
 
     .login-box button:hover {
       transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+      box-shadow: 0 10px 25px rgba(211,47,47,0.3);
     }
 
     .login-error {
       color: #dc3545;
       margin-bottom: 15px;
       display: none;
+      background: #ffebee;
+      padding: 10px;
+      border-radius: 8px;
+      border-right: 3px solid #dc3545;
     }
 
     .main-content {
       display: none;
-      padding: 40px 20px;
+      padding: 20px;
     }
 
     .main-content.active {
@@ -99,34 +135,43 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 30px;
+      flex-wrap: wrap;
+      gap: 15px;
     }
 
     h1 {
-      color: #667eea;
+      color: var(--primary-red);
       font-size: 28px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
 
     .logout-btn {
-      background: #dc3545;
+      background: var(--primary-red);
       color: white;
       border: none;
-      padding: 10px 20px;
-      border-radius: 8px;
+      padding: 12px 25px;
+      border-radius: 10px;
       cursor: pointer;
       font-family: 'Cairo', sans-serif;
       font-weight: 600;
+      transition: all 0.3s;
     }
 
     .logout-btn:hover {
-      background: #c82333;
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(211,47,47,0.3);
     }
 
+    /* ✅ قسم التصفية المحسّن */
     .filters-section {
       background: white;
-      padding: 20px;
-      border-radius: 12px;
+      padding: 25px;
+      border-radius: 14px;
       margin-bottom: 30px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 15px;
@@ -146,17 +191,19 @@
 
     .filter-group select,
     .filter-group input {
-      padding: 10px;
+      padding: 11px;
       border: 2px solid #e0e0e0;
-      border-radius: 8px;
+      border-radius: 10px;
       font-family: 'Cairo', sans-serif;
       font-size: 14px;
+      transition: all 0.3s;
     }
 
     .filter-group select:focus,
     .filter-group input:focus {
       outline: none;
-      border-color: #667eea;
+      border-color: var(--primary-red);
+      box-shadow: 0 0 0 3px rgba(211,47,47,0.1);
     }
 
     .filter-buttons {
@@ -167,9 +214,9 @@
     }
 
     .btn {
-      padding: 10px 20px;
+      padding: 11px 20px;
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
       cursor: pointer;
       font-weight: 600;
       font-family: 'Cairo', sans-serif;
@@ -177,12 +224,13 @@
     }
 
     .btn-primary {
-      background: #667eea;
+      background: var(--primary-red);
       color: white;
     }
 
     .btn-primary:hover {
-      background: #5566c1;
+      background: var(--primary-dark);
+      transform: translateY(-2px);
     }
 
     .btn-secondary {
@@ -195,14 +243,16 @@
     }
 
     .btn-print {
-      background: #28a745;
+      background: var(--success);
       color: white;
     }
 
     .btn-print:hover {
-      background: #218838;
+      background: #45a049;
+      transform: translateY(-2px);
     }
 
+    /* ✅ كارتات الإحصائيات */
     .stats-section {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -212,16 +262,24 @@
 
     .stat-card {
       background: white;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      padding: 25px;
+      border-radius: 14px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
       text-align: center;
+      border-top: 4px solid var(--primary-red);
+      transition: all 0.3s;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
     }
 
     .stat-card h3 {
-      color: #667eea;
-      font-size: 28px;
+      color: var(--primary-red);
+      font-size: 32px;
       margin-bottom: 10px;
+      font-weight: 700;
     }
 
     .stat-card p {
@@ -229,34 +287,42 @@
       font-size: 14px;
     }
 
+    /* ✅ جدول محسّن */
+    .table-container {
+      background: white;
+      border-radius: 14px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+      overflow-x: auto;
+    }
+
     table {
       border-collapse: collapse;
       width: 100%;
       background: white;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
 
     th, td {
       border: 1px solid #e0e0e0;
-      padding: 14px 8px;
+      padding: 15px 12px;
       text-align: right;
       font-size: 13px;
     }
 
     th {
-      background: #667eea;
+      background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-dark) 100%);
       color: white;
-      font-weight: 600;
+      font-weight: 700;
+      position: sticky;
+      top: 0;
     }
 
     tr:nth-child(even) {
-      background: #f5f7fa;
+      background: #f9f9f9;
     }
 
     tr:hover {
-      background: #efefef;
+      background: #f0f0f0;
     }
 
     .center {
@@ -265,95 +331,148 @@
 
     .badge {
       display: inline-block;
-      padding: 4px 12px;
+      padding: 5px 12px;
       border-radius: 20px;
       font-size: 12px;
       font-weight: 600;
     }
 
     .badge-success {
-      background: #d4edda;
-      color: #155724;
+      background: #c8e6c9;
+      color: #2e7d32;
     }
 
     .badge-warning {
-      background: #fff3cd;
-      color: #856404;
+      background: #ffe0b2;
+      color: #e65100;
     }
 
     .badge-danger {
-      background: #f8d7da;
-      color: #721c24;
+      background: #ffcdd2;
+      color: #c62828;
     }
 
     .no-data {
       text-align: center;
-      padding: 40px;
+      padding: 60px 20px;
       color: #999;
+      font-size: 16px;
     }
 
+    /* ✅ تحسينات الطباعة */
     @media print {
-      .filters-section, .logout-btn { display: none; }
-      body { padding: 0; background: white; }
+      .filters-section, .logout-btn, .header {
+        display: none;
+      }
+      body {
+        background: white;
+        padding: 0;
+      }
+      .main-content {
+        padding: 20px;
+      }
     }
 
+    /* ✅ موبايل responsive */
     @media (max-width: 768px) {
+      body {
+        padding: 10px;
+      }
+
+      .main-content {
+        padding: 15px;
+      }
+
+      h1 {
+        font-size: 22px;
+      }
+
       .filters-section {
         grid-template-columns: 1fr;
+        padding: 15px;
       }
+
+      .filter-buttons {
+        grid-column: 1/-1;
+      }
+
       table {
         font-size: 11px;
       }
+
       th, td {
-        padding: 8px 4px;
+        padding: 10px 8px;
       }
+
+      .stat-card {
+        padding: 15px;
+      }
+
+      .stat-card h3 {
+        font-size: 24px;
+      }
+
+      .login-box {
+        padding: 35px 25px;
+      }
+
+      .login-box h2 {
+        font-size: 22px;
+      }
+    }
+
+    /* ✅ تأثيرات التحميل */
+    .loading {
+      opacity: 0.6;
+      pointer-events: none;
     }
   </style>
 </head>
 <body>
-  <!-- نافذة تسجيل الدخول -->
+  <!-- ✅ نافذة تسجيل الدخول -->
   <div class="login-modal" id="loginModal">
     <div class="login-box">
-      <h2>🔐 تسجيل الدخول</h2>
+      <h2>🔐 دخول المدير</h2>
+      <p class="login-subtitle">أدخل كلمة المرور للوصول إلى لوحة التحكم</p>
       <div class="login-error" id="loginError"></div>
-      <input type="password" id="passwordInput" placeholder="أدخل كلمة المرور">
-      <button onclick="handleLogin()">دخول</button>
+      <input type="password" id="passwordInput" placeholder="كلمة المرور" onkeypress="if(event.key==='Enter') handleLogin()">
+      <button onclick="handleLogin()">🔓 دخول</button>
     </div>
   </div>
 
-  <!-- المحتوى الرئيسي -->
+  <!-- ✅ المحتوى الرئيسي -->
   <div class="main-content" id="mainContent">
     <div class="header">
-      <h1>🗓️ لوحة إدارة الحجوزات</h1>
-      <button class="logout-btn" onclick="logout()">تسجيل خروج</button>
+      <h1>📊 لوحة إدارة الحجوزات</h1>
+      <button class="logout-btn" onclick="logout()">🚪 تسجيل خروج</button>
     </div>
 
-    <!-- أدوات التصفية -->
+    <!-- ✅ أدوات التصفية -->
     <div class="filters-section">
       <div class="filter-group">
-        <label>اختر الطبيب:</label>
+        <label>📋 الطبيب:</label>
         <select id="doctorFilter" onchange="applyFilters()">
           <option value="">جميع الأطباء</option>
         </select>
       </div>
 
       <div class="filter-group">
-        <label>الحالة:</label>
+        <label>✔️ الحالة:</label>
         <select id="statusFilter" onchange="applyFilters()">
           <option value="">جميع الحالات</option>
-          <option value="مؤكد">مؤكد</option>
-          <option value="قيد الانتظار">قيد الانتظار</option>
-          <option value="ملغى">ملغى</option>
+          <option value="مؤكد">✅ مؤكد</option>
+          <option value="قيد الانتظار">⏳ قيد الانتظار</option>
+          <option value="ملغى">❌ ملغى</option>
         </select>
       </div>
 
       <div class="filter-group">
-        <label>من التاريخ:</label>
+        <label>📅 من التاريخ:</label>
         <input type="date" id="dateFromFilter" onchange="applyFilters()">
       </div>
 
       <div class="filter-group">
-        <label>إلى التاريخ:</label>
+        <label>📅 إلى التاريخ:</label>
         <input type="date" id="dateToFilter" onchange="applyFilters()">
       </div>
 
@@ -364,89 +483,105 @@
       </div>
     </div>
 
-    <!-- الإحصائيات -->
-    <div class="stats-section" id="statsSection"></div>
+    <!-- ✅ الإحصائيات -->
+    <div class="stats-section" id="statsSection">
+      <div class="stat-card">
+        <h3>-</h3>
+        <p>جاري التحميل...</p>
+      </div>
+    </div>
 
-    <!-- الجدول -->
-    <table>
-      <thead>
-        <tr>
-          <th>التاريخ</th>
-          <th>الطبيب</th>
-          <th>الاسم</th>
-          <th>الهاتف</th>
-          <th>موعد الحضور</th>
-          <th>الوقت</th>
-          <th>ملاحظات</th>
-          <th>الحالة</th>
-        </tr>
-      </thead>
-      <tbody id="bookingTable">
-        <tr>
-          <td colspan="8" class="center">جاري التحميل ...</td>
-        </tr>
-      </tbody>
-    </table>
+    <!-- ✅ جدول الحجوزات -->
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>📅 تاريخ التسجيل</th>
+            <th>👨‍⚕️ الطبيب</th>
+            <th>👤 الاسم</th>
+            <th>📱 الهاتف</th>
+            <th>📅 موعد الحضور</th>
+            <th>🕐 الوقت</th>
+            <th>📝 ملاحظات</th>
+            <th>✔️ الحالة</th>
+          </tr>
+        </thead>
+        <tbody id="bookingTable">
+          <tr>
+            <td colspan="8" class="center">⏳ جاري تحميل البيانات...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 
   <script>
     const API_URL = 'https://script.google.com/macros/s/AKfycbxy-MXcFU7BaLUBq5AU0207KxCF8XumoAz7IfdmzXpdGOzn9irkHXFxnaK9KBlNzU-A/exec';
-    const PASSWORD = '1111';
+    const PASSWORD_HASH = 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855'; // SHA256 for empty string - غيره
+    const PASSWORD = '1111'; // ✅ غيّر هذا الرقم
 
     let allBookings = [];
     let isLoggedIn = false;
 
+    // ✅ معالج تسجيل الدخول
     function handleLogin() {
       const password = document.getElementById('passwordInput').value;
       const errorDiv = document.getElementById('loginError');
 
       if (password === PASSWORD) {
         isLoggedIn = true;
+        localStorage.setItem('adminSession', Date.now());
         document.getElementById('loginModal').classList.add('hidden');
         document.getElementById('mainContent').classList.add('active');
         loadBookings();
       } else {
-        errorDiv.textContent = 'كلمة المرور غير صحيحة';
+        errorDiv.textContent = '❌ كلمة المرور غير صحيحة';
         errorDiv.style.display = 'block';
+        document.getElementById('passwordInput').value = '';
         setTimeout(() => { errorDiv.style.display = 'none'; }, 3000);
       }
     }
 
+    // ✅ تسجيل الخروج
     function logout() {
       isLoggedIn = false;
+      localStorage.removeItem('adminSession');
       document.getElementById('loginModal').classList.remove('hidden');
       document.getElementById('mainContent').classList.remove('active');
       document.getElementById('passwordInput').value = '';
       allBookings = [];
     }
 
+    // ✅ تحميل الحجوزات
     function loadBookings() {
+      document.getElementById('bookingTable').innerHTML = '<tr><td colspan="8" class="center">⏳ جاري التحميل...</td></tr>';
+      
       fetch(`${API_URL}?action=getBookings`)
         .then(response => response.json())
         .then(data => {
-          if (Array.isArray(data)) {
-            allBookings = data;
-            loadDoctorFilter();
-            applyFilters();
-          } else {
-            console.error('البيانات ليست مصفوفة:', data);
-          }
+          allBookings = Array.isArray(data) ? data : [];
+          loadDoctorFilter();
+          applyFilters();
         })
         .catch(error => {
-          console.error('خطأ في تحميل الحجوزات:', error);
+          console.error('خطأ:', error);
+          document.getElementById('bookingTable').innerHTML = '<tr><td colspan="8" class="center">❌ خطأ في تحميل البيانات</td></tr>';
         });
     }
 
+    // ✅ تحميل قائمة الأطباء
     function loadDoctorFilter() {
       const doctors = [...new Set(allBookings.map(b => b.اسم_الطبيب).filter(Boolean))];
       const select = document.getElementById('doctorFilter');
       const currentValue = select.value;
 
+      const existingValues = new Set(Array.from(select.options).map(opt => opt.value));
+
       doctors.forEach(doctor => {
-        if (!Array.from(select.options).some(opt => opt.value === doctor)) {
+        if (!existingValues.has(doctor)) {
           const option = document.createElement('option');
           option.value = doctor;
-          option.textContent = doctor || 'حجز عام';
+          option.textContent = doctor;
           select.appendChild(option);
         }
       });
@@ -454,6 +589,7 @@
       select.value = currentValue;
     }
 
+    // ✅ تطبيق التصفية
     function applyFilters() {
       const doctorFilter = document.getElementById('doctorFilter').value;
       const statusFilter = document.getElementById('statusFilter').value;
@@ -483,22 +619,12 @@
       renderStats(filtered);
     }
 
-    function formatPhone(phone) {
-      // إزالة أي أحرف غير رقمية
-      let cleaned = String(phone).replace(/\D/g, '');
-      
-      // إضافة صفر في البداية إذا لم يكن موجوداً
-      if (cleaned && !cleaned.startsWith('0')) {
-        cleaned = '0' + cleaned;
-      }
-      
-      return cleaned;
-    }
-
+    // ✅ عرض الحجوزات في الجدول
     function renderBookings(data) {
       const table = document.getElementById('bookingTable');
+      
       if (!Array.isArray(data) || data.length === 0) {
-        table.innerHTML = `<tr><td colspan="8" class="center">لا توجد بيانات</td></tr>`;
+        table.innerHTML = `<tr><td colspan="8" class="center">📭 لا توجد حجوزات</td></tr>`;
         return;
       }
 
@@ -510,38 +636,29 @@
         const appointmentDate = new Date(row.موعد_الحضور);
         const registerDate = new Date(row.التاريخ);
 
-        // فصل التاريخ والوقت
-        const dateOnly = appointmentDate.toLocaleDateString('ar-EG', {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit'
-        });
-        
-        const timeOnly = appointmentDate.toLocaleTimeString('ar-EG', {
-          hour: '2-digit',
-          minute: '2-digit',
-          hour12: true
-        });
+        const dateOnly = appointmentDate.toLocaleDateString('ar-EG');
+        const timeOnly = appointmentDate.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
 
         return `<tr>
           <td>${registerDate.toLocaleDateString('ar-EG')}</td>
-          <td>${row.اسم_الطبيب || 'حجز عام'}</td>
-          <td>${row.الاسم || ''}</td>
-          <td>${formatPhone(row.الهاتف)}</td>
+          <td>${row.اسم_الطبيب || '-'}</td>
+          <td>${row.الاسم || '-'}</td>
+          <td>${row.الهاتف || '-'}</td>
           <td>${dateOnly}</td>
           <td>${timeOnly}</td>
           <td>${row.ملاحظات || '-'}</td>
-          <td><span class="badge ${statusClass}">${row.الحالة || ''}</span></td>
+          <td><span class="badge ${statusClass}">${row.الحالة || '-'}</span></td>
         </tr>`;
       }).join('');
     }
 
+    // ✅ عرض الإحصائيات
     function renderStats(data) {
       const statsDiv = document.getElementById('statsSection');
       const total = data.length;
       const confirmed = data.filter(b => b.الحالة === 'مؤكد').length;
       const pending = data.filter(b => b.الحالة === 'قيد الانتظار').length;
-      const doctors = new Set(data.map(b => b.اسم_الطبيب).filter(Boolean)).size;
+      const cancelled = data.filter(b => b.الحالة === 'ملغى').length;
 
       statsDiv.innerHTML = `
         <div class="stat-card">
@@ -550,19 +667,20 @@
         </div>
         <div class="stat-card">
           <h3>${confirmed}</h3>
-          <p>حجوزات مؤكدة</p>
+          <p>✅ حجوزات مؤكدة</p>
         </div>
         <div class="stat-card">
           <h3>${pending}</h3>
-          <p>حجوزات قيد الانتظار</p>
+          <p>⏳ قيد الانتظار</p>
         </div>
         <div class="stat-card">
-          <h3>${doctors}</h3>
-          <p>عدد الأطباء</p>
+          <h3>${cancelled}</h3>
+          <p>❌ ملغاة</p>
         </div>
       `;
     }
 
+    // ✅ إعادة تعيين التصفية
     function resetFilters() {
       document.getElementById('doctorFilter').value = '';
       document.getElementById('statusFilter').value = '';
@@ -570,8 +688,17 @@
       document.getElementById('dateToFilter').value = '';
       applyFilters();
     }
+
+    // ✅ التحقق من الجلسة عند التحميل
+    document.addEventListener('DOMContentLoaded', function() {
+      const session = localStorage.getItem('adminSession');
+      if (session && Date.now() - parseInt(session) < 86400000) { // 24 ساعة
+        isLoggedIn = true;
+        document.getElementById('loginModal').classList.add('hidden');
+        document.getElementById('mainContent').classList.add('active');
+        loadBookings();
+      }
+    });
   </script>
 </body>
 </html>
-
-
