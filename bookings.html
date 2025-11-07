@@ -3,610 +3,73 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>لوحة إدارة الحجوزات</title>
+  <title>قائمة الحجوزات</title>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    
-    body {
-      font-family: 'Cairo', Arial, sans-serif;
-      background: #f9f9fb;
-      color: #333;
-    }
-
-    /* نافذة تسجيل الدخول */
-    .login-modal {
-      display: flex;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.6);
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-    }
-
-    .login-modal.hidden {
-      display: none;
-    }
-
-    .login-box {
-      background: white;
-      padding: 40px;
-      border-radius: 12px;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-      max-width: 400px;
-      width: 90%;
-      text-align: center;
-    }
-
-    .login-box h2 {
-      color: #667eea;
-      margin-bottom: 20px;
-      font-size: 24px;
-    }
-
-    .login-box input {
-      width: 100%;
-      padding: 12px;
-      margin-bottom: 15px;
-      border: 2px solid #e0e0e0;
-      border-radius: 8px;
-      font-size: 16px;
-      font-family: 'Cairo', sans-serif;
-    }
-
-    .login-box input:focus {
-      outline: none;
-      border-color: #667eea;
-    }
-
-    .login-box button {
-      width: 100%;
-      padding: 12px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      font-family: 'Cairo', sans-serif;
-    }
-
-    .login-box button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
-    }
-
-    .login-error {
-      color: #dc3545;
-      margin-bottom: 15px;
-      display: none;
-    }
-
-    /* المحتوى الرئيسي */
-    .main-content {
-      display: none;
-      padding: 40px;
-    }
-
-    .main-content.active {
-      display: block;
-    }
-
-    h1 {
-      color: #667eea;
-      text-align: center;
-      margin-bottom: 30px;
-      font-size: 28px;
-    }
-
-    /* أدوات التصفية */
-    .filters-section {
-      background: white;
-      padding: 20px;
-      border-radius: 12px;
-      margin-bottom: 30px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 15px;
-    }
-
-    .filter-group {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .filter-group label {
-      font-weight: 600;
-      margin-bottom: 8px;
-      color: #555;
-      font-size: 14px;
-    }
-
-    .filter-group select,
-    .filter-group input {
-      padding: 10px;
-      border: 2px solid #e0e0e0;
-      border-radius: 8px;
-      font-family: 'Cairo', sans-serif;
-      font-size: 14px;
-    }
-
-    .filter-group select:focus,
-    .filter-group input:focus {
-      outline: none;
-      border-color: #667eea;
-    }
-
-    .filter-buttons {
-      display: flex;
-      gap: 10px;
-      align-items: flex-end;
-    }
-
-    .btn {
-      padding: 10px 20px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 600;
-      font-family: 'Cairo', sans-serif;
-      transition: all 0.3s;
-    }
-
-    .btn-primary {
-      background: #667eea;
-      color: white;
-    }
-
-    .btn-primary:hover {
-      background: #5566c1;
-    }
-
-    .btn-secondary {
-      background: #f0f0f0;
-      color: #333;
-    }
-
-    .btn-secondary:hover {
-      background: #e0e0e0;
-    }
-
-    .btn-danger {
-      background: #dc3545;
-      color: white;
-    }
-
-    .btn-danger:hover {
-      background: #c82333;
-    }
-
-    .btn-print {
-      background: #28a745;
-      color: white;
-    }
-
-    .btn-print:hover {
-      background: #218838;
-    }
-
-    /* الإحصائيات */
-    .stats-section {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 15px;
-      margin-bottom: 30px;
-    }
-
-    .stat-card {
-      background: white;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      text-align: center;
-    }
-
-    .stat-card h3 {
-      color: #667eea;
-      font-size: 28px;
-      margin-bottom: 10px;
-    }
-
-    .stat-card p {
-      color: #666;
-      font-size: 14px;
-    }
-
-    /* الجدول */
-    table {
-      border-collapse: collapse;
-      width: 100%;
-      background: white;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    th, td {
-      border: 1px solid #e0e0e0;
-      padding: 14px 8px;
-      text-align: right;
-      font-size: 14px;
-    }
-
-    th {
-      background: #667eea;
-      color: white;
-      font-weight: 600;
-    }
-
-    tr:nth-child(even) {
-      background: #f5f7fa;
-    }
-
-    tr:hover {
-      background: #efefef;
-    }
-
-    .center {
-      text-align: center;
-    }
-
-    .badge {
-      display: inline-block;
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 600;
-    }
-
-    .badge-success {
-      background: #d4edda;
-      color: #155724;
-    }
-
-    .badge-warning {
-      background: #fff3cd;
-      color: #856404;
-    }
-
-    .badge-danger {
-      background: #f8d7da;
-      color: #721c24;
-    }
-
-    .no-data {
-      text-align: center;
-      padding: 40px;
-      color: #999;
-    }
-
-    .logout-btn {
-      position: fixed;
-      top: 20px;
-      left: 20px;
-      background: #dc3545;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-family: 'Cairo', sans-serif;
-      font-weight: 600;
-    }
-
-    .logout-btn:hover {
-      background: #c82333;
-    }
-
-    @media print {
-      .filters-section, .logout-btn { display: none; }
-      body { padding: 0; background: white; }
-    }
-
-    @media (max-width: 768px) {
-      .filters-section {
-        grid-template-columns: 1fr;
-      }
-      table {
-        font-size: 12px;
-      }
-      th, td {
-        padding: 10px 5px;
-      }
-    }
+    body { font-family: 'Cairo', Arial, sans-serif; background:#f9f9fb; padding: 40px; color:#333;}
+    h1 { color: #667eea; text-align: center; }
+    table { border-collapse: collapse; width: 100%; margin-top: 24px; background: #fff;}
+    th, td { border:1px solid #e0e0e0; padding:14px 8px; text-align: right;}
+    th { background: #667eea; color: #fff; }
+    tr:nth-child(even) {background: #f5f7fa;}
+    .center {text-align:center;}
   </style>
 </head>
 <body>
-  <!-- نافذة تسجيل الدخول -->
-  <div class="login-modal" id="loginModal">
-    <div class="login-box">
-      <h2>🔐 تسجيل الدخول</h2>
-      <div class="login-error" id="loginError"></div>
-      <input type="password" id="passwordInput" placeholder="أدخل كلمة المرور" />
-      <button onclick="handleLogin()">دخول</button>
-    </div>
-  </div>
-
-  <!-- زر تسجيل الخروج -->
-  <button class="logout-btn" id="logoutBtn" style="display: none;" onclick="logout()">تسجيل خروج</button>
-
-  <!-- المحتوى الرئيسي -->
-  <div class="main-content" id="mainContent">
-    <h1>🗓️ لوحة إدارة الحجوزات</h1>
-
-    <!-- أدوات التصفية -->
-    <div class="filters-section">
-      <div class="filter-group">
-        <label>اختر الطبيب:</label>
-        <select id="doctorFilter" onchange="applyFilters()">
-          <option value="">جميع الأطباء</option>
-        </select>
-      </div>
-
-      <div class="filter-group">
-        <label>الحالة:</label>
-        <select id="statusFilter" onchange="applyFilters()">
-          <option value="">جميع الحالات</option>
-          <option value="مؤكد">مؤكد</option>
-          <option value="قيد الانتظار">قيد الانتظار</option>
-          <option value="ملغى">ملغى</option>
-        </select>
-      </div>
-
-      <div class="filter-group">
-        <label>من التاريخ:</label>
-        <input type="date" id="dateFromFilter" onchange="applyFilters()" />
-      </div>
-
-      <div class="filter-group">
-        <label>إلى التاريخ:</label>
-        <input type="date" id="dateToFilter" onchange="applyFilters()" />
-      </div>
-
-      <div class="filter-buttons">
-        <button class="btn btn-primary" onclick="applyFilters()">🔍 بحث</button>
-        <button class="btn btn-secondary" onclick="resetFilters()">🔄 إعادة تعيين</button>
-        <button class="btn btn-print" onclick="printReport()">🖨️ طباعة</button>
-      </div>
-    </div>
-
-    <!-- الإحصائيات -->
-    <div class="stats-section" id="statsSection"></div>
-
-    <!-- الجدول -->
-    <table>
-      <thead>
-        <tr>
-          <th>التاريخ</th>
-          <th>الطبيب</th>
-          <th>الاسم</th>
-          <th>الهاتف</th>
-          <th>موعد الحضور</th>
-          <th>الحالة</th>
-          <th>ملاحظات</th>
-        </tr>
-      </thead>
-      <tbody id="bookingTable">
-        <tr>
-          <td colspan="7" class="center">جاري التحميل ...</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
+  <h1>🗓️ قائمة حجوزات المواعيد</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>التاريخ</th>
+        <th>الاسم</th>
+        <th>الهاتف</th>
+        <th>موعد الحضور</th>
+        <th>الحالة</th>
+        <th>ملاحظات</th>
+      </tr>
+    </thead>
+    <tbody id="bookingTable">
+      <tr><td colspan="6" class="center">جاري التحميل ...</td></tr>
+    </tbody>
+  </table>
   <script>
-  const API_URL = "https://script.google.com/macros/s/AKfycbyf4dEdOls02_pUfV1e93bRvDkj4avzWqKC2ecmEZ-US-dchDMPy96QQ29kGN2sjgZZ/exec"; // ⚠️ غيّر هنا
-  const PASSWORD = "1111";
+    const API_URL = "https://script.google.com/macros/s/AKfycbwYGOQDCU3kC2HFeHi8hxdwWgxKmUYlWwY-w2NzSpCiXrIluwVYwimlK3VyBsCTIGQNIg/exec";
 
-  let allBookings = [];
-  let isLoggedIn = false;
-
-  function handleLogin() {
-    const password = document.getElementById('passwordInput').value;
-    const errorDiv = document.getElementById('loginError');
-
-    if (password === PASSWORD) {
-      isLoggedIn = true;
-      document.getElementById('loginModal').classList.add('hidden');
-      document.getElementById('mainContent').classList.add('active');
-      document.getElementById('logoutBtn').style.display = 'block';
-      loadBookings();
-    } else {
-      errorDiv.textContent = 'كلمة المرور غير صحيحة';
-      errorDiv.style.display = 'block';
-      setTimeout(() => { errorDiv.style.display = 'none'; }, 3000);
-    }
-  }
-
-  function logout() {
-    isLoggedIn = false;
-    document.getElementById('loginModal').classList.remove('hidden');
-    document.getElementById('mainContent').classList.remove('active');
-    document.getElementById('logoutBtn').style.display = 'none';
-    document.getElementById('passwordInput').value = '';
-    document.getElementById('bookingTable').innerHTML = '<tr><td colspan="7" class="center">جاري التحميل ...</td></tr>';
-  }
-
-  // ✅ دالة JSONP محسّنة
-  function jsonpRequest(action, callback) {
-    const cbFunc = 'cb_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-    
-    console.log('📡 محاولة الاتصال بـ:', action);
-    
-    window[cbFunc] = function(data) {
-      console.log('✅ تم استقبال البيانات:', data);
-      callback(data);
-      delete window[cbFunc];
-      if (script.parentNode) {
-        script.parentNode.removeChild(script);
-      }
-    };
-    
-    const script = document.createElement('script');
-    script.src = `${API_URL}?action=${action}&callback=${cbFunc}`;
-    script.charset = 'utf-8';
-    
-    script.onerror = function() {
-      console.error('❌ خطأ في الاتصال للإجراء:', action);
-      console.error('الرابط المستخدم:', `${API_URL}?action=${action}&callback=${cbFunc}`);
-      callback([]);
-      delete window[cbFunc];
-      if (script.parentNode) {
-        script.parentNode.removeChild(script);
-      }
-    };
-    
-    script.onload = function() {
-      console.log('✓ تم تحميل السكريبت بنجاح');
-    };
-    
-    document.head.appendChild(script);
-  }
-
-  function loadBookings() {
-    console.log('جاري تحميل الحجوزات...');
-    jsonpRequest('getBookings', function(data) {
-      console.log('البيانات المستقبلة:', data);
-      allBookings = Array.isArray(data) ? data : [];
-      loadDoctorFilter();
-      applyFilters();
-    });
-  }
-
-  function loadDoctorFilter() {
-    const doctors = [...new Set(allBookings.map(b => b['اسم_الطبيب']).filter(Boolean))];
-    const select = document.getElementById('doctorFilter');
-    const currentValue = select.value;
-
-    doctors.forEach(doctor => {
-      if (!Array.from(select.options).some(opt => opt.value === doctor)) {
-        const option = document.createElement('option');
-        option.value = doctor;
-        option.textContent = doctor;
-        select.appendChild(option);
-      }
-    });
-
-    select.value = currentValue;
-  }
-
-  function applyFilters() {
-    const doctorFilter = document.getElementById('doctorFilter').value;
-    const statusFilter = document.getElementById('statusFilter').value;
-    const dateFrom = document.getElementById('dateFromFilter').value;
-    const dateTo = document.getElementById('dateToFilter').value;
-
-    let filtered = allBookings.filter(booking => {
-      let match = true;
-
-      if (doctorFilter && booking['اسم_الطبيب'] !== doctorFilter) match = false;
-      if (statusFilter && booking['الحالة'] !== statusFilter) match = false;
-
-      if (dateFrom) {
-        const bookingDate = new Date(booking['موعد_الحضور']);
-        if (bookingDate < new Date(dateFrom)) match = false;
-      }
-
-      if (dateTo) {
-        const bookingDate = new Date(booking['موعد_الحضور']);
-        if (bookingDate > new Date(dateTo)) match = false;
-      }
-
-      return match;
-    });
-
-    renderBookings(filtered);
-    renderStats(filtered);
-  }
-
-  function renderBookings(data) {
-    const table = document.getElementById('bookingTable');
-    if (!Array.isArray(data) || data.length === 0) {
-      table.innerHTML = `<tr><td colspan="7" class="center">لا توجد بيانات</td></tr>`;
-      return;
+    function jsonpRequest(action, callback) {
+      const cbFunc = 'cb_' + Date.now();
+      window[cbFunc] = function(data) {
+        callback(data);
+        delete window[cbFunc];
+        script.remove();
+      };
+      const script = document.createElement('script');
+      script.src = `${API_URL}?action=${action}&callback=${cbFunc}`;
+      script.onerror = function() {
+        callback([]);
+        script.remove();
+      };
+      document.body.appendChild(script);
     }
 
-    table.innerHTML = data.map(row => {
-      const statusClass = 
-        row['الحالة'] === 'مؤكد' ? 'badge-success' :
-        row['الحالة'] === 'قيد الانتظار' ? 'badge-warning' : 'badge-danger';
+    function renderBookings(data) {
+      const table = document.getElementById('bookingTable');
+      if (!Array.isArray(data) || data.length === 0) {
+        table.innerHTML = `<tr><td colspan="6" class="center">لا توجد بيانات حجوزات</td></tr>`;
+        return;
+      }
+      table.innerHTML = data.map(row =>
+        `<tr>
+          <td>${row['التاريخ'] || ''}</td>
+          <td>${row['الاسم'] || ''}</td>
+          <td>${row['الهاتف'] || ''}</td>
+          <td>${row['موعد_الحضور'] || ''}</td>
+          <td>${row['الحالة'] || ''}</td>
+          <td>${row['ملاحظات'] || ''}</td>
+        </tr>`
+      ).join('');
+    }
 
-      return `<tr>
-        <td>${row['التاريخ'] ? new Date(row['التاريخ']).toLocaleDateString('ar-EG') : ''}</td>
-        <td>${row['اسم_الطبيب'] || ''}</td>
-        <td>${row['الاسم'] || ''}</td>
-        <td>${row['الهاتف'] || ''}</td>
-        <td>${row['موعد_الحضور'] ? new Date(row['موعد_الحضور']).toLocaleString('ar-EG') : ''}</td>
-        <td><span class="badge ${statusClass}">${row['الحالة'] || ''}</span></td>
-        <td>${row['ملاحظات'] || '-'}</td>
-      </tr>`;
-    }).join('');
-  }
-
-  function renderStats(data) {
-    const statsDiv = document.getElementById('statsSection');
-    const total = data.length;
-    const confirmed = data.filter(b => b['الحالة'] === 'مؤكد').length;
-    const pending = data.filter(b => b['الحالة'] === 'قيد الانتظار').length;
-    const doctors = new Set(data.map(b => b['اسم_الطبيب'])).size;
-
-    statsDiv.innerHTML = `
-      <div class="stat-card">
-        <h3>${total}</h3>
-        <p>إجمالي الحجوزات</p>
-      </div>
-      <div class="stat-card">
-        <h3>${confirmed}</h3>
-        <p>حجوزات مؤكدة</p>
-      </div>
-      <div class="stat-card">
-        <h3>${pending}</h3>
-        <p>حجوزات قيد الانتظار</p>
-      </div>
-      <div class="stat-card">
-        <h3>${doctors}</h3>
-        <p>عدد الأطباء</p>
-      </div>
-    `;
-  }
-
-  function resetFilters() {
-    document.getElementById('doctorFilter').value = '';
-    document.getElementById('statusFilter').value = '';
-    document.getElementById('dateFromFilter').value = '';
-    document.getElementById('dateToFilter').value = '';
-    applyFilters();
-  }
-
-  function printReport() {
-    window.print();
-  }
-
-  window.addEventListener('load', function() {
-    console.log('🚀 تم تحميل الصفحة بنجاح');
-  });
-</script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    jsonpRequest('getBookings', renderBookings);
+  </script>
+</body>
+</html>
 
