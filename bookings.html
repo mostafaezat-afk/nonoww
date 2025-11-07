@@ -302,10 +302,10 @@
         grid-template-columns: 1fr;
       }
       table {
-        font-size: 12px;
+        font-size: 11px;
       }
       th, td {
-        padding: 10px 5px;
+        padding: 8px 4px;
       }
     }
   </style>
@@ -375,8 +375,8 @@
           <th>الطبيب</th>
           <th>الاسم</th>
           <th>الهاتف</th>
-          <th>البريد</th>
           <th>موعد الحضور</th>
+          <th>الوقت</th>
           <th>ملاحظات</th>
           <th>الحالة</th>
         </tr>
@@ -483,6 +483,18 @@
       renderStats(filtered);
     }
 
+    function formatPhone(phone) {
+      // إزالة أي أحرف غير رقمية
+      let cleaned = String(phone).replace(/\D/g, '');
+      
+      // إضافة صفر في البداية إذا لم يكن موجوداً
+      if (cleaned && !cleaned.startsWith('0')) {
+        cleaned = '0' + cleaned;
+      }
+      
+      return cleaned;
+    }
+
     function renderBookings(data) {
       const table = document.getElementById('bookingTable');
       if (!Array.isArray(data) || data.length === 0) {
@@ -498,13 +510,26 @@
         const appointmentDate = new Date(row.موعد_الحضور);
         const registerDate = new Date(row.التاريخ);
 
+        // فصل التاريخ والوقت
+        const dateOnly = appointmentDate.toLocaleDateString('ar-EG', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit'
+        });
+        
+        const timeOnly = appointmentDate.toLocaleTimeString('ar-EG', {
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: true
+        });
+
         return `<tr>
           <td>${registerDate.toLocaleDateString('ar-EG')}</td>
           <td>${row.اسم_الطبيب || 'حجز عام'}</td>
           <td>${row.الاسم || ''}</td>
-          <td>${row.الهاتف || ''}</td>
-          <td>${row.الهاتف || ''}</td>
-          <td>${appointmentDate.toLocaleString('ar-EG')}</td>
+          <td>${formatPhone(row.الهاتف)}</td>
+          <td>${dateOnly}</td>
+          <td>${timeOnly}</td>
           <td>${row.ملاحظات || '-'}</td>
           <td><span class="badge ${statusClass}">${row.الحالة || ''}</span></td>
         </tr>`;
@@ -548,7 +573,3 @@
   </script>
 </body>
 </html>
-
-
-
-
