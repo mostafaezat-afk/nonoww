@@ -1,704 +1,448 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html dir="rtl" lang="ar">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>🏥 لوحة إدارة الحجوزات</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    
-    :root {
-      --primary-red: #d32f2f;
-      --primary-light: #f44336;
-      --primary-dark: #b71c1c;
-      --success: #4caf50;
-      --warning: #ff9800;
-    }
-    
-    body {
-      font-family: 'Cairo', Arial, sans-serif;
-      background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
-      color: #333;
-      min-height: 100vh;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>عرض الحجوزات</title>
+    <style>
+        :root {
+            --primary: #0d7ea2;
+            --primary-light: #1094c0;
+            --secondary: #00bfa5;
+            --accent: #ff6b6b;
+            --success: #26c281;
+            --background: #f5f8fa;
+            --card-bg: #ffffff;
+            --text-primary: #1a1a2e;
+            --text-secondary: #6c757d;
+            --border: #e1e8ed;
+        }
 
-    /* ✅ نافذة تسجيل الدخول المحسّنة */
-    .login-modal {
-      display: flex;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.7);
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-      backdrop-filter: blur(4px);
-    }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-    .login-modal.hidden {
-      display: none;
-    }
+        body {
+            font-family: 'Cairo', 'Segoe UI', Tahoma, sans-serif;
+            background: var(--background);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
 
-    .login-box {
-      background: white;
-      padding: 50px 40px;
-      border-radius: 16px;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-      max-width: 420px;
-      width: 90%;
-      text-align: center;
-      animation: slideUp 0.5s ease-out;
-    }
-    
-    @keyframes slideUp {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 99999;
+            color: white;
+        }
 
-    .login-box h2 {
-      color: var(--primary-red);
-      margin-bottom: 10px;
-      font-size: 26px;
-    }
+        .loading-logo {
+            font-size: 6rem;
+            margin-bottom: 2rem;
+            animation: bounce 2s infinite;
+        }
 
-    .login-subtitle {
-      color: #999;
-      margin-bottom: 30px;
-      font-size: 14px;
-    }
+        @keyframes bounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
 
-    .login-box input {
-      width: 100%;
-      padding: 14px;
-      margin-bottom: 20px;
-      border: 2px solid #e0e0e0;
-      border-radius: 10px;
-      font-size: 16px;
-      font-family: 'Cairo', sans-serif;
-      transition: all 0.3s;
-    }
+        .loading-text {
+            font-size: 2rem;
+            font-weight: 700;
+        }
 
-    .login-box input:focus {
-      outline: none;
-      border-color: var(--primary-red);
-      box-shadow: 0 0 0 4px rgba(211,47,47,0.1);
-    }
+        /* Login Modal */
+        .login-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        }
 
-    .login-box button {
-      width: 100%;
-      padding: 14px;
-      background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-dark) 100%);
-      color: white;
-      border: none;
-      border-radius: 10px;
-      font-size: 16px;
-      font-weight: 700;
-      cursor: pointer;
-      font-family: 'Cairo', sans-serif;
-      transition: all 0.3s;
-    }
+        .login-card {
+            background: white;
+            border-radius: 24px;
+            padding: 3rem;
+            max-width: 450px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
 
-    .login-box button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 25px rgba(211,47,47,0.3);
-    }
+        .login-card h2 {
+            color: var(--primary);
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
 
-    .login-error {
-      color: #dc3545;
-      margin-bottom: 15px;
-      display: none;
-      background: #ffebee;
-      padding: 10px;
-      border-radius: 8px;
-      border-right: 3px solid #dc3545;
-    }
+        .login-input {
+            width: 100%;
+            padding: 1.2rem;
+            font-size: 1.1rem;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            font-family: inherit;
+        }
 
-    .main-content {
-      display: none;
-      padding: 20px;
-    }
+        .login-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(13, 126, 162, 0.1);
+        }
 
-    .main-content.active {
-      display: block;
-    }
+        .login-btn {
+            width: 100%;
+            padding: 1.2rem;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+        }
 
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 30px;
-      flex-wrap: wrap;
-      gap: 15px;
-    }
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+            display: none;
+        }
 
-    h1 {
-      color: var(--primary-red);
-      font-size: 28px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
+        .container.active {
+            display: block;
+        }
 
-    .logout-btn {
-      background: var(--primary-red);
-      color: white;
-      border: none;
-      padding: 12px 25px;
-      border-radius: 10px;
-      cursor: pointer;
-      font-family: 'Cairo', sans-serif;
-      font-weight: 600;
-      transition: all 0.3s;
-    }
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            padding: 2rem;
+            border-radius: 20px;
+            color: white;
+            text-align: center;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(13, 126, 162, 0.3);
+        }
 
-    .logout-btn:hover {
-      background: var(--primary-dark);
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(211,47,47,0.3);
-    }
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
 
-    /* ✅ قسم التصفية المحسّن */
-    .filters-section {
-      background: white;
-      padding: 25px;
-      border-radius: 14px;
-      margin-bottom: 30px;
-      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 15px;
-    }
+        .filters {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 16px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
 
-    .filter-group {
-      display: flex;
-      flex-direction: column;
-    }
+        .filter-input {
+            flex: 1;
+            min-width: 200px;
+            padding: 0.8rem 1rem;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-size: 1rem;
+            font-family: inherit;
+        }
 
-    .filter-group label {
-      font-weight: 600;
-      margin-bottom: 8px;
-      color: #555;
-      font-size: 14px;
-    }
+        .filter-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
 
-    .filter-group select,
-    .filter-group input {
-      padding: 11px;
-      border: 2px solid #e0e0e0;
-      border-radius: 10px;
-      font-family: 'Cairo', sans-serif;
-      font-size: 14px;
-      transition: all 0.3s;
-    }
+        .bookings-table {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        }
 
-    .filter-group select:focus,
-    .filter-group input:focus {
-      outline: none;
-      border-color: var(--primary-red);
-      box-shadow: 0 0 0 3px rgba(211,47,47,0.1);
-    }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
 
-    .filter-buttons {
-      display: flex;
-      gap: 10px;
-      align-items: flex-end;
-      flex-wrap: wrap;
-    }
+        thead {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+        }
 
-    .btn {
-      padding: 11px 20px;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      font-weight: 600;
-      font-family: 'Cairo', sans-serif;
-      transition: all 0.3s;
-    }
+        th {
+            padding: 1.2rem;
+            text-align: right;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
 
-    .btn-primary {
-      background: var(--primary-red);
-      color: white;
-    }
+        td {
+            padding: 1rem 1.2rem;
+            border-bottom: 1px solid var(--border);
+        }
 
-    .btn-primary:hover {
-      background: var(--primary-dark);
-      transform: translateY(-2px);
-    }
+        tbody tr:hover {
+            background: #f8f9fa;
+        }
 
-    .btn-secondary {
-      background: #f0f0f0;
-      color: #333;
-    }
+        .status {
+            display: inline-block;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
 
-    .btn-secondary:hover {
-      background: #e0e0e0;
-    }
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
 
-    .btn-print {
-      background: var(--success);
-      color: white;
-    }
+        .status-confirmed {
+            background: #d4edda;
+            color: #155724;
+        }
 
-    .btn-print:hover {
-      background: #45a049;
-      transform: translateY(-2px);
-    }
+        .status-cancelled {
+            background: #f8d7da;
+            color: #721c24;
+        }
 
-    /* ✅ كارتات الإحصائيات */
-    .stats-section {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 15px;
-      margin-bottom: 30px;
-    }
+        .btn-action {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin: 0 0.2rem;
+            transition: all 0.2s;
+        }
 
-    .stat-card {
-      background: white;
-      padding: 25px;
-      border-radius: 14px;
-      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-      text-align: center;
-      border-top: 4px solid var(--primary-red);
-      transition: all 0.3s;
-    }
+        .btn-confirm {
+            background: var(--success);
+            color: white;
+        }
 
-    .stat-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
-    }
+        .btn-cancel {
+            background: var(--accent);
+            color: white;
+        }
 
-    .stat-card h3 {
-      color: var(--primary-red);
-      font-size: 32px;
-      margin-bottom: 10px;
-      font-weight: 700;
-    }
+        .btn-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
 
-    .stat-card p {
-      color: #666;
-      font-size: 14px;
-    }
-
-    /* ✅ جدول محسّن */
-    .table-container {
-      background: white;
-      border-radius: 14px;
-      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-      overflow: hidden;
-      overflow-x: auto;
-    }
-
-    table {
-      border-collapse: collapse;
-      width: 100%;
-      background: white;
-    }
-
-    th, td {
-      border: 1px solid #e0e0e0;
-      padding: 15px 12px;
-      text-align: right;
-      font-size: 13px;
-    }
-
-    th {
-      background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-dark) 100%);
-      color: white;
-      font-weight: 700;
-      position: sticky;
-      top: 0;
-    }
-
-    tr:nth-child(even) {
-      background: #f9f9f9;
-    }
-
-    tr:hover {
-      background: #f0f0f0;
-    }
-
-    .center {
-      text-align: center;
-    }
-
-    .badge {
-      display: inline-block;
-      padding: 5px 12px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 600;
-    }
-
-    .badge-success {
-      background: #c8e6c9;
-      color: #2e7d32;
-    }
-
-    .badge-warning {
-      background: #ffe0b2;
-      color: #e65100;
-    }
-
-    .badge-danger {
-      background: #ffcdd2;
-      color: #c62828;
-    }
-
-    .no-data {
-      text-align: center;
-      padding: 60px 20px;
-      color: #999;
-      font-size: 16px;
-    }
-
-    /* ✅ تحسينات الطباعة */
-    @media print {
-      .filters-section, .logout-btn, .header {
-        display: none;
-      }
-      body {
-        background: white;
-        padding: 0;
-      }
-      .main-content {
-        padding: 20px;
-      }
-    }
-
-    /* ✅ موبايل responsive */
-    @media (max-width: 768px) {
-      body {
-        padding: 10px;
-      }
-
-      .main-content {
-        padding: 15px;
-      }
-
-      h1 {
-        font-size: 22px;
-      }
-
-      .filters-section {
-        grid-template-columns: 1fr;
-        padding: 15px;
-      }
-
-      .filter-buttons {
-        grid-column: 1/-1;
-      }
-
-      table {
-        font-size: 11px;
-      }
-
-      th, td {
-        padding: 10px 8px;
-      }
-
-      .stat-card {
-        padding: 15px;
-      }
-
-      .stat-card h3 {
-        font-size: 24px;
-      }
-
-      .login-box {
-        padding: 35px 25px;
-      }
-
-      .login-box h2 {
-        font-size: 22px;
-      }
-    }
-
-    /* ✅ تأثيرات التحميل */
-    .loading {
-      opacity: 0.6;
-      pointer-events: none;
-    }
-  </style>
+        @media (max-width: 768px) {
+            .header h1 { font-size: 2rem; }
+            .filters { flex-direction: column; }
+            
+            table {
+                font-size: 0.9rem;
+            }
+            
+            th, td {
+                padding: 0.8rem;
+            }
+        }
+    </style>
 </head>
 <body>
-  <!-- ✅ نافذة تسجيل الدخول -->
-  <div class="login-modal" id="loginModal">
-    <div class="login-box">
-      <h2>🔐 دخول المدير</h2>
-      <p class="login-subtitle">أدخل كلمة المرور للوصول إلى لوحة التحكم</p>
-      <div class="login-error" id="loginError"></div>
-      <input type="password" id="passwordInput" placeholder="كلمة المرور" onkeypress="if(event.key==='Enter') handleLogin()">
-      <button onclick="handleLogin()">🔓 دخول</button>
-    </div>
-  </div>
-
-  <!-- ✅ المحتوى الرئيسي -->
-  <div class="main-content" id="mainContent">
-    <div class="header">
-      <h1>📊 لوحة إدارة الحجوزات</h1>
-      <button class="logout-btn" onclick="logout()">🚪 تسجيل خروج</button>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-logo">📅</div>
+        <div class="loading-text">جاري التحميل...</div>
     </div>
 
-    <!-- ✅ أدوات التصفية -->
-    <div class="filters-section">
-      <div class="filter-group">
-        <label>📋 الطبيب:</label>
-        <select id="doctorFilter" onchange="applyFilters()">
-          <option value="">جميع الأطباء</option>
-        </select>
-      </div>
-
-      <div class="filter-group">
-        <label>✔️ الحالة:</label>
-        <select id="statusFilter" onchange="applyFilters()">
-          <option value="">جميع الحالات</option>
-          <option value="مؤكد">✅ مؤكد</option>
-          <option value="قيد الانتظار">⏳ قيد الانتظار</option>
-          <option value="ملغى">❌ ملغى</option>
-        </select>
-      </div>
-
-      <div class="filter-group">
-        <label>📅 من التاريخ:</label>
-        <input type="date" id="dateFromFilter" onchange="applyFilters()">
-      </div>
-
-      <div class="filter-group">
-        <label>📅 إلى التاريخ:</label>
-        <input type="date" id="dateToFilter" onchange="applyFilters()">
-      </div>
-
-      <div class="filter-buttons">
-        <button class="btn btn-primary" onclick="applyFilters()">🔍 بحث</button>
-        <button class="btn btn-secondary" onclick="resetFilters()">🔄 إعادة تعيين</button>
-        <button class="btn btn-print" onclick="window.print()">🖨️ طباعة</button>
-      </div>
+    <!-- Login Modal -->
+    <div class="login-modal" id="loginModal">
+        <div class="login-card">
+            <h2>🔐 تسجيل الدخول</h2>
+            <input type="password" class="login-input" id="loginPassword" placeholder="كلمة المرور" autocomplete="off">
+            <button class="login-btn" onclick="checkLogin()">دخول</button>
+        </div>
     </div>
 
-    <!-- ✅ الإحصائيات -->
-    <div class="stats-section" id="statsSection">
-      <div class="stat-card">
-        <h3>-</h3>
-        <p>جاري التحميل...</p>
-      </div>
+    <!-- Main Container -->
+    <div class="container" id="mainContainer">
+        <div class="header">
+            <h1>📅 عرض الحجوزات</h1>
+            <p>إدارة ومتابعة جميع الحجوزات</p>
+        </div>
+
+        <div class="filters">
+            <input type="text" class="filter-input" id="searchName" placeholder="🔍 البحث بالاسم...">
+            <input type="text" class="filter-input" id="searchPhone" placeholder="📱 البحث بالهاتف...">
+            <input type="date" class="filter-input" id="filterDate">
+            <select class="filter-input" id="filterDoctor">
+                <option value="">جميع الأطباء</option>
+            </select>
+        </div>
+
+        <div class="bookings-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>الاسم</th>
+                        <th>الهاتف</th>
+                        <th>الطبيب</th>
+                        <th>التاريخ</th>
+                        <th>الوقت</th>
+                        <th>الحالة</th>
+                        <th>الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody id="bookingsBody">
+                    <tr>
+                        <td colspan="7" style="text-align:center;padding:2rem;color:#999;">جاري تحميل البيانات...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
-    <!-- ✅ جدول الحجوزات -->
-    <div class="table-container">
-      <table>
-        <thead>
-          <tr>
-            <th>📅 تاريخ التسجيل</th>
-            <th>👨‍⚕️ الطبيب</th>
-            <th>👤 الاسم</th>
-            <th>📱 الهاتف</th>
-            <th>📅 موعد الحضور</th>
-            <th>🕐 الوقت</th>
-            <th>📝 ملاحظات</th>
-            <th>✔️ الحالة</th>
-          </tr>
-        </thead>
-        <tbody id="bookingTable">
-          <tr>
-            <td colspan="8" class="center">⏳ جاري تحميل البيانات...</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
+    <script>
+        let isLoggedIn = false;
+        let allBookings = [];
 
-  <script>
-    const API_URL = 'https://script.google.com/macros/s/AKfycbxy-MXcFU7BaLUBq5AU0207KxCF8XumoAz7IfdmzXpdGOzn9irkHXFxnaK9KBlNzU-A/exec';
-    const PASSWORD_HASH = 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855'; // SHA256 for empty string - غيره
-    const PASSWORD = '1111'; // ✅ غيّر هذا الرقم
-
-    let allBookings = [];
-    let isLoggedIn = false;
-
-    // ✅ معالج تسجيل الدخول
-    function handleLogin() {
-      const password = document.getElementById('passwordInput').value;
-      const errorDiv = document.getElementById('loginError');
-
-      if (password === PASSWORD) {
-        isLoggedIn = true;
-        localStorage.setItem('adminSession', Date.now());
-        document.getElementById('loginModal').classList.add('hidden');
-        document.getElementById('mainContent').classList.add('active');
-        loadBookings();
-      } else {
-        errorDiv.textContent = '❌ كلمة المرور غير صحيحة';
-        errorDiv.style.display = 'block';
-        document.getElementById('passwordInput').value = '';
-        setTimeout(() => { errorDiv.style.display = 'none'; }, 3000);
-      }
-    }
-
-    // ✅ تسجيل الخروج
-    function logout() {
-      isLoggedIn = false;
-      localStorage.removeItem('adminSession');
-      document.getElementById('loginModal').classList.remove('hidden');
-      document.getElementById('mainContent').classList.remove('active');
-      document.getElementById('passwordInput').value = '';
-      allBookings = [];
-    }
-
-    // ✅ تحميل الحجوزات
-    function loadBookings() {
-      document.getElementById('bookingTable').innerHTML = '<tr><td colspan="8" class="center">⏳ جاري التحميل...</td></tr>';
-      
-      fetch(`${API_URL}?action=getBookings`)
-        .then(response => response.json())
-        .then(data => {
-          allBookings = Array.isArray(data) ? data : [];
-          loadDoctorFilter();
-          applyFilters();
-        })
-        .catch(error => {
-          console.error('خطأ:', error);
-          document.getElementById('bookingTable').innerHTML = '<tr><td colspan="8" class="center">❌ خطأ في تحميل البيانات</td></tr>';
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                document.getElementById('loadingScreen').style.display = 'none';
+            }, 1500);
         });
-    }
 
-    // ✅ تحميل قائمة الأطباء
-    function loadDoctorFilter() {
-      const doctors = [...new Set(allBookings.map(b => b.اسم_الطبيب).filter(Boolean))];
-      const select = document.getElementById('doctorFilter');
-      const currentValue = select.value;
-
-      const existingValues = new Set(Array.from(select.options).map(opt => opt.value));
-
-      doctors.forEach(doctor => {
-        if (!existingValues.has(doctor)) {
-          const option = document.createElement('option');
-          option.value = doctor;
-          option.textContent = doctor;
-          select.appendChild(option);
-        }
-      });
-
-      select.value = currentValue;
-    }
-
-    // ✅ تطبيق التصفية
-    function applyFilters() {
-      const doctorFilter = document.getElementById('doctorFilter').value;
-      const statusFilter = document.getElementById('statusFilter').value;
-      const dateFrom = document.getElementById('dateFromFilter').value;
-      const dateTo = document.getElementById('dateToFilter').value;
-
-      let filtered = allBookings.filter(booking => {
-        let match = true;
-
-        if (doctorFilter && booking.اسم_الطبيب !== doctorFilter) match = false;
-        if (statusFilter && booking.الحالة !== statusFilter) match = false;
-
-        if (dateFrom) {
-          const bookingDate = new Date(booking.موعد_الحضور);
-          if (bookingDate < new Date(dateFrom)) match = false;
+        function checkLogin() {
+            const password = document.getElementById('loginPassword').value;
+            
+            google.script.run
+                .withSuccessHandler(function(result) {
+                    if (result) {
+                        isLoggedIn = true;
+                        document.getElementById('loginModal').style.display = 'none';
+                        document.getElementById('mainContainer').classList.add('active');
+                        loadBookings();
+                        loadDoctors();
+                    } else {
+                        alert('❌ كلمة المرور غير صحيحة');
+                    }
+                })
+                .checkAdminPassword(password);
         }
 
-        if (dateTo) {
-          const bookingDate = new Date(booking.موعد_الحضور);
-          if (bookingDate > new Date(dateTo)) match = false;
+        function loadBookings() {
+            google.script.run
+                .withSuccessHandler(function(bookings) {
+                    allBookings = bookings;
+                    displayBookings(bookings);
+                })
+                .getAllBookings();
         }
 
-        return match;
-      });
+        function loadDoctors() {
+            google.script.run
+                .withSuccessHandler(function(doctors) {
+                    const select = document.getElementById('filterDoctor');
+                    doctors.forEach(doc => {
+                        const option = document.createElement('option');
+                        option.value = doc.name;
+                        option.textContent = doc.name;
+                        select.appendChild(option);
+                    });
+                })
+                .getDoctors();
+        }
 
-      renderBookings(filtered);
-      renderStats(filtered);
-    }
+        function displayBookings(bookings) {
+            const tbody = document.getElementById('bookingsBody');
+            
+            if (!bookings || bookings.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:2rem;color:#999;">لا توجد حجوزات</td></tr>';
+                return;
+            }
 
-    // ✅ عرض الحجوزات في الجدول
-    function renderBookings(data) {
-      const table = document.getElementById('bookingTable');
-      
-      if (!Array.isArray(data) || data.length === 0) {
-        table.innerHTML = `<tr><td colspan="8" class="center">📭 لا توجد حجوزات</td></tr>`;
-        return;
-      }
+            tbody.innerHTML = bookings.map(booking => `
+                <tr>
+                    <td>${booking.name}</td>
+                    <td>${booking.phone}</td>
+                    <td>${booking.doctor}</td>
+                    <td>${booking.date}</td>
+                    <td>${booking.time}</td>
+                    <td><span class="status status-${booking.status}">${booking.statusText}</span></td>
+                    <td>
+                        <button class="btn-action btn-confirm" onclick="confirmBooking('${booking.id}')">تأكيد</button>
+                        <button class="btn-action btn-cancel" onclick="cancelBooking('${booking.id}')">إلغاء</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
 
-      table.innerHTML = data.map(row => {
-        const statusClass = 
-          row.الحالة === 'مؤكد' ? 'badge-success' :
-          row.الحالة === 'قيد الانتظار' ? 'badge-warning' : 'badge-danger';
+        function confirmBooking(id) {
+            if (confirm('هل تريد تأكيد هذا الحجز؟')) {
+                google.script.run
+                    .withSuccessHandler(() => {
+                        alert('✅ تم تأكيد الحجز');
+                        loadBookings();
+                    })
+                    .updateBookingStatus(id, 'confirmed');
+            }
+        }
 
-        const appointmentDate = new Date(row.موعد_الحضور);
-        const registerDate = new Date(row.التاريخ);
+        function cancelBooking(id) {
+            if (confirm('هل تريد إلغاء هذا الحجز؟')) {
+                google.script.run
+                    .withSuccessHandler(() => {
+                        alert('✅ تم إلغاء الحجز');
+                        loadBookings();
+                    })
+                    .updateBookingStatus(id, 'cancelled');
+            }
+        }
 
-        const dateOnly = appointmentDate.toLocaleDateString('ar-EG');
-        const timeOnly = appointmentDate.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
+        // Filters
+        document.getElementById('searchName').addEventListener('input', applyFilters);
+        document.getElementById('searchPhone').addEventListener('input', applyFilters);
+        document.getElementById('filterDate').addEventListener('change', applyFilters);
+        document.getElementById('filterDoctor').addEventListener('change', applyFilters);
 
-        return `<tr>
-          <td>${registerDate.toLocaleDateString('ar-EG')}</td>
-          <td>${row.اسم_الطبيب || '-'}</td>
-          <td>${row.الاسم || '-'}</td>
-          <td>${row.الهاتف || '-'}</td>
-          <td>${dateOnly}</td>
-          <td>${timeOnly}</td>
-          <td>${row.ملاحظات || '-'}</td>
-          <td><span class="badge ${statusClass}">${row.الحالة || '-'}</span></td>
-        </tr>`;
-      }).join('');
-    }
+        function applyFilters() {
+            const name = document.getElementById('searchName').value.toLowerCase();
+            const phone = document.getElementById('searchPhone').value;
+            const date = document.getElementById('filterDate').value;
+            const doctor = document.getElementById('filterDoctor').value;
 
-    // ✅ عرض الإحصائيات
-    function renderStats(data) {
-      const statsDiv = document.getElementById('statsSection');
-      const total = data.length;
-      const confirmed = data.filter(b => b.الحالة === 'مؤكد').length;
-      const pending = data.filter(b => b.الحالة === 'قيد الانتظار').length;
-      const cancelled = data.filter(b => b.الحالة === 'ملغى').length;
+            const filtered = allBookings.filter(booking => {
+                return (!name || booking.name.toLowerCase().includes(name)) &&
+                       (!phone || booking.phone.includes(phone)) &&
+                       (!date || booking.date === date) &&
+                       (!doctor || booking.doctor === doctor);
+            });
 
-      statsDiv.innerHTML = `
-        <div class="stat-card">
-          <h3>${total}</h3>
-          <p>إجمالي الحجوزات</p>
-        </div>
-        <div class="stat-card">
-          <h3>${confirmed}</h3>
-          <p>✅ حجوزات مؤكدة</p>
-        </div>
-        <div class="stat-card">
-          <h3>${pending}</h3>
-          <p>⏳ قيد الانتظار</p>
-        </div>
-        <div class="stat-card">
-          <h3>${cancelled}</h3>
-          <p>❌ ملغاة</p>
-        </div>
-      `;
-    }
-
-    // ✅ إعادة تعيين التصفية
-    function resetFilters() {
-      document.getElementById('doctorFilter').value = '';
-      document.getElementById('statusFilter').value = '';
-      document.getElementById('dateFromFilter').value = '';
-      document.getElementById('dateToFilter').value = '';
-      applyFilters();
-    }
-
-    // ✅ التحقق من الجلسة عند التحميل
-    document.addEventListener('DOMContentLoaded', function() {
-      const session = localStorage.getItem('adminSession');
-      if (session && Date.now() - parseInt(session) < 86400000) { // 24 ساعة
-        isLoggedIn = true;
-        document.getElementById('loginModal').classList.add('hidden');
-        document.getElementById('mainContent').classList.add('active');
-        loadBookings();
-      }
-    });
-  </script>
+            displayBookings(filtered);
+        }
+    </script>
 </body>
 </html>
