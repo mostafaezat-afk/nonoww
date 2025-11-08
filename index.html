@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🏥 نظام الحجز الإلكتروني للعيادات</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>🏥 نظام الحجز الإلكتروني</title>
   <style>
     * { 
       margin: 0; 
@@ -12,16 +12,22 @@
     }
     
     :root {
-      --primary-red: #d32f2f;       /* ✅ أحمر الهلال */
-      --primary-light: #f44336;
-      --primary-dark: #b71c1c;
-      --success: #4caf50;
+      --primary: #0d7ea2;
+      --primary-light: #1094c0;
+      --primary-dark: #085a77;
+      --secondary: #00bfa5;
+      --success: #26c281;
       --warning: #ff9800;
+      --background: #f5f8fa;
+      --card-bg: #ffffff;
+      --text-primary: #1a1a2e;
+      --text-secondary: #6c757d;
+      --border: #e1e8ed;
     }
     
     body {
-      font-family: 'Cairo', sans-serif;
-      background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-dark) 100%);
+      font-family: 'Cairo', 'Segoe UI', Tahoma, sans-serif;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
       min-height: 100vh;
       display: flex;
       align-items: center;
@@ -84,7 +90,7 @@
     }
 
     h1 {
-      color: var(--primary-red);
+      color: var(--primary);
       font-size: 32px;
       margin-bottom: 10px;
       font-weight: 700;
@@ -92,10 +98,10 @@
     }
 
     .subtitle {
-      color: #666;
+      color: var(--text-secondary);
       font-size: 16px;
       margin-bottom: 40px;
-      line-height: 1.5;
+      line-height: 1.6;
     }
 
     .button-group {
@@ -143,54 +149,57 @@
       left: 100%;
     }
 
-    /* ✅ زر الحجز - أحمر */
+    /* ✅ زر الحجز - أزرق */
     .btn-book {
-      background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-dark) 100%);
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
       color: white;
       font-size: 17px;
       font-weight: 700;
+      box-shadow: 0 8px 20px rgba(13, 126, 162, 0.3);
     }
 
     .btn-book:hover {
-      background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%);
-      box-shadow: 0 12px 35px rgba(211, 47, 47, 0.4);
+      background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
+      box-shadow: 0 12px 35px rgba(13, 126, 162, 0.5);
     }
 
     /* ✅ زر المدير - أخضر */
     .btn-admin {
-      background: linear-gradient(135deg, #4caf50 0%, #388e3c 100%);
+      background: linear-gradient(135deg, var(--success) 0%, #1fbf8f 100%);
       color: white;
+      box-shadow: 0 8px 20px rgba(38, 194, 129, 0.3);
     }
 
     .btn-admin:hover {
-      background: linear-gradient(135deg, #45a049 0%, #2e7d32 100%);
-      box-shadow: 0 12px 35px rgba(76, 175, 80, 0.4);
+      background: linear-gradient(135deg, #1fbf8f 0%, var(--success) 100%);
+      box-shadow: 0 12px 35px rgba(38, 194, 129, 0.5);
     }
 
     /* ✅ زر الإعدادات - برتقالي */
     .btn-settings {
-      background: linear-gradient(135deg, #ff9800 0%, #e65100 100%);
+      background: linear-gradient(135deg, var(--warning) 0%, #e65100 100%);
       color: white;
+      box-shadow: 0 8px 20px rgba(255, 152, 0, 0.3);
     }
 
     .btn-settings:hover {
-      background: linear-gradient(135deg, #fb8c00 0%, #d84315 100%);
-      box-shadow: 0 12px 35px rgba(255, 152, 0, 0.4);
+      background: linear-gradient(135deg, #fb8c00 0%, var(--warning) 100%);
+      box-shadow: 0 12px 35px rgba(255, 152, 0, 0.5);
     }
 
     .divider {
       margin: 25px 0;
       height: 1px;
-      background: linear-gradient(90deg, transparent, #e0e0e0, transparent);
+      background: linear-gradient(90deg, transparent, var(--border), transparent);
     }
 
     .features {
-      background: #f9f9f9;
+      background: var(--background);
       padding: 20px;
       border-radius: 12px;
       margin: 20px 0;
       font-size: 13px;
-      color: #666;
+      color: var(--text-secondary);
       line-height: 1.8;
     }
 
@@ -206,12 +215,12 @@
       align-items: center;
       gap: 8px;
       font-size: 13px;
-      color: #555;
+      color: var(--text-primary);
     }
 
     .feature-item::before {
       content: '✓';
-      color: var(--primary-red);
+      color: var(--primary);
       font-weight: 700;
       font-size: 16px;
     }
@@ -221,12 +230,12 @@
       font-size: 12px;
       margin-top: 30px;
       padding-top: 20px;
-      border-top: 1px solid #eee;
+      border-top: 1px solid var(--border);
     }
 
     .contact-hint {
       font-size: 12px;
-      color: #aaa;
+      color: var(--text-secondary);
       margin-top: 10px;
       font-style: italic;
     }
@@ -292,7 +301,7 @@
 </head>
 <body>
   <div class="container">
-    <!-- ✅ شعار الهلال الأحمر -->
+    <!-- ✅ شعار -->
     <div class="logo-section">
       <div class="logo-icon">🏥</div>
       <h1>نظام الحجز الإلكتروني</h1>
@@ -315,17 +324,17 @@
 
     <div class="button-group">
       <!-- ✅ زر الحجز -->
-      <button class="btn-book" onclick="window.location.href='https://script.google.com/macros/s/AKfycbzf5iy8yCdMqnaTe5_SLuh-qd50KGc4Q65PfJvVNIGXgwAjMOQ_w2qsuA8Vz_ofd7kW/exec'">
+      <button class="btn-book" onclick="window.location.href='https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec'">
         📅 حجز موعد جديد
       </button>
 
       <!-- ✅ زر لوحة الحجوزات -->
-      <button class="btn-admin" onclick="window.location.href='https://script.google.com/macros/s/AKfycbzf5iy8yCdMqnaTe5_SLuh-qd50KGc4Q65PfJvVNIGXgwAjMOQ_w2qsuA8Vz_ofd7kW/exec?page=bookings.html'">
+      <button class="btn-admin" onclick="window.location.href='https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec?page=bookings'">
         📋 لوحة إدارة الحجوزات
       </button>
 
       <!-- ✅ زر الإعدادات -->
-      <button class="btn-settings" onclick="window.location.href='https://script.google.com/macros/s/AKfycbzf5iy8yCdMqnaTe5_SLuh-qd50KGc4Q65PfJvVNIGXgwAjMOQ_w2qsuA8Vz_ofd7kW/exec?page=Settings'">
+      <button class="btn-settings" onclick="window.location.href='https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec?page=settings'">
         ⚙️ الإعدادات والأطباء
       </button>
     </div>
