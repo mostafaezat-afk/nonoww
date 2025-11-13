@@ -80,323 +80,199 @@
         </div>
     </div>
     <script>
-        // ضع رابط الإطار هنا - Replace with your frame URL
-        const FRAME_URL = 'https://raw.githubusercontent.com/mostafaezat-afk/nonoww/main/6_n.png';
+        (function() {
+            const allowedDomains = ['https://mostafaezat-afk.github.io/nonoww/ta.html', 'localhost', '127.0.0.1'];
+            const currentDomain = window.location.hostname;
+            const isAllowed = allowedDomains.some(d => currentDomain.includes(d));
+            
+            if (!isAllowed && !currentDomain.includes('claude.ai')) {
+                document.body.innerHTML = '<div style="text-align:center;padding:50px;"><h1>⚠️ غير مصرح</h1><p>هذه الأداة تعمل فقط على النطاق المصرح به</p></div>';
+                throw new Error('Unauthorized domain');
+            }
+        })();
         
-        let userImage = null;
-        let frameImage = null;
-        let scale = 100;
-        let posX = 0;
-        let posY = 0;
-        let rotation = 0;
-        let isDragging = false;
-        let startX, startY;
-
-        const uploadArea = document.getElementById('uploadArea');
-        const fileInput = document.getElementById('fileInput');
-        const uploadSection = document.getElementById('uploadSection');
-        const editorSection = document.getElementById('editorSection');
-        const canvas = document.getElementById('editorCanvas');
-        const ctx = canvas.getContext('2d');
-
-        const scaleSlider = document.getElementById('scaleSlider');
-        const xSlider = document.getElementById('xSlider');
-        const ySlider = document.getElementById('ySlider');
-        const rotationSlider = document.getElementById('rotationSlider');
-
-        const scaleValue = document.getElementById('scaleValue');
-        const xValue = document.getElementById('xValue');
-        const yValue = document.getElementById('yValue');
-        const rotationValue = document.getElementById('rotationValue');
-
-        // تحميل الإطار تلقائياً
-        function loadFrame() {
-            const img = new Image();
-            img.crossOrigin = 'anonymous';
-            img.onload = () => {
-                frameImage = img;
-            };
-            img.onerror = () => {
-                console.error('فشل تحميل الإطار من الرابط');
-            };
-            img.src = FRAME_URL;
-        }
-
-        loadFrame();
-
-        // رفع صورة المستخدم
-        uploadArea.addEventListener('click', () => fileInput.click());
+        const _0x4f2a = ['aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL21vc3RhZmFlemF0LWFmay9ub25vd3cvbWFpbi82X24ucG5n'];
+        const _0x7b3c = (s) => atob(s);
+        const _0x9d1e = () => _0x7b3c(_0x4f2a[0]);
         
-        fileInput.addEventListener('change', (e) => {
-            if (e.target.files.length > 0) {
-                loadUserImage(e.target.files[0]);
+        let _$={u:null,f:null,s:100,x:0,y:0,r:0,d:false,sx:0,sy:0};
+        const _e=(i)=>document.getElementById(i);
+        const _d={ua:_e('uploadArea'),fi:_e('fileInput'),us:_e('uploadSection'),es:_e('editorSection'),cv:_e('editorCanvas'),ss:_e('scaleSlider'),xs:_e('xSlider'),ys:_e('ySlider'),rs:_e('rotationSlider'),sv:_e('scaleValue'),xv:_e('xValue'),yv:_e('yValue'),rv:_e('rotationValue')};
+        const _c=_d.cv.getContext('2d');
+        
+        (function(){
+            const img=new Image();
+            img.crossOrigin='anonymous';
+            img.onload=()=>{_$.f=img;};
+            img.onerror=()=>console.error('Frame load failed');
+            setTimeout(()=>{img.src=_0x9d1e();},100);
+        })();
+        
+        document.addEventListener('contextmenu',e=>e.preventDefault());
+        document.addEventListener('keydown',e=>{
+            if(e.key==='F12'||e.ctrlKey&&e.shiftKey&&e.key==='I'||e.ctrlKey&&e.shiftKey&&e.key==='J'||e.ctrlKey&&e.key==='U'){
+                e.preventDefault();
+                return false;
             }
         });
-
-        uploadArea.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            uploadArea.classList.add('dragover');
-        });
-
-        uploadArea.addEventListener('dragleave', () => {
-            uploadArea.classList.remove('dragover');
-        });
-
-        uploadArea.addEventListener('drop', (e) => {
-            e.preventDefault();
-            uploadArea.classList.remove('dragover');
-            if (e.dataTransfer.files.length > 0) {
-                loadUserImage(e.dataTransfer.files[0]);
-            }
-        });
-
-        function loadUserImage(file) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const img = new Image();
-                img.onload = () => {
-                    userImage = img;
-                    showEditor();
-                };
-                img.src = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        }
-
-        function showEditor() {
-            uploadSection.style.display = 'none';
-            editorSection.classList.add('active');
-            
-            canvas.width = 600;
-            canvas.height = 600;
-            
-            drawCanvas();
-        }
-
-        // التحكم في التكبير والتصغير
-        scaleSlider.addEventListener('input', (e) => {
-            scale = parseInt(e.target.value);
-            scaleValue.textContent = scale + '%';
-            drawCanvas();
-        });
-
-        // التحكم في الموضع الأفقي
-        xSlider.addEventListener('input', (e) => {
-            posX = parseInt(e.target.value);
-            xValue.textContent = posX;
-            drawCanvas();
-        });
-
-        // التحكم في الموضع العمودي
-        ySlider.addEventListener('input', (e) => {
-            posY = parseInt(e.target.value);
-            yValue.textContent = posY;
-            drawCanvas();
-        });
-
-        // التحكم في الدوران
-        rotationSlider.addEventListener('input', (e) => {
-            rotation = parseInt(e.target.value);
-            rotationValue.textContent = rotation + '°';
-            drawCanvas();
-        });
-
-        // السحب والإفلات على الكانفاس
-        canvas.addEventListener('mousedown', startDrag);
-        canvas.addEventListener('mousemove', drag);
-        canvas.addEventListener('mouseup', endDrag);
-        canvas.addEventListener('mouseleave', endDrag);
-
-        // دعم اللمس
-        canvas.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            const touch = e.touches[0];
-            const mouseEvent = new MouseEvent('mousedown', {
-                clientX: touch.clientX,
-                clientY: touch.clientY
-            });
-            canvas.dispatchEvent(mouseEvent);
-        });
-
-        canvas.addEventListener('touchmove', (e) => {
-            e.preventDefault();
-            const touch = e.touches[0];
-            const mouseEvent = new MouseEvent('mousemove', {
-                clientX: touch.clientX,
-                clientY: touch.clientY
-            });
-            canvas.dispatchEvent(mouseEvent);
-        });
-
-        canvas.addEventListener('touchend', (e) => {
-            e.preventDefault();
-            const mouseEvent = new MouseEvent('mouseup', {});
-            canvas.dispatchEvent(mouseEvent);
-        });
-
-        function startDrag(e) {
-            isDragging = true;
-            startX = e.offsetX;
-            startY = e.offsetY;
-        }
-
-        function drag(e) {
-            if (!isDragging) return;
-            
-            const deltaX = e.offsetX - startX;
-            const deltaY = e.offsetY - startY;
-            
-            posX += deltaX;
-            posY += deltaY;
-            
-            xSlider.value = posX;
-            ySlider.value = posY;
-            xValue.textContent = posX;
-            yValue.textContent = posY;
-            
-            startX = e.offsetX;
-            startY = e.offsetY;
-            
-            drawCanvas();
-        }
-
-        function endDrag() {
-            isDragging = false;
-        }
-
-        function drawCanvas() {
-            if (!userImage) return;
-
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            const centerX = canvas.width / 2;
-            const centerY = canvas.height / 2;
-
-            ctx.save();
-            ctx.translate(centerX, centerY);
-            ctx.rotate((rotation * Math.PI) / 180);
-            ctx.translate(-centerX, -centerY);
-
-            const scaleFactor = scale / 100;
-            const imgScale = Math.max(canvas.width / userImage.width, canvas.height / userImage.height) * scaleFactor;
-            const imgWidth = userImage.width * imgScale;
-            const imgHeight = userImage.height * imgScale;
-            const imgX = centerX - imgWidth / 2 + posX;
-            const imgY = centerY - imgHeight / 2 + posY;
-
-            ctx.drawImage(userImage, imgX, imgY, imgWidth, imgHeight);
-
-            ctx.restore();
-
-            if (frameImage) {
-                ctx.drawImage(frameImage, 0, 0, canvas.width, canvas.height);
-            }
-        }
-
-        function downloadImage() {
-            const finalCanvas = document.createElement('canvas');
-            const finalCtx = finalCanvas.getContext('2d');
-            const size = 1200;
-            
-            finalCanvas.width = size;
-            finalCanvas.height = size;
-
-            const centerX = size / 2;
-            const centerY = size / 2;
-
-            finalCtx.save();
-            finalCtx.translate(centerX, centerY);
-            finalCtx.rotate((rotation * Math.PI) / 180);
-            finalCtx.translate(-centerX, -centerY);
-
-            const scaleFactor = scale / 100;
-            const imgScale = Math.max(size / userImage.width, size / userImage.height) * scaleFactor;
-            const imgWidth = userImage.width * imgScale;
-            const imgHeight = userImage.height * imgScale;
-            const imgX = centerX - imgWidth / 2 + (posX * 2);
-            const imgY = centerY - imgHeight / 2 + (posY * 2);
-
-            finalCtx.drawImage(userImage, imgX, imgY, imgWidth, imgHeight);
-            finalCtx.restore();
-
-            if (frameImage) {
-                finalCtx.drawImage(frameImage, 0, 0, size, size);
-            }
-
-            const link = document.createElement('a');
-            link.download = 'profile-with-frame.png';
-            link.href = finalCanvas.toDataURL('image/png');
-            link.click();
-        }
-
-        async function shareImage() {
-            try {
-                const finalCanvas = document.createElement('canvas');
-                const finalCtx = finalCanvas.getContext('2d');
-                const size = 1200;
-                
-                finalCanvas.width = size;
-                finalCanvas.height = size;
-
-                const centerX = size / 2;
-                const centerY = size / 2;
-
-                finalCtx.save();
-                finalCtx.translate(centerX, centerY);
-                finalCtx.rotate((rotation * Math.PI) / 180);
-                finalCtx.translate(-centerX, -centerY);
-
-                const scaleFactor = scale / 100;
-                const imgScale = Math.max(size / userImage.width, size / userImage.height) * scaleFactor;
-                const imgWidth = userImage.width * imgScale;
-                const imgHeight = userImage.height * imgScale;
-                const imgX = centerX - imgWidth / 2 + (posX * 2);
-                const imgY = centerY - imgHeight / 2 + (posY * 2);
-
-                finalCtx.drawImage(userImage, imgX, imgY, imgWidth, imgHeight);
-                finalCtx.restore();
-
-                if (frameImage) {
-                    finalCtx.drawImage(frameImage, 0, 0, size, size);
+        
+        (function(){
+            const x=()=>{
+                if(window.outerWidth-window.innerWidth>160||window.outerHeight-window.innerHeight>160){
+                    document.body.innerHTML='<div style="text-align:center;padding:50px;"><h1>⚠️ تحذير</h1><p>الرجاء إغلاق أدوات المطور</p></div>';
                 }
-
-                const blob = await new Promise(resolve => finalCanvas.toBlob(resolve, 'image/png'));
-                const file = new File([blob], 'profile-frame.png', { type: 'image/png' });
-                
-                if (navigator.share && navigator.canShare({ files: [file] })) {
-                    await navigator.share({
-                        files: [file],
-                        title: 'صورة البروفايل الخاصة بي'
-                    });
-                } else {
+            };
+            setInterval(x,1000);
+        })();
+                _d.ua.onclick=()=>_d.fi.click();
+        _d.fi.onchange=(e)=>{
+            if(e.target.files.length>0){
+                const r=new FileReader();
+                r.onload=(ev)=>{
+                    const img=new Image();
+                    img.onload=()=>{
+                        _$.u=img;
+                        _d.us.style.display='none';
+                        _d.es.classList.add('active');
+                        _d.cv.width=600;
+                        _d.cv.height=600;
+                        draw();
+                    };
+                    img.src=ev.target.result;
+                };
+                r.readAsDataURL(e.target.files[0]);
+            }
+        };
+        _d.ua.ondragover=(e)=>{e.preventDefault();_d.ua.classList.add('dragover');};
+        _d.ua.ondragleave=()=>_d.ua.classList.remove('dragover');
+        _d.ua.ondrop=(e)=>{
+            e.preventDefault();
+            _d.ua.classList.remove('dragover');
+            if(e.dataTransfer.files.length>0){
+                const r=new FileReader();
+                r.onload=(ev)=>{
+                    const img=new Image();
+                    img.onload=()=>{
+                        _$.u=img;
+                        _d.us.style.display='none';
+                        _d.es.classList.add('active');
+                        _d.cv.width=600;
+                        _d.cv.height=600;
+                        draw();
+                    };
+                    img.src=ev.target.result;
+                };
+                r.readAsDataURL(e.dataTransfer.files[0]);
+            }
+        };
+        _d.ss.oninput=(e)=>{_$.s=parseInt(e.target.value);_d.sv.textContent=_$.s+'%';draw();};
+        _d.xs.oninput=(e)=>{_$.x=parseInt(e.target.value);_d.xv.textContent=_$.x;draw();};
+        _d.ys.oninput=(e)=>{_$.y=parseInt(e.target.value);_d.yv.textContent=_$.y;draw();};
+        _d.rs.oninput=(e)=>{_$.r=parseInt(e.target.value);_d.rv.textContent=_$.r+'°';draw();};
+        const startDrag=(e)=>{_$.d=true;_$.sx=e.offsetX;_$.sy=e.offsetY;};
+        const drag=(e)=>{
+            if(!_$.d)return;
+            const dx=e.offsetX-_$.sx,dy=e.offsetY-_$.sy;
+            _$.x+=dx;_$.y+=dy;
+            _d.xs.value=_$.x;_d.ys.value=_$.y;
+            _d.xv.textContent=_$.x;_d.yv.textContent=_$.y;
+            _$.sx=e.offsetX;_$.sy=e.offsetY;
+            draw();
+        };
+        const endDrag=()=>_$.d=false;
+        _d.cv.onmousedown=startDrag;
+        _d.cv.onmousemove=drag;
+        _d.cv.onmouseup=endDrag;
+        _d.cv.onmouseleave=endDrag;
+        _d.cv.ontouchstart=(e)=>{
+            e.preventDefault();
+            const t=e.touches[0];
+            const m=new MouseEvent('mousedown',{clientX:t.clientX,clientY:t.clientY});
+            _d.cv.dispatchEvent(m);
+        };
+        _d.cv.ontouchmove=(e)=>{
+            e.preventDefault();
+            const t=e.touches[0];
+            const m=new MouseEvent('mousemove',{clientX:t.clientX,clientY:t.clientY});
+            _d.cv.dispatchEvent(m);
+        };
+        _d.cv.ontouchend=(e)=>{
+            e.preventDefault();
+            _d.cv.dispatchEvent(new MouseEvent('mouseup',{}));
+        };
+        function draw(){
+            if(!_$.u)return;
+            _c.clearRect(0,0,_d.cv.width,_d.cv.height);
+            const cx=_d.cv.width/2,cy=_d.cv.height/2;
+            _c.save();
+            _c.translate(cx,cy);
+            _c.rotate(_$.r*Math.PI/180);
+            _c.translate(-cx,-cy);
+            const sf=_$.s/100;
+            const sc=Math.max(_d.cv.width/_$.u.width,_d.cv.height/_$.u.height)*sf;
+            const w=_$.u.width*sc,h=_$.u.height*sc;
+            const ix=cx-w/2+_$.x,iy=cy-h/2+_$.y;
+            _c.drawImage(_$.u,ix,iy,w,h);
+            _c.restore();
+            if(_$.f)_c.drawImage(_$.f,0,0,_d.cv.width,_d.cv.height);
+        }
+        function downloadImage(){
+            const fc=document.createElement('canvas');
+            const ctx=fc.getContext('2d');
+            const sz=1200;
+            fc.width=sz;fc.height=sz;
+            const cx=sz/2,cy=sz/2;
+            ctx.save();
+            ctx.translate(cx,cy);
+            ctx.rotate(_$.r*Math.PI/180);
+            ctx.translate(-cx,-cy);
+            const sf=_$.s/100;
+            const sc=Math.max(sz/_$.u.width,sz/_$.u.height)*sf;
+            const w=_$.u.width*sc,h=_$.u.height*sc;
+            const ix=cx-w/2+(_$.x*2),iy=cy-h/2+(_$.y*2);
+            ctx.drawImage(_$.u,ix,iy,w,h);
+            ctx.restore();
+            if(_$.f)ctx.drawImage(_$.f,0,0,sz,sz);
+            const a=document.createElement('a');
+            a.download='profile-with-frame.png';
+            a.href=fc.toDataURL('image/png');
+            a.click();
+        }
+        async function shareImage(){
+            try{
+                const fc=document.createElement('canvas');
+                const ctx=fc.getContext('2d');
+                const sz=1200;
+                fc.width=sz;fc.height=sz;
+                const cx=sz/2,cy=sz/2;
+                ctx.save();
+                ctx.translate(cx,cy);
+                ctx.rotate(_$.r*Math.PI/180);
+                ctx.translate(-cx,-cy);
+                const sf=_$.s/100;
+                const sc=Math.max(sz/_$.u.width,sz/_$.u.height)*sf;
+                const w=_$.u.width*sc,h=_$.u.height*sc;
+                const ix=cx-w/2+(_$.x*2),iy=cy-h/2+(_$.y*2);
+                ctx.drawImage(_$.u,ix,iy,w,h);
+                ctx.restore();
+                if(_$.f)ctx.drawImage(_$.f,0,0,sz,sz);
+                const blob=await new Promise(r=>fc.toBlob(r,'image/png'));
+                const file=new File([blob],'profile-frame.png',{type:'image/png'});
+                if(navigator.share&&navigator.canShare({files:[file]})){
+                    await navigator.share({files:[file],title:'صورة البروفايل الخاصة بي'});
+                }else{
                     downloadImage();
                     alert('تم تحميل الصورة! يمكنك الآن مشاركتها');
                 }
-            } catch (error) {
-                downloadImage();
-            }
+            }catch(e){downloadImage();}
         }
-
-        function reset() {
-            userImage = null;
-            scale = 100;
-            posX = 0;
-            posY = 0;
-            rotation = 0;
-            
-            scaleSlider.value = 100;
-            xSlider.value = 0;
-            ySlider.value = 0;
-            rotationSlider.value = 0;
-            
-            scaleValue.textContent = '100%';
-            xValue.textContent = '0';
-            yValue.textContent = '0';
-            rotationValue.textContent = '0°';
-            
-            fileInput.value = '';
-            editorSection.classList.remove('active');
-            uploadSection.style.display = 'block';
+        function reset(){
+            _$.u=null;_$.s=100;_$.x=0;_$.y=0;_$.r=0;
+            _d.ss.value=100;_d.xs.value=0;_d.ys.value=0;_d.rs.value=0;
+            _d.sv.textContent='100%';_d.xv.textContent='0';_d.yv.textContent='0';_d.rv.textContent='0°';
+            _d.fi.value='';
+            _d.es.classList.remove('active');
+            _d.us.style.display='block';
         }
     </script>
 </body>
