@@ -86,7 +86,7 @@
             const isAllowed = allowedDomains.some(d => currentDomain.includes(d));
             
             if (!isAllowed && !currentDomain.includes('claude.ai')) {
-                document.body.innerHTML = '<div style="text-align:center;padding:50px;"><h1>⚠️ غير مصرح</h1><p>هذه الأداة تعمل فقط على النطاق المصرح به</p></div>';
+                document.body.innerHTML = '<div style="text-align:center;padding:50px;"><h1>⚠️ غير مصرح</h1><p>غير مصرح ا </p></div>';
                 throw new Error('Unauthorized domain');
             }
         })();
@@ -277,3 +277,4 @@
     </script>
 </body>
 </html>
+
