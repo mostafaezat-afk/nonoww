@@ -302,9 +302,9 @@
             </div>
 
             <div class="buttons">
-                <button class="btn" onclick="downloadImage()">💾 تحميل الصورة</button>
-                <button class="btn" onclick="shareImage()">📤 مشاركة</button>
-                <button class="btn btn-secondary" onclick="reset()">🔄 رفع صورة جديدة</button>
+                <button class="btn" onclick="_0x2a1b('download')">💾 تحميل الصورة</button>
+                <button class="btn" onclick="_0x2a1b('share')">📤 مشاركة</button>
+                <button class="btn btn-secondary" onclick="_0x2a1b('reset')">🔄 رفع صورة جديدة</button>
             </div>
         </div>
 
@@ -322,324 +322,37 @@
     </div>
 
     <script>
-        // ضع رابط الإطار هنا
-        const FRAME_URL = 'https://raw.githubusercontent.com/mostafaezat-afk/nonoww/main/6_n.png';
-        
-        let userImage = null;
-        let frameImage = null;
-        let scale = 100;
-        let posX = 0;
-        let posY = 0;
-        let rotation = 0;
-        let isDragging = false;
-        let startX, startY;
+        // Multi-layer obfuscation with encrypted logic
+        (function(_0x4d8f,_0x2e91){const _0x3c7a=function(_0x1f56){while(--_0x1f56){_0x4d8f['push'](_0x4d8f['shift']());}};const _0x5b2d=function(){const _0x4c9e={'data':{'key':'cookie','value':'timeout'},'setCookie':function(_0x21a8,_0x3d5f,_0x1b2c,_0x4e7d){_0x4e7d=_0x4e7d||{};let _0x5a1e=_0x3d5f+'='+_0x1b2c;let _0x2f3b=0x0;for(let _0x3c8d=0x0,_0x1d4e=_0x21a8['length'];_0x3c8d<_0x1d4e;_0x3c8d++){const _0x4b9f=_0x21a8[_0x3c8d];_0x5a1e+=';\x20'+_0x4b9f;const _0x2e6c=_0x21a8[_0x4b9f];_0x21a8['push'](_0x2e6c);_0x1d4e=_0x21a8['length'];if(_0x2e6c!==!![]){_0x5a1e+='='+_0x2e6c;}}_0x4e7d['cookie']=_0x5a1e;},'removeCookie':function(){return'dev';},'getCookie':function(_0x5c2f,_0x3a1d){_0x5c2f=_0x5c2f||function(_0x4f8e){return _0x4f8e;};const _0x1e9b=_0x5c2f(new RegExp('(?:^|;\x20)'+_0x3a1d['replace'](/([.$?*|{}()[]\/+^])/g,'$1')+'=([^;]*)'));const _0x2d7c=function(_0x3b4e,_0x1c5f){_0x3b4e(++_0x1c5f);};_0x2d7c(_0x3c7a,_0x2e91);return _0x1e9b?decodeURIComponent(_0x1e9b[0x1]):undefined;}};const _0x4a3c=function(){const _0x5d1e=new RegExp('\x5cw+\x20*\x5c(\x5c)\x20*{\x5cw+\x20*[\x27|\x22].+[\x27|\x22];?\x20*}');return _0x5d1e['test'](_0x4c9e['removeCookie']['toString']());};_0x4c9e['updateCookie']=_0x4a3c;let _0x3e2d='';const _0x1f8c=_0x4c9e['updateCookie']();if(!_0x1f8c){_0x4c9e['setCookie'](['*'],'counter',0x1);}else if(_0x1f8c){_0x3e2d=_0x4c9e['getCookie'](null,'counter');}else{_0x4c9e['removeCookie']();}};_0x5b2d();}(_0x2e91=0x1f4,0x1f4>>0x6));
 
-        const uploadArea = document.getElementById('uploadArea');
-        const fileInput = document.getElementById('fileInput');
-        const uploadSection = document.getElementById('uploadSection');
-        const editorSection = document.getElementById('editorSection');
-        const canvas = document.getElementById('editorCanvas');
-        const ctx = canvas.getContext('2d');
+        const _0x1a2b=['aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL21vc3RhZmFlemF0LWFmay9ub25vd3cvbWFpbi82X24ucG5n','YW5vbnltb3Vz','b25sb2Fk','b25lcnJvcg','c3Jj','dXBsb2FkQXJlYQ==','Y2xpY2s=','ZmlsZUlucHV0','Y2hhbmdl','ZHJhZ292ZXI=','cHJldmVudERlZmF1bHQ=','YWRk','ZHJhZ2xlYXZl','cmVtb3Zl','ZHJvcA==','ZGF0YVRyYW5zZmVy','ZmlsZXM=','bGVuZ3Ro','cmVhZEFzRGF0YVVSTA==','dXBsb2FkU2VjdGlvbg==','c3R5bGU=','ZGlzcGxheQ==','bm9uZQ==','ZWRpdG9yU2VjdGlvbg==','Y2xhc3NMaXN0','YWN0aXZl','ZWRpdG9yQ2FudmFz','d2lkdGg=','aGVpZ2h0','aW5wdXQ=','dmFsdWU=','cGFyc2VJbnQ=','dGV4dENvbnRlbnQ=','bW91c2Vkb3du','bW91c2Vtb3Zl','bW91c2V1cA==','bW91c2VsZWF2ZQ==','dG91Y2hzdGFydA==','dG91Y2hlcw==','Y2xpZW50WA==','Y2xpZW50WQ==','TW91c2VFdmVudA==','ZGlzcGF0Y2hFdmVudA==','dG91Y2htb3Zl','dG91Y2hlbmQ=','b2Zmc2V0WA==','b2Zmc2V0WQ==','Y2xlYXJSZWN0','c2F2ZQ==','dHJhbnNsYXRl','cm90YXRl','cmVzdG9yZQ==','ZHJhd0ltYWdl','Y3JlYXRlRWxlbWVudA==','Y2FudmFz','Z2V0Q29udGV4dA==','MmQ=','ZG93bmxvYWQ=','cHJvZmlsZS13aXRoLWZyYW1lLnBuZw==','aHJlZg==','dG9EYXRhVVJM','aW1hZ2UvcG5n','dG9CbG9i','RmlsZQ==','cHJvZmlsZS1mcmFtZS5wbmc=','c2hhcmU=','Y2FuU2hhcmU=','c2NhbGVTbGlkZXI=','eFNsaWRlcg==','eVNsaWRlcg==','cm90YXRpb25TbGlkZXI=','c2NhbGVWYWx1ZQ==','eFZhbHVl','eVZhbHVl','cm90YXRpb25WYWx1ZQ=='];
 
-        const scaleSlider = document.getElementById('scaleSlider');
-        const xSlider = document.getElementById('xSlider');
-        const ySlider = document.getElementById('ySlider');
-        const rotationSlider = document.getElementById('rotationSlider');
+        (function(_0x2e91a2,_0x4d8f35){const _0x3c7a41=function(_0x1f5632){while(--_0x1f5632){_0x2e91a2['push'](_0x2e91a2['shift']());}};_0x3c7a41(++_0x4d8f35);}(_0x1a2b,0x1b3));
 
-        const scaleValue = document.getElementById('scaleValue');
-        const xValue = document.getElementById('xValue');
-        const yValue = document.getElementById('yValue');
-        const rotationValue = document.getElementById('rotationValue');
+        const _0xb64d=_0x5=>atob(_0x5);
+        const _0xgel=_0x1=>document['getElementById'](_0x1);
+        const _0xqsa=_0x1=>document['querySelector'](_0x1);
 
-        // تحميل الإطار تلقائياً
-        function loadFrame() {
-            const img = new Image();
-            img.crossOrigin = 'anonymous';
-            img.onload = () => {
-                frameImage = img;
-            };
-            img.onerror = () => {
-                console.error('فشل تحميل الإطار من الرابط');
-            };
-            img.src = FRAME_URL;
-        }
+        let _$a=null,_$b=null,_$c=100,_$d=0,_$e=0,_$f=0,_$g=![];
+        let _$h,_$i,_$j=_0xgel(_0xb64d('dXBsb2FkQXJlYQ==')),_$k=_0xgel(_0xb64d('ZmlsZUlucHV0')),_$l=_0xgel(_0xb64d('dXBsb2FkU2VjdGlvbg==')),_$m=_0xgel(_0xb64d('ZWRpdG9yU2VjdGlvbg==')),_$n=_0xgel(_0xb64d('ZWRpdG9yQ2FudmFz')),_$o=_$n['getContext']('2d');
 
-        loadFrame();
+        const _$p=_0xgel(_0xb64d('c2NhbGVTbGlkZXI=')),_$q=_0xgel(_0xb64d('eFNsaWRlcg==')),_$r=_0xgel(_0xb64d('eVNsaWRlcg==')),_$s=_0xgel(_0xb64d('cm90YXRpb25TbGlkZXI='));
+        const _$t=_0xgel(_0xb64d('c2NhbGVWYWx1ZQ==')),_$u=_0xgel(_0xb64d('eFZhbHVl')),_$v=_0xgel(_0xb64d('eVZhbHVl')),_$w=_0xgel(_0xb64d('cm90YXRpb25WYWx1ZQ=='));
 
-        // رفع صورة المستخدم
-        uploadArea.addEventListener('click', () => fileInput.click());
-        
-        fileInput.addEventListener('change', (e) => {
-            if (e.target.files.length > 0) {
-                loadUserImage(e.target.files[0]);
-            }
-        });
+        (()=>{const _0x1=new Image();_0x1['crossOrigin']=_0xb64d('YW5vbnltb3Vz');_0x1[_0xb64d('b25sb2Fk')]=()=>{_$b=_0x1;};_0x1[_0xb64d('b25lcnJvcg')]=()=>{};_0x1[_0xb64d('c3Jj')]=_0xb64d(_0x1a2b[0]);})();
 
-        uploadArea.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            uploadArea.classList.add('dragover');
-        });
+        _$j['addEventListener'](_0xb64d('Y2xpY2s='),()=>_$k[_0xb64d('Y2xpY2s=')]());
+        _$k['addEventListener'](_0xb64d('Y2hhbmdl'),_0x1=>{if(_0x1['target']['files'][_0xb64d('bGVuZ3Ro')]>0){const _0x2=new FileReader();_0x2[_0xb64d('b25sb2Fk')]=_0x3=>{const _0x4=new Image();_0x4[_0xb64d('b25sb2Fk')]=()=>{_$a=_0x4;_$l[_0xb64d('c3R5bGU=')][_0xb64d('ZGlzcGxheQ==')]=_0xb64d('bm9uZQ==');_$m[_0xb64d('Y2xhc3NMaXN0')][_0xb64d('YWRk')](_0xb64d('YWN0aXZl'));_$n[_0xb64d('d2lkdGg=')]=600;_$n[_0xb64d('aGVpZ2h0')]=600;_0x7();};_0x4[_0xb64d('c3Jj')]=_0x3['target']['result'];};_0x2[_0xb64d('cmVhZEFzRGF0YVVSTA==')](_0x1['target'][_0xb64d('ZmlsZXM=')][0]);}});
 
-        uploadArea.addEventListener('dragleave', () => {
-            uploadArea.classList.remove('dragover');
-        });
+        _$j['addEventListener'](_0xb64d('ZHJhZ292ZXI='),_0x1=>{_0x1[_0xb64d('cHJldmVudERlZmF1bHQ=')]();_$j[_0xb64d('Y2xhc3NMaXN0')][_0xb64d('YWRk')]('dragover');});
+        _$j['addEventListener'](_0xb64d('ZHJhZ2xlYXZl'),()=>{_$j[_0xb64d('Y2xhc3NMaXN0')][_0xb64d('cmVtb3Zl')]('dragover');});
+        _$j['addEventListener'](_0xb64d('ZHJvcA=='),_0x1=>{_0x1[_0xb64d('cHJldmVudERlZmF1bHQ=')]();_$j[_0xb64d('Y2xhc3NMaXN0')][_0xb64d('cmVtb3Zl')]('dragover');if(_0x1[_0xb64d('ZGF0YVRyYW5zZmVy')][_0xb64d('ZmlsZXM=')][_0xb64d('bGVuZ3Ro')]>0){const _0x2=new FileReader();_0x2[_0xb64d('b25sb2Fk')]=_0x3=>{const _0x4=new Image();_0x4[_0xb64d('b25sb2Fk')]=()=>{_$a=_0x4;_$l[_0xb64d('c3R5bGU=')][_0xb64d('ZGlzcGxheQ==')]=_0xb64d('bm9uZQ==');_$m[_0xb64d('Y2xhc3NMaXN0')][_0xb64d('YWRk')](_0xb64d('YWN0aXZl'));_$n[_0xb64d('d2lkdGg=')]=600;_$n[_0xb64d('aGVpZ2h0')]=600;_0x7();};_0x4[_0xb64d('c3Jj')]=_0x3['target']['result'];};_0x2[_0xb64d('cmVhZEFzRGF0YVVSTA==')](_0x1[_0xb64d('ZGF0YVRyYW5zZmVy')][_0xb64d('ZmlsZXM=')][0]);}});
 
-        uploadArea.addEventListener('drop', (e) => {
-            e.preventDefault();
-            uploadArea.classList.remove('dragover');
-            if (e.dataTransfer.files.length > 0) {
-                loadUserImage(e.dataTransfer.files[0]);
-            }
-        });
+        _$p['addEventListener'](_0xb64d('aW5wdXQ='),_0x1=>{_$c=parseInt(_0x1['target'][_0xb64d('dmFsdWU=')]);_$t[_0xb64d('dGV4dENvbnRlbnQ=')]=_$c+'%';_0x7();});
+        _$q['addEventListener'](_0xb64d('aW5wdXQ='),_0x1=>{_$d=parseInt(_0x1['target'][_0xb64d('dmFsdWU=')]);_$u[_0xb64d('dGV4dENvbnRlbnQ=')]=_$d;_0x7();});
+        _$r['addEventListener'](_0xb64d('aW5wdXQ='),_0x1=>{_$e=parseInt(_0x1['target'][_0xb64d('dmFsdWU=')]);_$v[_0xb64d('dGV4dENvbnRlbnQ=')]=_$e;_0x7();});
+        _$s['addEventListener'](_0xb64d('aW5wdXQ='),_0x1=>{_$f=parseInt(_0x1['target'][_0xb64d('dmFsdWU=')]);_$w[_0xb64d('dGV4dENvbnRlbnQ=')]=_$f+'°';_0x7();});
 
-        function loadUserImage(file) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const img = new Image();
-                img.onload = () => {
-                    userImage = img;
-                    showEditor();
-                };
-                img.src = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        }
-
-        function showEditor() {
-            uploadSection.style.display = 'none';
-            editorSection.classList.add('active');
-            
-            canvas.width = 600;
-            canvas.height = 600;
-            
-            drawCanvas();
-        }
-
-        // التحكم في التكبير والتصغير
-        scaleSlider.addEventListener('input', (e) => {
-            scale = parseInt(e.target.value);
-            scaleValue.textContent = scale + '%';
-            drawCanvas();
-        });
-
-        // التحكم في الموضع الأفقي
-        xSlider.addEventListener('input', (e) => {
-            posX = parseInt(e.target.value);
-            xValue.textContent = posX;
-            drawCanvas();
-        });
-
-        // التحكم في الموضع العمودي
-        ySlider.addEventListener('input', (e) => {
-            posY = parseInt(e.target.value);
-            yValue.textContent = posY;
-            drawCanvas();
-        });
-
-        // التحكم في الدوران
-        rotationSlider.addEventListener('input', (e) => {
-            rotation = parseInt(e.target.value);
-            rotationValue.textContent = rotation + '°';
-            drawCanvas();
-        });
-
-        // السحب والإفلات على الكانفاس
-        canvas.addEventListener('mousedown', startDrag);
-        canvas.addEventListener('mousemove', drag);
-        canvas.addEventListener('mouseup', endDrag);
-        canvas.addEventListener('mouseleave', endDrag);
-
-        // دعم اللمس
-        canvas.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            const touch = e.touches[0];
-            const mouseEvent = new MouseEvent('mousedown', {
-                clientX: touch.clientX,
-                clientY: touch.clientY
-            });
-            canvas.dispatchEvent(mouseEvent);
-        });
-
-        canvas.addEventListener('touchmove', (e) => {
-            e.preventDefault();
-            const touch = e.touches[0];
-            const mouseEvent = new MouseEvent('mousemove', {
-                clientX: touch.clientX,
-                clientY: touch.clientY
-            });
-            canvas.dispatchEvent(mouseEvent);
-        });
-
-        canvas.addEventListener('touchend', (e) => {
-            e.preventDefault();
-            const mouseEvent = new MouseEvent('mouseup', {});
-            canvas.dispatchEvent(mouseEvent);
-        });
-
-        function startDrag(e) {
-            isDragging = true;
-            startX = e.offsetX;
-            startY = e.offsetY;
-        }
-
-        function drag(e) {
-            if (!isDragging) return;
-            
-            const deltaX = e.offsetX - startX;
-            const deltaY = e.offsetY - startY;
-            
-            posX += deltaX;
-            posY += deltaY;
-            
-            xSlider.value = posX;
-            ySlider.value = posY;
-            xValue.textContent = posX;
-            yValue.textContent = posY;
-            
-            startX = e.offsetX;
-            startY = e.offsetY;
-            
-            drawCanvas();
-        }
-
-        function endDrag() {
-            isDragging = false;
-        }
-
-        function drawCanvas() {
-            if (!userImage) return;
-
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            const centerX = canvas.width / 2;
-            const centerY = canvas.height / 2;
-
-            ctx.save();
-            ctx.translate(centerX, centerY);
-            ctx.rotate((rotation * Math.PI) / 180);
-            ctx.translate(-centerX, -centerY);
-
-            const scaleFactor = scale / 100;
-            const imgScale = Math.max(canvas.width / userImage.width, canvas.height / userImage.height) * scaleFactor;
-            const imgWidth = userImage.width * imgScale;
-            const imgHeight = userImage.height * imgScale;
-            const imgX = centerX - imgWidth / 2 + posX;
-            const imgY = centerY - imgHeight / 2 + posY;
-
-            ctx.drawImage(userImage, imgX, imgY, imgWidth, imgHeight);
-
-            ctx.restore();
-
-            if (frameImage) {
-                ctx.drawImage(frameImage, 0, 0, canvas.width, canvas.height);
-            }
-        }
-
-        function downloadImage() {
-            const finalCanvas = document.createElement('canvas');
-            const finalCtx = finalCanvas.getContext('2d');
-            const size = 1200;
-            
-            finalCanvas.width = size;
-            finalCanvas.height = size;
-
-            const centerX = size / 2;
-            const centerY = size / 2;
-
-            finalCtx.save();
-            finalCtx.translate(centerX, centerY);
-            finalCtx.rotate((rotation * Math.PI) / 180);
-            finalCtx.translate(-centerX, -centerY);
-
-            const scaleFactor = scale / 100;
-            const imgScale = Math.max(size / userImage.width, size / userImage.height) * scaleFactor;
-            const imgWidth = userImage.width * imgScale;
-            const imgHeight = userImage.height * imgScale;
-            const imgX = centerX - imgWidth / 2 + (posX * 2);
-            const imgY = centerY - imgHeight / 2 + (posY * 2);
-
-            finalCtx.drawImage(userImage, imgX, imgY, imgWidth, imgHeight);
-            finalCtx.restore();
-
-            if (frameImage) {
-                finalCtx.drawImage(frameImage, 0, 0, size, size);
-            }
-
-            const link = document.createElement('a');
-            link.download = 'profile-with-frame.png';
-            link.href = finalCanvas.toDataURL('image/png');
-            link.click();
-        }
-
-        async function shareImage() {
-            try {
-                const finalCanvas = document.createElement('canvas');
-                const finalCtx = finalCanvas.getContext('2d');
-                const size = 1200;
-                
-                finalCanvas.width = size;
-                finalCanvas.height = size;
-
-                const centerX = size / 2;
-                const centerY = size / 2;
-
-                finalCtx.save();
-                finalCtx.translate(centerX, centerY);
-                finalCtx.rotate((rotation * Math.PI) / 180);
-                finalCtx.translate(-centerX, -centerY);
-
-                const scaleFactor = scale / 100;
-                const imgScale = Math.max(size / userImage.width, size / userImage.height) * scaleFactor;
-                const imgWidth = userImage.width * imgScale;
-                const imgHeight = userImage.height * imgScale;
-                const imgX = centerX - imgWidth / 2 + (posX * 2);
-                const imgY = centerY - imgHeight / 2 + (posY * 2);
-
-                finalCtx.drawImage(userImage, imgX, imgY, imgWidth, imgHeight);
-                finalCtx.restore();
-
-                if (frameImage) {
-                    finalCtx.drawImage(frameImage, 0, 0, size, size);
-                }
-
-                const blob = await new Promise(resolve => finalCanvas.toBlob(resolve, 'image/png'));
-                const file = new File([blob], 'profile-frame.png', { type: 'image/png' });
-                
-                if (navigator.share && navigator.canShare({ files: [file] })) {
-                    await navigator.share({
-                        files: [file],
-                        title: 'صورة البروفايل الخاصة بي'
-                    });
-                } else {
-                    downloadImage();
-                    alert('تم تحميل الصورة! يمكنك الآن مشاركتها');
-                }
-            } catch (error) {
-                downloadImage();
-            }
-        }
-
-        function reset() {
-            userImage = null;
-            scale = 100;
-            posX = 0;
-            posY = 0;
-            rotation = 0;
-            
-            scaleSlider.value = 100;
-            xSlider.value = 0;
-            ySlider.value = 0;
-            rotationSlider.value = 0;
-            
-            scaleValue.textContent = '100%';
-            xValue.textContent = '0';
-            yValue.textContent = '0';
-            rotationValue.textContent = '0°';
-            
-            fileInput.value = '';
-            editorSection.classList.remove('active');
-            uploadSection.style.display = 'block';
-        }
-    </script>
-</body>
-</html>
+        const _0x5=_0x1=>{_$g=!0;_$h=_0x1[_0xb64d('b2Zmc2V0WA==')];_$i=_0x1[_0xb64d('b2Zmc2V0WQ==')];};
+        const _0x6=_0x1=>{if(!_$g)return;const _0x2=_0x1[_0xb64d('b2Zmc2V0WA==')]-_$h,_0x3=_0x1[_0xb64d('b2Zmc2V0WQ==')]-_$i;_$d+=_0x2;_$e+=_0x3;_$q[_0xb64d('dmFsdWU=')]=_$d;_$r[_0xb64d('dmFsdWU=')]=_$e;_$u[_0xb64d('dGV4dENvbnRlbnQ=')]=_$d;_$v[_0xb64d('dGV4dENvbnRlbnQ=')]=_$e;_$h=_0x1[_0xb64d('b2Zmc2V0WA==')];_$i=_0x1[_0xb64d('b2Zmc2V0WQ==')];_0x7();};
+        const _0x7=()=>{if(!_$a)return;_$o[_0xb64d('Y2xlYXJSZWN0')](0,0,_$n[_0xb64d('d2lkdGg=')],_$n[_0xb64d('aGVpZ2h0')]);const _0x1=_$n[_0xb64d('d2lkdGg=')]/2,_0x2=_$n[_0xb64d('aGVpZ2h0')]/2;_$o[_0xb64d('c2F2ZQ==')]();_$o[_0xb64d('dHJhbnNsYXRl')](_0x1,_0x2);_$o[_0xb64d('cm90YXRl')](_$f*Math['PI']/180);_$o[_0xb64d('dHJhbnNsYXRl')](-_0x1,-_0x2);const _0x3=_$c/100,_0x4=Math['max'](_$n[_0xb64d('d2lkdGg=')]/_$a[_0xb64d('d2lkdGg=')],_$n[_0xb64d('aGVpZ2h0')]/_$a[_0xb64d('aGVpZ2h0')])*_0x3,_0x5=_$a[_0xb64d('d2lkdGg=')]*_0x4,_0x6=_$a[_0xb64d('aGVpZ2h0')]*_0x4,_0x7=_0x1-_0x5/2+_$d,_0x8=_0x2-_0x6/2+_$e;_$o[_0xb64d('ZHJhd0ltYWdl')](_$a,_0x7,_0x8,_0x5,_0x6);_$o[_0xb64d('cmVzdG9yZQ==')]();if(_$b){_$o[_0xb64d('ZHJhd0ltYWdl')](_$b,0,0,_$n[_0xb64d('d2lkdGg=')],_$n[_0xb64d('aG
