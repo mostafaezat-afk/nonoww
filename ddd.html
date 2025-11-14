@@ -3,133 +3,149 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>محرر الإطارات</title>
+    <title>محرر الإطارات الاحترافي</title>
     <style>
-        /* تنسيقات عامة */
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; margin: 0; padding: 20px; }
-        .container { max-width: 1000px; margin: 0 auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        h1 { text-align: center; color: #333; margin-bottom: 10px; }
-        .subtitle { text-align: center; color: #666; margin-bottom: 30px; }
+        /* --- 1. تنسيقات عامة --- */
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f7f6; margin: 0; padding: 20px; color: #333; }
+        .container { max-width: 1100px; margin: 0 auto; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        h1 { text-align: center; color: #2c3e50; margin-bottom: 5px; }
+        .subtitle { text-align: center; color: #7f8c8d; margin-bottom: 30px; font-size: 0.9em; }
 
-        /* منطقة الرفع */
+        /* --- 2. منطقة الرفع (تم إصلاح الزر) --- */
         .upload-box {
-            border: 2px dashed #ccc; padding: 40px; text-align: center; cursor: pointer;
-            border-radius: 10px; background: #fafafa; transition: 0.3s;
+            border: 3px dashed #bdc3c7;
+            background: #ecf0f1;
+            padding: 50px;
+            text-align: center;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-bottom: 20px;
         }
-        .upload-box:hover { border-color: #667eea; background: #f0f4ff; }
-        
-        /* منطقة المحرر (مخفية في البداية) */
-        .editor-area { display: none; margin-top: 20px; }
-        .editor-grid { display: flex; flex-wrap: wrap; gap: 30px; }
-        
-        /* اليمين: الكانفاس */
-        .canvas-container {
-            flex: 1; min-width: 300px;
-            background: #eee; border-radius: 10px; overflow: hidden;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            /* لجعلها مربعة دائماً */
-            aspect-ratio: 1; 
+        .upload-box:hover { border-color: #3498db; background: #ebf5fb; }
+        .upload-icon { font-size: 50px; margin-bottom: 15px; display: block; }
+        .upload-text { font-size: 1.2em; font-weight: bold; color: #34495e; }
+
+        /* --- 3. منطقة التعديل (Grid Layout) --- */
+        .editor-area { display: none; /* مخفية حتى يتم رفع صورة */ }
+        .editor-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* عمودين: يمين ويسار */
+            gap: 40px;
+        }
+        @media (max-width: 768px) { .editor-grid { grid-template-columns: 1fr; } }
+
+        /* --- 4. الكانفاس (يمين) --- */
+        .canvas-wrapper {
+            background: #eee;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            aspect-ratio: 1; /* مربع دائماً */
+            position: relative;
         }
         canvas { width: 100%; height: 100%; display: block; }
 
-        /* اليسار: التحكمات */
-        .controls-container { flex: 1; min-width: 300px; }
+        /* --- 5. أدوات التحكم (يسار) --- */
+        .controls-wrapper { padding: 10px; }
 
-        /* تنسيق قائمة الفريمات (صور وتحتها تشيك بوكس) */
-        .frames-list {
+        /* قائمة الفريمات */
+        .frames-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
             gap: 15px;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
         }
-        .frame-item {
+        .frame-card {
             text-align: center;
             cursor: pointer;
-            padding: 10px;
+            padding: 8px;
             border: 2px solid transparent;
-            border-radius: 8px;
-            transition: all 0.2s;
+            border-radius: 10px;
             background: #fff;
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: all 0.2s;
         }
-        .frame-item:hover { transform: translateY(-2px); }
-        .frame-item.active {
-            border-color: #667eea;
-            background: #f0f4ff;
-        }
-        .frame-item img {
+        .frame-card:hover { transform: translateY(-3px); }
+        .frame-card.active { border-color: #3498db; background: #eaf6ff; }
+        
+        /* تنسيق الصور المصغرة لتظهر بشكل جيد دائماً */
+        .frame-card img {
             width: 100%;
-            height: 80px; /* ارتفاع ثابت للصورة المصغرة */
-            object-fit: contain;
-            margin-bottom: 5px;
-            border-radius: 4px;
+            height: 80px;
+            object-fit: contain; /* السر هنا: يحافظ على الصورة كاملة داخل المربع */
+            margin-bottom: 8px;
         }
-        /* تنسيق زر الاختيار (Radio) */
-        .frame-selector {
-            width: 20px; height: 20px; cursor: pointer;
-            accent-color: #667eea; /* لون العلامة */
-        }
+        
+        /* زر الراديو */
+        .frame-radio { width: 18px; height: 18px; accent-color: #3498db; cursor: pointer; }
 
-        /* أشرطة التحكم */
-        .slider-group { margin-bottom: 15px; }
-        .slider-group label { display: block; margin-bottom: 5px; font-weight: bold; color: #555; }
-        input[type=range] { width: 100%; cursor: pointer; }
+        /* أشرطة التمرير (Sliders) */
+        .control-group { margin-bottom: 20px; }
+        .control-group label { display: flex; justify-content: space-between; font-weight: 600; margin-bottom: 8px; color: #34495e; }
+        input[type=range] { width: 100%; height: 6px; background: #bdc3c7; border-radius: 5px; outline: none; -webkit-appearance: none; cursor: pointer; }
+        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; background: #3498db; border-radius: 50%; cursor: pointer; transition: 0.2s; }
+        input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.2); }
 
         /* الأزرار */
-        .btn {
-            width: 100%; padding: 12px; border: none; border-radius: 50px;
-            font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px;
-            transition: 0.2s;
-        }
-        .btn-primary { background: #667eea; color: white; }
-        .btn-primary:hover { background: #5a6fd6; }
-        .btn-secondary { background: #e2e8f0; color: #333; }
-        .btn-secondary:hover { background: #cbd5e0; }
+        .btn-group { display: flex; gap: 10px; margin-top: 20px; }
+        .btn { flex: 1; padding: 15px; border: none; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .btn-primary { background: #3498db; color: white; }
+        .btn-primary:hover { background: #2980b9; }
+        .btn-secondary { background: #ecf0f1; color: #7f8c8d; }
+        .btn-secondary:hover { background: #bdc3c7; }
 
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>تصميم صورتك الشخصية</h1>
-    <p class="subtitle">اختر الإطار المناسب وارفع صورتك</p>
+    <h1>🎨 تصميم صورة البروفايل</h1>
+    <p class="subtitle">اختر الإطار المناسب، وارفع صورتك لتصميم بروفايل احترافي</p>
 
-    <div class="upload-box" id="uploadBox">
-        <div style="font-size: 40px;">📷</div>
-        <h3>اضغط هنا لرفع صورتك</h3>
+    <div class="upload-box" id="uploadBox" onclick="document.getElementById('fileInput').click()">
+        <span class="upload-icon">📷</span>
+        <div class="upload-text">اضغط هنا لرفع صورتك الشخصية</div>
         <input type="file" id="fileInput" accept="image/*" style="display: none;">
     </div>
 
     <div class="editor-area" id="editorArea">
         <div class="editor-grid">
             
-            <div class="canvas-container">
+            <div class="canvas-wrapper">
                 <canvas id="canvas"></canvas>
             </div>
 
-            <div class="controls-container">
+            <div class="controls-wrapper">
                 
-                <h4 style="margin-top:0">اختر الشكل:</h4>
-                <div class="frames-list" id="framesContainer">
-                    </div>
-
-                <hr style="border: 0; border-top: 1px solid #ddd; margin: 20px 0;">
-
-                <div class="slider-group">
-                    <label>تكبير / تصغير</label>
-                    <input type="range" id="scale" min="10" max="200" value="100">
-                </div>
-                <div class="slider-group">
-                    <label>تحريك أفقي (يمين/يسار)</label>
-                    <input type="range" id="posX" min="-200" max="200" value="0">
-                </div>
-                <div class="slider-group">
-                    <label>تحريك رأسى (فوق/تحت)</label>
-                    <input type="range" id="posY" min="-200" max="200" value="0">
+                <div class="control-group">
+                    <label>اختر شكل الإطار:</label>
+                    <div class="frames-grid" id="framesContainer">
+                        </div>
                 </div>
 
-                <button class="btn btn-primary" onclick="downloadImage()">💾 حفظ الصورة</button>
-                <button class="btn btn-secondary" onclick="location.reload()">🔄 صورة جديدة</button>
+                <hr style="border: 0; border-top: 1px solid #e0e0e0; margin: 20px 0;">
+
+                <div class="control-group">
+                    <label>🔎 تكبير / تصغير</label>
+                    <input type="range" id="scale" min="20" max="200" value="100">
+                </div>
+
+                <div class="control-group">
+                    <label>↔️ تحريك أفقي</label>
+                    <input type="range" id="posX" min="-300" max="300" value="0">
+                </div>
+
+                <div class="control-group">
+                    <label>↕️ تحريك عمودي</label>
+                    <input type="range" id="posY" min="-300" max="300" value="0">
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn btn-primary" onclick="downloadImage()">💾 حفظ الصورة</button>
+                    <button class="btn btn-secondary" onclick="location.reload()">🔄 رفع جديد</button>
+                </div>
+
             </div>
         </div>
     </div>
@@ -138,148 +154,152 @@
 <script src="frames.js"></script>
 
 <script>
-    // التحقق من تحميل ملف الإطارات
-    if (typeof framesList === 'undefined') {
-        alert('تنبيه: ملف frames.js غير موجود أو فارغ!');
-        var framesList = [];
-    }
+    // --- المتغيرات الأساسية ---
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    
+    // لضمان جودة عالية، نجعل حجم الكانفاس الداخلي كبير
+    const canvasSize = 1080; 
+    canvas.width = canvasSize;
+    canvas.height = canvasSize;
 
-    // المتغيرات العامة
-    let canvas = document.getElementById('canvas');
-    let ctx = canvas.getContext('2d');
     let userImg = new Image();
     let frameImg = new Image();
-    frameImg.crossOrigin = "anonymous"; // للسماح بتحميل الصور من روابط خارجية
+    frameImg.crossOrigin = "anonymous"; // هام لتحميل الصور من روابط خارجية
 
-    // إعدادات الصورة الافتراضية
+    // قيم التحكم المبدئية
     let settings = { scale: 100, x: 0, y: 0 };
-    let currentFrameUrl = "";
 
-    // 1. توليد قائمة الإطارات (Thumbnails + Checkboxes)
-    const framesContainer = document.getElementById('framesContainer');
-    
-    framesList.forEach((frame, index) => {
-        // إنشاء العنصر الحاوي
-        let div = document.createElement('div');
-        div.className = 'frame-item';
-        if (index === 0) div.classList.add('active'); // تفعيل الأول افتراضياً
-
-        // HTML الداخلي: صورة + راديو
-        div.innerHTML = `
-            <img src="${frame.thumb}" alt="${frame.name}">
-            <br>
-            <input type="radio" name="selectedFrame" class="frame-selector" 
-                   value="${frame.url}" ${index === 0 ? 'checked' : ''}>
-        `;
-
-        // حدث عند الضغط على العنصر بالكامل
-        div.onclick = function() {
-            // تحديث الشكل المرئي
-            document.querySelectorAll('.frame-item').forEach(el => el.classList.remove('active'));
-            div.classList.add('active');
-            
-            // تحديث زر الراديو
-            div.querySelector('input').checked = true;
-
-            // تحميل الفريم الجديد
-            loadFrame(frame.url);
-        };
-
-        framesContainer.appendChild(div);
-    });
-
-    // تحميل الفريم الافتراضي (الأول)
-    if (framesList.length > 0) {
-        loadFrame(framesList[0].url);
-    }
-
-    function loadFrame(url) {
-        currentFrameUrl = url;
-        frameImg.src = url;
-        frameImg.onload = function() {
-            draw();
+    // --- 1. تحميل الفريمات عند فتح الصفحة ---
+    window.onload = function() {
+        if (typeof framesList === 'undefined') {
+            alert("خطأ: لم يتم العثور على ملف frames.js!");
+            return;
         }
+        
+        const container = document.getElementById('framesContainer');
+        
+        framesList.forEach((frame, index) => {
+            const card = document.createElement('div');
+            card.className = `frame-card ${index === 0 ? 'active' : ''}`;
+            
+            // HTML الكارت (صورة + راديو)
+            card.innerHTML = `
+                <img src="${frame.thumb}" alt="${frame.name}">
+                <br>
+                <input type="radio" name="frameGroup" class="frame-radio" 
+                       ${index === 0 ? 'checked' : ''}>
+            `;
+
+            // عند الضغط على الكارت أو الراديو
+            card.onclick = () => {
+                // إزالة التحديد من الكل
+                document.querySelectorAll('.frame-card').forEach(c => c.classList.remove('active'));
+                document.querySelectorAll('.frame-radio').forEach(r => r.checked = false);
+                
+                // تحديد الحالي
+                card.classList.add('active');
+                card.querySelector('input').checked = true;
+                
+                // تغيير الفريم
+                changeFrame(frame.url);
+            };
+
+            container.appendChild(card);
+        });
+
+        // تحميل أول فريم افتراضياً
+        if(framesList.length > 0) changeFrame(framesList[0].url);
+    };
+
+    function changeFrame(url) {
+        frameImg.src = url;
+        frameImg.onload = draw; // إعادة الرسم عند تحميل الفريم
     }
 
-    // 2. منطق رفع الصورة
-    document.getElementById('uploadBox').onclick = () => document.getElementById('fileInput').click();
+    // --- 2. معالجة رفع الصورة ---
+    const fileInput = document.getElementById('fileInput');
     
-    document.getElementById('fileInput').onchange = function(e) {
+    fileInput.onchange = function(e) {
         if (e.target.files && e.target.files[0]) {
-            let reader = new FileReader();
+            const reader = new FileReader();
+            
             reader.onload = function(event) {
                 userImg.src = event.target.result;
                 userImg.onload = function() {
-                    // إظهار المحرر وإخفاء الرفع
+                    // إظهار المحرر
                     document.getElementById('uploadBox').style.display = 'none';
                     document.getElementById('editorArea').style.display = 'block';
                     
-                    // تعيين أبعاد الكانفاس
-                    canvas.width = 1000; // دقة عالية
-                    canvas.height = 1000;
-                    
-                    // تصفير الإعدادات
-                    settings = { scale: 100, x: 0, y: 0 };
-                    document.getElementById('scale').value = 100;
-                    document.getElementById('posX').value = 0;
-                    document.getElementById('posY').value = 0;
-                    
+                    // إعادة ضبط الإعدادات
+                    resetSettings();
                     draw();
                 }
-            }
+            };
+            
             reader.readAsDataURL(e.target.files[0]);
         }
     };
 
-    // 3. دالة الرسم (Draw)
+    function resetSettings() {
+        settings = { scale: 100, x: 0, y: 0 };
+        document.getElementById('scale').value = 100;
+        document.getElementById('posX').value = 0;
+        document.getElementById('posY').value = 0;
+    }
+
+    // --- 3. دالة الرسم الرئيسية (Draw) ---
     function draw() {
         // مسح الكانفاس
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.clearRect(0, 0, canvasSize, canvasSize);
 
-        // أ. رسم خلفية بيضاء (اختياري لتجنب الشفافية خلف الصورة)
+        // أ. رسم خلفية بيضاء
         ctx.fillStyle = "#ffffff";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillRect(0, 0, canvasSize, canvasSize);
 
         // ب. رسم صورة المستخدم
         if (userImg.src) {
             ctx.save();
-            // نقطة الارتكاز في المنتصف
-            ctx.translate(canvas.width/2, canvas.height/2);
+            ctx.translate(canvasSize/2, canvasSize/2);
             
-            let scaleVal = settings.scale / 100;
-            // معادلة لجعل الصورة تغطي الكانفاس (Cover Style)
-            let ratio = Math.max(canvas.width / userImg.width, canvas.height / userImg.height);
-            let finalScale = ratio * scaleVal;
+            const scaleFactor = settings.scale / 100;
             
-            let w = userImg.width * finalScale;
-            let h = userImg.height * finalScale;
-            
-            // الرسم مع الإزاحة (التحريك)
-            // نضرب الإزاحة في 5 لتسريع الحركة عند سحب المؤشر
-            ctx.drawImage(userImg, -w/2 + (settings.x * 5), -h/2 + (settings.y * 5), w, h);
+            // معادلة Cover (ملء المساحة)
+            const ratio = Math.max(canvasSize / userImg.width, canvasSize / userImg.height);
+            const finalW = userImg.width * ratio * scaleFactor;
+            const finalH = userImg.height * ratio * scaleFactor;
+
+            // الرسم مع الإحداثيات
+            // نضرب الإحداثيات في 4 لزيادة سرعة الحركة بما يتناسب مع حجم الكانفاس الكبير
+            ctx.drawImage(
+                userImg, 
+                -finalW/2 + (settings.x * 4), 
+                -finalH/2 + (settings.y * 4), 
+                finalW, 
+                finalH
+            );
             
             ctx.restore();
         }
 
-        // ج. رسم الفريم (PNG) فوق كل شيء
+        // ج. رسم الفريم
         if (frameImg.src) {
-            ctx.drawImage(frameImg, 0, 0, canvas.width, canvas.height);
+            ctx.drawImage(frameImg, 0, 0, canvasSize, canvasSize);
         }
     }
 
-    // 4. تفعيل أشرطة التحكم
-    document.getElementById('scale').oninput = function(e) { settings.scale = parseInt(e.target.value); draw(); };
-    document.getElementById('posX').oninput = function(e) { settings.x = parseInt(e.target.value); draw(); };
-    document.getElementById('posY').oninput = function(e) { settings.y = parseInt(e.target.value); draw(); };
+    // --- 4. تفعيل أزرار التحكم ---
+    document.getElementById('scale').oninput = (e) => { settings.scale = parseInt(e.target.value); draw(); };
+    document.getElementById('posX').oninput = (e) => { settings.x = parseInt(e.target.value); draw(); };
+    document.getElementById('posY').oninput = (e) => { settings.y = parseInt(e.target.value); draw(); };
 
-    // 5. التحميل
+    // --- 5. التحميل ---
     function downloadImage() {
-        let link = document.createElement('a');
-        link.download = 'profile-design.png';
-        link.href = canvas.toDataURL('image/png');
+        const link = document.createElement('a');
+        link.download = 'profile-picture.png';
+        link.href = canvas.toDataURL('image/png', 1.0); // 1.0 تعني أعلى جودة
         link.click();
     }
-
 </script>
 
 </body>
