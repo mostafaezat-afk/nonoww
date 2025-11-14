@@ -2,93 +2,431 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>محرر الإطارات الاحترافي</title>
     <style>
-        /* --- 1. تنسيقات عامة --- */
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f7f6; margin: 0; padding: 20px; color: #333; user-select: none; /* منع تحديد النصوص */ }
-        .container { max-width: 1100px; margin: 0 auto; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
-        h1 { text-align: center; color: #2c3e50; margin-bottom: 5px; }
-        .subtitle { text-align: center; color: #7f8c8d; margin-bottom: 30px; font-size: 0.9em; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 15px;
+            color: #333; 
+            user-select: none;
+            touch-action: manipulation;
+        }
+        
+        .container { 
+            max-width: 600px; 
+            margin: 0 auto; 
+            background: white; 
+            border-radius: 25px; 
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        /* --- Header --- */
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 30px 20px;
+            text-align: center;
+            color: white;
+        }
+        .header h1 { 
+            font-size: 1.8em; 
+            margin-bottom: 8px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        .header p { 
+            font-size: 0.9em; 
+            opacity: 0.95;
+        }
 
-        /* --- 2. منطقة الرفع --- */
+        /* --- Upload Area --- */
+        .upload-section {
+            padding: 20px;
+            background: #f8f9fa;
+        }
         .upload-box {
-            border: 3px dashed #bdc3c7; background: #ecf0f1; padding: 50px; text-align: center;
-            border-radius: 15px; cursor: pointer; transition: 0.3s; margin-bottom: 20px;
+            border: 3px dashed #667eea; 
+            background: white;
+            padding: 40px 20px; 
+            text-align: center;
+            border-radius: 20px; 
+            cursor: pointer; 
+            transition: all 0.3s;
         }
-        .upload-box:hover { border-color: #3498db; background: #ebf5fb; }
-        .upload-icon { font-size: 50px; margin-bottom: 15px; display: block; }
-        .upload-text { font-size: 1.2em; font-weight: bold; color: #34495e; }
+        .upload-box:hover, .upload-box:active { 
+            border-color: #764ba2; 
+            background: #f0f4ff; 
+            transform: scale(1.02);
+        }
+        .upload-icon { font-size: 60px; margin-bottom: 15px; }
+        .upload-text { 
+            font-size: 1.1em; 
+            font-weight: 600; 
+            color: #667eea;
+            margin-bottom: 8px;
+        }
+        .upload-hint {
+            font-size: 0.85em;
+            color: #888;
+        }
 
-        /* --- 3. منطقة التعديل --- */
+        /* --- Editor Area --- */
         .editor-area { display: none; }
-        .editor-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
-        @media (max-width: 768px) { .editor-grid { grid-template-columns: 1fr; } }
-
-        /* --- 4. الكانفاس --- */
-        .canvas-wrapper {
-            background: #eee; border-radius: 15px; overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1); aspect-ratio: 1; position: relative;
+        
+        /* --- 1. Frames Grid (في الأعلى) --- */
+        .frames-section {
+            padding: 20px;
+            background: #f8f9fa;
+            border-bottom: 3px solid #e9ecef;
         }
-        canvas { width: 100%; height: 100%; display: block; }
-
-        /* --- 5. أدوات التحكم --- */
-        .controls-wrapper { padding: 10px; }
-        .frames-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 15px; margin-bottom: 30px; }
+        .section-title {
+            font-size: 1.1em;
+            font-weight: 700;
+            color: #495057;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .frames-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); 
+            gap: 12px;
+        }
         .frame-card {
-            text-align: center; cursor: pointer; padding: 8px; border: 2px solid transparent;
-            border-radius: 10px; background: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: all 0.2s;
+            cursor: pointer; 
+            padding: 8px; 
+            border: 3px solid transparent;
+            border-radius: 15px; 
+            background: white; 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08); 
+            transition: all 0.2s;
+            position: relative;
         }
-        .frame-card:hover { transform: translateY(-3px); }
-        .frame-card.active { border-color: #3498db; background: #eaf6ff; }
-        .frame-card img { width: 100%; height: 80px; object-fit: contain; margin-bottom: 8px; pointer-events: none; /* منع سحب الصور */ }
-        .frame-radio { width: 18px; height: 18px; accent-color: #3498db; cursor: pointer; }
+        .frame-card:hover, .frame-card:active { 
+            transform: translateY(-5px); 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+        }
+        .frame-card.active { 
+            border-color: #667eea; 
+            background: linear-gradient(135deg, #f0f4ff 0%, #e8ecff 100%);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.3);
+        }
+        .frame-card img { 
+            width: 100%; 
+            height: 70px; 
+            object-fit: contain; 
+            pointer-events: none;
+        }
+        .frame-check {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #667eea;
+            color: white;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+        .frame-card.active .frame-check {
+            display: flex;
+        }
 
-        /* أشرطة التمرير */
-        .control-group { margin-bottom: 20px; }
-        .control-group label { display: flex; justify-content: space-between; font-weight: 600; margin-bottom: 8px; color: #34495e; }
-        input[type=range] { width: 100%; height: 6px; background: #bdc3c7; border-radius: 5px; outline: none; -webkit-appearance: none; cursor: pointer; }
-        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; background: #3498db; border-radius: 50%; cursor: pointer; transition: 0.2s; }
+        /* --- 2. Canvas Area (في الوسط) --- */
+        .canvas-section {
+            padding: 20px;
+            background: white;
+        }
+        .canvas-wrapper {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 20px; 
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            aspect-ratio: 1;
+            position: relative;
+            touch-action: none;
+        }
+        canvas { 
+            width: 100%; 
+            height: 100%; 
+            display: block;
+            cursor: move;
+        }
+        .touch-hint {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 15px;
+            font-size: 0.9em;
+            text-align: center;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .touch-hint.show {
+            opacity: 1;
+        }
 
-        /* الأزرار */
-        .btn-group { display: flex; gap: 10px; margin-top: 20px; }
-        .btn { flex: 1; padding: 15px; border: none; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.2s; }
-        .btn-primary { background: #3498db; color: white; }
-        .btn-primary:hover { background: #2980b9; }
-        .btn-secondary { background: #ecf0f1; color: #7f8c8d; }
-        .btn-secondary:hover { background: #bdc3c7; }
+        /* --- 3. Controls (أسفل الكانفاس) --- */
+        .controls-section {
+            padding: 20px;
+            background: #f8f9fa;
+        }
+        .control-group { 
+            margin-bottom: 20px;
+            background: white;
+            padding: 15px;
+            border-radius: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .control-group label { 
+            display: flex; 
+            justify-content: space-between; 
+            font-weight: 600; 
+            margin-bottom: 10px; 
+            color: #495057;
+            font-size: 0.95em;
+        }
+        .control-value {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 0.85em;
+        }
+        input[type=range] { 
+            width: 100%; 
+            height: 8px; 
+            background: #e9ecef;
+            border-radius: 10px; 
+            outline: none; 
+            -webkit-appearance: none;
+            cursor: pointer;
+        }
+        input[type=range]::-webkit-slider-thumb { 
+            -webkit-appearance: none; 
+            width: 24px; 
+            height: 24px; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%; 
+            cursor: pointer; 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        input[type=range]::-moz-range-thumb {
+            width: 24px; 
+            height: 24px; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%; 
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        /* --- 4. Instructions --- */
+        .instructions-section {
+            padding: 20px;
+            background: white;
+            border-top: 3px solid #e9ecef;
+        }
+        .instruction-card {
+            background: linear-gradient(135deg, #f0f4ff 0%, #e8ecff 100%);
+            padding: 20px;
+            border-radius: 15px;
+            border-right: 4px solid #667eea;
+        }
+        .instruction-title {
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 12px;
+            font-size: 1.05em;
+        }
+        .instruction-list {
+            list-style: none;
+            padding: 0;
+        }
+        .instruction-list li {
+            padding: 8px 0;
+            color: #495057;
+            display: flex;
+            align-items: start;
+            gap: 10px;
+            font-size: 0.9em;
+        }
+        .instruction-list li:before {
+            content: "✓";
+            color: #667eea;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        /* --- Buttons --- */
+        .button-section {
+            padding: 20px;
+            background: #f8f9fa;
+        }
+        .btn-group { 
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        .btn { 
+            padding: 16px; 
+            border: none; 
+            border-radius: 15px; 
+            font-size: 1em; 
+            font-weight: 700; 
+            cursor: pointer; 
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn:active {
+            transform: scale(0.95);
+        }
+        .btn-primary { 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        .btn-primary:hover { 
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+            transform: translateY(-2px);
+        }
+        .btn-secondary { 
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+        .btn-secondary:hover { 
+            background: #f0f4ff;
+        }
+
+        /* --- Responsive --- */
+        @media (max-width: 480px) {
+            .header h1 { font-size: 1.5em; }
+            .frames-grid { grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); }
+            .frame-card img { height: 60px; }
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>🎨 تصميم صورة البروفايل</h1>
-    <p class="subtitle">اختر الإطار المناسب، وارفع صورتك لتصميم بروفايل احترافي</p>
-
-    <div class="upload-box" id="uploadBox" onclick="document.getElementById('fileInput').click()">
-        <span class="upload-icon">📷</span>
-        <div class="upload-text">اضغط هنا لرفع صورتك الشخصية</div>
-        <input type="file" id="fileInput" accept="image/*" style="display: none;">
+    <!-- Header -->
+    <div class="header">
+        <h1>🎨 محرر صور البروفايل</h1>
+        <p>صمم صورتك الشخصية باحترافية في ثوانٍ</p>
     </div>
 
+    <!-- Upload Section -->
+    <div class="upload-section">
+        <div class="upload-box" id="uploadBox" onclick="document.getElementById('fileInput').click()">
+            <div class="upload-icon">📸</div>
+            <div class="upload-text">اضغط لرفع صورتك</div>
+            <div class="upload-hint">JPG, PNG أو GIF</div>
+            <input type="file" id="fileInput" accept="image/*" style="display: none;">
+        </div>
+    </div>
+
+    <!-- Editor Area -->
     <div class="editor-area" id="editorArea">
-        <div class="editor-grid">
-            <div class="canvas-wrapper"><canvas id="canvas"></canvas></div>
-            <div class="controls-wrapper">
-                <div class="control-group">
-                    <label>اختر شكل الإطار:</label>
-                    <div class="frames-grid" id="framesContainer"></div>
-                </div>
-                <hr style="border: 0; border-top: 1px solid #e0e0e0; margin: 20px 0;">
-                <div class="control-group"><label>🔎 تكبير / تصغير</label><input type="range" id="scale" min="20" max="200" value="100"></div>
-                <div class="control-group"><label>↔️ تحريك أفقي</label><input type="range" id="posX" min="-300" max="300" value="0"></div>
-                <div class="control-group"><label>↕️ تحريك عمودي</label><input type="range" id="posY" min="-300" max="300" value="0"></div>
-                <div class="btn-group">
-                    <button class="btn btn-primary" onclick="downloadImage()">💾 حفظ الصورة</button>
-                    <button class="btn btn-secondary" onclick="location.reload()">🔄 رفع جديد</button>
+        
+        <!-- 1. Frames Selection -->
+        <div class="frames-section">
+            <div class="section-title">
+                <span>🖼️</span>
+                <span>اختر الإطار المناسب</span>
+            </div>
+            <div class="frames-grid" id="framesContainer"></div>
+        </div>
+
+        <!-- 2. Canvas Display -->
+        <div class="canvas-section">
+            <div class="section-title">
+                <span>👁️</span>
+                <span>معاينة التصميم</span>
+            </div>
+            <div class="canvas-wrapper">
+                <canvas id="canvas"></canvas>
+                <div class="touch-hint" id="touchHint">
+                    استخدم إصبعين للتكبير والتصغير<br>
+                    اسحب بإصبع واحد للتحريك
                 </div>
             </div>
         </div>
+
+        <!-- 3. Slider Controls -->
+        <div class="controls-section">
+            <div class="section-title">
+                <span>⚙️</span>
+                <span>ضبط دقيق</span>
+            </div>
+            
+            <div class="control-group">
+                <label>
+                    <span>🔎 التكبير والتصغير</span>
+                    <span class="control-value" id="scaleValue">100%</span>
+                </label>
+                <input type="range" id="scale" min="20" max="200" value="100">
+            </div>
+
+            <div class="control-group">
+                <label>
+                    <span>↔️ التحريك الأفقي</span>
+                    <span class="control-value" id="posXValue">0</span>
+                </label>
+                <input type="range" id="posX" min="-300" max="300" value="0">
+            </div>
+
+            <div class="control-group">
+                <label>
+                    <span>↕️ التحريك العمودي</span>
+                    <span class="control-value" id="posYValue">0</span>
+                </label>
+                <input type="range" id="posY" min="-300" max="300" value="0">
+            </div>
+        </div>
+
+        <!-- 4. Instructions -->
+        <div class="instructions-section">
+            <div class="instruction-card">
+                <div class="instruction-title">📱 كيفية الاستخدام على الموبايل</div>
+                <ul class="instruction-list">
+                    <li>استخدم إصبعين للتكبير والتصغير (Pinch Zoom)</li>
+                    <li>اسحب بإصبع واحد لتحريك الصورة</li>
+                    <li>استخدم أشرطة التمرير للضبط الدقيق</li>
+                    <li>اختر الإطار المناسب من الأعلى</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 5. Action Buttons -->
+        <div class="button-section">
+            <div class="btn-group">
+                <button class="btn btn-primary" onclick="downloadImage()">
+                    <span>💾</span>
+                    <span>حفظ الصورة</span>
+                </button>
+                <button class="btn btn-secondary" onclick="location.reload()">
+                    <span>🔄</span>
+                    <span>صورة جديدة</span>
+                </button>
+            </div>
+        </div>
+
     </div>
 </div>
 
@@ -96,38 +434,33 @@
 
 <script>
     // ==========================================
-    // 🛡️ بداية نظام الحماية (Security Layer) 🛡️
+    // 🛡️ Security Layer 🛡️
     // ==========================================
     (function() {
-        // 1. Domain Lock (قفل النطاق)
-        // الكود سيعمل فقط إذا كان الرابط يحتوي على اسم حسابك
         const allowedHost = 'mostafaezat-afk'; 
         const currentHost = window.location.hostname;
         
-        // السماح بالعمل على GitHub أو Localhost للتجربة
-        if (currentHost.indexOf(allowedHost) === -1 && currentHost.indexOf('localhost') === -1 && currentHost.indexOf('127.0.0.1') === -1) {
-            document.body.innerHTML = '<div style="display:flex;justify-content:center;align-items:center;height:100vh;background:#000;color:red;font-family:sans-serif;text-align:center;"><h1>🚫 Access Denied<br>تم رفض الوصول: هذا الكود محمي</h1></div>';
+        if (currentHost.indexOf(allowedHost) === -1 && 
+            currentHost.indexOf('localhost') === -1 && 
+            currentHost.indexOf('127.0.0.1') === -1 &&
+            currentHost.indexOf('claude.site') === -1) {
+            document.body.innerHTML = '<div style="display:flex;justify-content:center;align-items:center;height:100vh;background:#000;color:red;font-family:sans-serif;text-align:center;"><h1>🚫 Access Denied<br>تم رفض الوصول</h1></div>';
             throw new Error('Unauthorized Domain');
         }
 
-        // 2. منع النقر بزر الماوس الأيمن (Right Click)
-        document.addEventListener('contextmenu', function(e) {
-            e.preventDefault();
-        });
-
-        // 3. منع اختصارات أدوات المطور (F12, Ctrl+Shift+I, etc.)
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        
         document.onkeydown = function(e) {
-            if (e.keyCode == 123) return false; // F12
-            if (e.ctrlKey && e.shiftKey && e.keyCode == 73) return false; // Ctrl+Shift+I
-            if (e.ctrlKey && e.shiftKey && e.keyCode == 74) return false; // Ctrl+Shift+J
-            if (e.ctrlKey && e.keyCode == 85) return false; // Ctrl+U
+            if (e.keyCode == 123) return false;
+            if (e.ctrlKey && e.shiftKey && e.keyCode == 73) return false;
+            if (e.ctrlKey && e.shiftKey && e.keyCode == 74) return false;
+            if (e.ctrlKey && e.keyCode == 85) return false;
         };
     })();
-    // ==========================================
-    // 🛡️ نهاية نظام الحماية 🛡️
-    // ==========================================
 
-    // --- الكود الأساسي للأداة ---
+    // ==========================================
+    // Main Application Code
+    // ==========================================
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
     const canvasSize = 1080; 
@@ -140,9 +473,16 @@
 
     let settings = { scale: 100, x: 0, y: 0 };
 
+    // Touch controls
+    let touchStartDist = 0;
+    let touchStartScale = 100;
+    let touchStartPos = { x: 0, y: 0 };
+    let lastTouchPos = { x: 0, y: 0 };
+
+    // Initialize frames
     window.onload = function() {
         if (typeof framesList === 'undefined') {
-            alert("خطأ: ملف frames.js غير موجود، لن يعمل الموقع بدونه.");
+            alert("خطأ: ملف frames.js غير موجود");
             return;
         }
         
@@ -152,17 +492,13 @@
             const card = document.createElement('div');
             card.className = `frame-card ${index === 0 ? 'active' : ''}`;
             card.innerHTML = `
+                <div class="frame-check">✓</div>
                 <img src="${frame.thumb}" alt="${frame.name}">
-                <br>
-                <input type="radio" name="frameGroup" class="frame-radio" 
-                       ${index === 0 ? 'checked' : ''}>
             `;
 
             card.onclick = () => {
                 document.querySelectorAll('.frame-card').forEach(c => c.classList.remove('active'));
-                document.querySelectorAll('.frame-radio').forEach(r => r.checked = false);
                 card.classList.add('active');
-                card.querySelector('input').checked = true;
                 changeFrame(frame.url);
             };
             container.appendChild(card);
@@ -176,6 +512,7 @@
         frameImg.onload = draw;
     }
 
+    // File upload
     const fileInput = document.getElementById('fileInput');
     fileInput.onchange = function(e) {
         if (e.target.files && e.target.files[0]) {
@@ -183,21 +520,41 @@
             reader.onload = function(event) {
                 userImg.src = event.target.result;
                 userImg.onload = function() {
-                    document.getElementById('uploadBox').style.display = 'none';
+                    document.querySelector('.upload-section').style.display = 'none';
                     document.getElementById('editorArea').style.display = 'block';
                     resetSettings();
                     draw();
+                    showTouchHint();
                 }
             };
             reader.readAsDataURL(e.target.files[0]);
         }
     };
 
+    function showTouchHint() {
+        const hint = document.getElementById('touchHint');
+        hint.classList.add('show');
+        setTimeout(() => {
+            hint.classList.remove('show');
+        }, 3000);
+    }
+
     function resetSettings() {
         settings = { scale: 100, x: 0, y: 0 };
-        document.getElementById('scale').value = 100;
-        document.getElementById('posX').value = 0;
-        document.getElementById('posY').value = 0;
+        updateSliders();
+    }
+
+    function updateSliders() {
+        document.getElementById('scale').value = settings.scale;
+        document.getElementById('posX').value = settings.x;
+        document.getElementById('posY').value = settings.y;
+        updateValueDisplays();
+    }
+
+    function updateValueDisplays() {
+        document.getElementById('scaleValue').textContent = settings.scale + '%';
+        document.getElementById('posXValue').textContent = settings.x;
+        document.getElementById('posYValue').textContent = settings.y;
     }
 
     function draw() {
@@ -221,9 +578,77 @@
         }
     }
 
-    document.getElementById('scale').oninput = (e) => { settings.scale = parseInt(e.target.value); draw(); };
-    document.getElementById('posX').oninput = (e) => { settings.x = parseInt(e.target.value); draw(); };
-    document.getElementById('posY').oninput = (e) => { settings.y = parseInt(e.target.value); draw(); };
+    // Slider controls
+    document.getElementById('scale').oninput = (e) => { 
+        settings.scale = parseInt(e.target.value); 
+        updateValueDisplays();
+        draw(); 
+    };
+    document.getElementById('posX').oninput = (e) => { 
+        settings.x = parseInt(e.target.value); 
+        updateValueDisplays();
+        draw(); 
+    };
+    document.getElementById('posY').oninput = (e) => { 
+        settings.y = parseInt(e.target.value); 
+        updateValueDisplays();
+        draw(); 
+    };
+
+    // Touch controls for canvas
+    canvas.addEventListener('touchstart', function(e) {
+        e.preventDefault();
+        
+        if (e.touches.length === 2) {
+            // Pinch zoom
+            const touch1 = e.touches[0];
+            const touch2 = e.touches[1];
+            touchStartDist = Math.hypot(
+                touch2.clientX - touch1.clientX,
+                touch2.clientY - touch1.clientY
+            );
+            touchStartScale = settings.scale;
+        } else if (e.touches.length === 1) {
+            // Pan
+            lastTouchPos = {
+                x: e.touches[0].clientX,
+                y: e.touches[0].clientY
+            };
+            touchStartPos = { x: settings.x, y: settings.y };
+        }
+    }, { passive: false });
+
+    canvas.addEventListener('touchmove', function(e) {
+        e.preventDefault();
+        
+        if (e.touches.length === 2) {
+            // Pinch zoom
+            const touch1 = e.touches[0];
+            const touch2 = e.touches[1];
+            const currentDist = Math.hypot(
+                touch2.clientX - touch1.clientX,
+                touch2.clientY - touch1.clientY
+            );
+            const scale = (currentDist / touchStartDist) * touchStartScale;
+            settings.scale = Math.max(20, Math.min(200, scale));
+            updateSliders();
+            draw();
+        } else if (e.touches.length === 1) {
+            // Pan
+            const deltaX = e.touches[0].clientX - lastTouchPos.x;
+            const deltaY = e.touches[0].clientY - lastTouchPos.y;
+            
+            settings.x = Math.max(-300, Math.min(300, touchStartPos.x + deltaX * 0.5));
+            settings.y = Math.max(-300, Math.min(300, touchStartPos.y + deltaY * 0.5));
+            
+            updateSliders();
+            draw();
+        }
+    }, { passive: false });
+
+    canvas.addEventListener('touchend', function(e) {
+        e.preventDefault();
+    }, { passive: false });
 
     function downloadImage() {
         const link = document.createElement('a');
