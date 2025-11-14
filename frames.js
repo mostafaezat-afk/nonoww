@@ -7,13 +7,13 @@ const framesList = [
     {
         id: 1,
         name: "الإطار الأول",
-        url: "https://via.placeholder.com/1000/FF0000/FFFFFF?text=Frame+1+PNG", // ضع رابط الفريم 1 هنا
-        thumb: "https://via.placeholder.com/150/FF0000/FFFFFF?text=Thumb+1"   // ضع رابط مصغر 1 هنا
+        url: "https://raw.githubusercontent.com/mostafaezat-afk/nonoww/main/642_n.png", // ضع رابط الفريم 1 هنا
+        thumb: "https://raw.githubusercontent.com/mostafaezat-afk/nonoww/main/642_n.png"   // ضع رابط مصغر 1 هنا
     },
     {
         id: 2,
         name: "الإطار الثاني",
-        url: "https://via.placeholder.com/1000/00FF00/000000?text=Frame+2+PNG", // ضع رابط الفريم 2 هنا
+        url: "https://raw.githubusercontent.com/mostafaezat-afk/nonoww/main/642_n.png", // ضع رابط الفريم 2 هنا
         thumb: "https://via.placeholder.com/150/00FF00/000000?text=Thumb+2"
     },
     {
@@ -28,4 +28,5 @@ const framesList = [
         url: "https://via.placeholder.com/1000/FFFF00/000000?text=Frame+4+PNG", // ضع رابط الفريم 4 هنا
         thumb: "https://via.placeholder.com/150/FFFF00/000000?text=Thumb+4"
     }
+
 ];
