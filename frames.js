@@ -13,20 +13,21 @@ const framesList = [
     {
         id: 2,
         name: "الإطار الثاني",
-        url: "https://raw.githubusercontent.com/mostafaezat-afk/nonoww/main/642_n.png", // ضع رابط الفريم 2 هنا
-        thumb: "https://via.placeholder.com/150/00FF00/000000?text=Thumb+2"
+        url: "https://raw.githubusercontent.com/mostafaezat-afk/nonoww/main/22.png", // ضع رابط الفريم 2 هنا
+        thumb: "https://raw.githubusercontent.com/mostafaezat-afk/nonoww/main/22.png"
     },
     {
         id: 3,
         name: "الإطار الثالث",
-        url: "https://via.placeholder.com/1000/0000FF/FFFFFF?text=Frame+3+PNG", // ضع رابط الفريم 3 هنا
-        thumb: "https://via.placeholder.com/150/0000FF/FFFFFF?text=Thumb+3"
+        url: "https://raw.githubusercontent.com/mostafaezat-afk/nonoww/main/33.png", // ضع رابط الفريم 3 هنا
+        thumb: "https://raw.githubusercontent.com/mostafaezat-afk/nonoww/main/33.png"
     },
     {
         id: 4,
         name: "الإطار الرابع",
-        url: "https://via.placeholder.com/1000/FFFF00/000000?text=Frame+4+PNG", // ضع رابط الفريم 4 هنا
-        thumb: "https://via.placeholder.com/150/FFFF00/000000?text=Thumb+4"
+        url: "https://raw.githubusercontent.com/mostafaezat-afk/nonoww/main/44.png", // ضع رابط الفريم 4 هنا
+        thumb: "https://raw.githubusercontent.com/mostafaezat-afk/nonoww/main/44.png"
     }
 
 ];
+
