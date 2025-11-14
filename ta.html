@@ -5,44 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>محرر الإطار المخصص</title>
     <style>
-        * {margin: 0;padding: 0;box-sizing: border-box;}
-        body {font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);min-height: 100vh;padding: 20px;}
-        .container {background: white;border-radius: 20px;box-shadow: 0 20px 60px rgba(0,0,0,0.3);max-width: 1000px;width: 100%;margin: 0 auto;padding: 40px;}
-        h1 {color: #2d3748;text-align: center;margin-bottom: 10px;font-size: 2.5em;}
-        .subtitle {text-align: center;color: #667eea;margin-bottom: 40px;font-size: 1.1em;}
-        .upload-section {text-align: center;margin-bottom: 30px;}
-        .upload-box {border: 3px dashed #667eea;border-radius: 15px;padding: 40px;text-align: center;cursor: pointer;transition: all 0.3s;background: #f8f9fa;display: inline-block;min-width: 400px;}
-        .upload-box:hover {background: #e9ecef;border-color: #764ba2;transform: translateY(-2px);}
-        .upload-box.dragover {background: #dee2e6;border-color: #764ba2;}
-        .upload-box.uploaded {border-color: #28a745;background: #d4edda;}
-        .upload-icon {font-size: 4em;margin-bottom: 15px;}
-        .upload-box h3 {color: #495057;margin-bottom: 10px;font-size: 1.5em;}
-        .upload-box p {color: #6c757d;font-size: 1em;}
-        input[type="file"] {display: none;}
-        .editor-section {display: none;margin-top: 30px;}
-        .editor-section.active {display: block;}
-        .preview-container {position: relative;max-width: 600px;margin: 0 auto 30px;background: #f0f0f0;border-radius: 50%;overflow: hidden;aspect-ratio: 1;}
-        #editorCanvas {display: block;width: 100%;height: 100%;cursor: move;touch-action: none;}
-        .controls {background: #f8f9fa;padding: 25px;border-radius: 15px;margin-bottom: 20px;}
-        .control-group {margin-bottom: 20px;}
-        .control-group label {display: block;margin-bottom: 10px;color: #2d3748;font-weight: 600;font-size: 1.1em;}
-        .control-row {display: flex;align-items: center;gap: 15px;}
-        input[type="range"] {flex: 1;height: 8px;border-radius: 5px;background: #dee2e6;outline: none;-webkit-appearance: none;}
-        input[type="range"]::-webkit-slider-thumb {-webkit-appearance: none;appearance: none;width: 20px;height: 20px;border-radius: 50%;background: #667eea;cursor: pointer;}
-        input[type="range"]::-moz-range-thumb {width: 20px;height: 20px;border-radius: 50%;background: #667eea;cursor: pointer;border: none;}
-        .value-display {min-width: 60px;text-align: center;font-weight: 600;color: #667eea;font-size: 1.1em;}
-        .btn {background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);color: white;border: none;padding: 15px 40px;border-radius: 50px;font-size: 1.1em;cursor: pointer;transition: transform 0.2s;margin: 10px;font-weight: 600;}
-        .btn:hover {transform: translateY(-2px);box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);}
-        .btn-secondary {background: linear-gradient(135deg, #6c757d 0%, #495057 100%);}
-        .buttons {text-align: center;margin-top: 20px;}
-        .info {background: #e7f3ff;border-right: 4px solid #667eea;padding: 20px;border-radius: 10px;margin-top: 20px;color: #2d3748;}
-        .info h4 {margin-bottom: 10px;color: #667eea;}
-        .info ul {margin-right: 20px;line-height: 1.8;}
-        @media (max-width: 768px) {.container {padding: 20px;}h1 {font-size: 1.8em;}.upload-box {min-width: 100%;}.preview-container {max-width: 100%;}}
+        *{margin:0;padding:0;box-sizing:border-box}body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);min-height:100vh;padding:20px}.container{background:white;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,0.3);max-width:1000px;width:100%;margin:0 auto;padding:40px}h1{color:#2d3748;text-align:center;margin-bottom:10px;font-size:2.5em}.subtitle{text-align:center;color:#667eea;margin-bottom:40px;font-size:1.1em}.upload-section{text-align:center;margin-bottom:30px}.upload-box{border:3px dashed #667eea;border-radius:15px;padding:40px;text-align:center;cursor:pointer;transition:all 0.3s;background:#f8f9fa;display:inline-block;min-width:400px}.upload-box:hover{background:#e9ecef;border-color:#764ba2;transform:translateY(-2px)}.upload-box.dragover{background:#dee2e6;border-color:#764ba2}.upload-box.uploaded{border-color:#28a745;background:#d4edda}.upload-icon{font-size:4em;margin-bottom:15px}.upload-box h3{color:#495057;margin-bottom:10px;font-size:1.5em}.upload-box p{color:#6c757d;font-size:1em}input[type="file"]{display:none}.editor-section{display:none;margin-top:30px}.editor-section.active{display:block}.preview-container{position:relative;max-width:600px;margin:0 auto 30px;background:#f0f0f0;border-radius:50%;overflow:hidden;aspect-ratio:1}#editorCanvas{display:block;width:100%;height:100%;cursor:move;touch-action:none}.controls{background:#f8f9fa;padding:25px;border-radius:15px;margin-bottom:20px}.control-group{margin-bottom:20px}.control-group label{display:block;margin-bottom:10px;color:#2d3748;font-weight:600;font-size:1.1em}.control-row{display:flex;align-items:center;gap:15px}input[type="range"]{flex:1;height:8px;border-radius:5px;background:#dee2e6;outline:none;-webkit-appearance:none}input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:20px;height:20px;border-radius:50%;background:#667eea;cursor:pointer}input[type="range"]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:#667eea;cursor:pointer;border:none}.value-display{min-width:60px;text-align:center;font-weight:600;color:#667eea;font-size:1.1em}.btn{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;border:none;padding:15px 40px;border-radius:50px;font-size:1.1em;cursor:pointer;transition:transform 0.2s;margin:10px;font-weight:600}.btn:hover{transform:translateY(-2px);box-shadow:0 10px 20px rgba(102,126,234,0.4)}.btn-secondary{background:linear-gradient(135deg,#6c757d 0%,#495057 100%)}.buttons{text-align:center;margin-top:20px}.info{background:#e7f3ff;border-right:4px solid #667eea;padding:20px;border-radius:10px;margin-top:20px;color:#2d3748}.info h4{margin-bottom:10px;color:#667eea}.info ul{margin-right:20px;line-height:1.8}@media (max-width:768px){.container{padding:20px}h1{font-size:1.8em}.upload-box{min-width:100%}.preview-container{max-width:100%}}
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="container" id="mainApp">
         <h1>🎨 محرر الإطار المخصص</h1>
         <div class="subtitle">ارفع صورتك واضبط موضعها للحصول على بروفايل احترافي</div>
         <div class="upload-section" id="uploadSection">
@@ -62,9 +29,9 @@
                 <div class="control-group"><label>🔄 دوران</label><div class="control-row"><input type="range" id="rotationSlider" min="-180" max="180" value="0" step="1"><span class="value-display" id="rotationValue">0°</span></div></div>
             </div>
             <div class="buttons">
-                <button class="btn" onclick="downloadImage()">💾 تحميل الصورة</button>
-                <button class="btn" onclick="shareImage()">📤 مشاركة</button>
-                <button class="btn btn-secondary" onclick="reset()">🔄 رفع صورة جديدة</button>
+                <button class="btn" id="btnDownload">💾 تحميل الصورة</button>
+                <button class="btn" id="btnShare">📤 مشاركة</button>
+                <button class="btn btn-secondary" id="btnReset">🔄 رفع صورة جديدة</button>
             </div>
         </div>
         <div class="info">
@@ -72,209 +39,102 @@
             <ul>
                 <li><strong>الخطوة 1:</strong> ارفع صورتك الشخصية</li>
                 <li><strong>الخطوة 2:</strong> اضبط حجم الصورة باستخدام شريط التحكم</li>
-                <li><strong>الخطوة 3:</strong> حرك الصورة أفقياً وعمودياً للوصول للموضع المثالي</li>
-                <li><strong>الخطوة 4:</strong> يمكنك أيضاً تدوير الصورة إذا لزم الأمر</li>
-                <li><strong>الخطوة 5:</strong> شاهد النتيجة النهائية مباشرة واضغط تحميل</li>
-                <li><strong>نصيحة:</strong> يمكنك سحب الصورة بالماوس أو الإصبع لتحريكها بسهولة</li>
+                <li><strong>الخطوة 3:</strong> حرك الصورة للوصول للموضع المثالي</li>
+                <li><strong>الخطوة 4:</strong> حمل الصورة النهائية</li>
             </ul>
         </div>
     </div>
     <script>
-        (function() {
-            const allowedDomains = ['mostafaezat-afk.github.io', 'github.io', 'localhost', '127.0.0.1'];
-            const currentDomain = window.location.hostname;
-            const isAllowed = allowedDomains.some(d => currentDomain.includes(d));
-            
-            if (!isAllowed && !currentDomain.includes('claude.ai')) {
-                document.body.innerHTML = '<div style="text-align:center;padding:50px;"><h1>⚠️ غير مصرح</h1><p>غير مصرح ا </p></div>';
-                throw new Error('Unauthorized domain');
-            }
-        })();
-        
-        const _0x4f2a = ['aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL21vc3RhZmFlemF0LWFmay9ub25vd3cvbWFpbi82X24ucG5n'];
-        const _0x7b3c = (s) => atob(s);
-        const _0x9d1e = () => _0x7b3c(_0x4f2a[0]);
-        
-        let _$={u:null,f:null,s:100,x:0,y:0,r:0,d:false,sx:0,sy:0};
-        const _e=(i)=>document.getElementById(i);
-        const _d={ua:_e('uploadArea'),fi:_e('fileInput'),us:_e('uploadSection'),es:_e('editorSection'),cv:_e('editorCanvas'),ss:_e('scaleSlider'),xs:_e('xSlider'),ys:_e('ySlider'),rs:_e('rotationSlider'),sv:_e('scaleValue'),xv:_e('xValue'),yv:_e('yValue'),rv:_e('rotationValue')};
-        const _c=_d.cv.getContext('2d');
-        
-        (function(){
+    /* Security & Logic Layer */
+    (function(_0x1a2b){const _0x3c4d=function(){let _0x5e=true;return function(_0x6f,_0x7g){const _0x8h=_0x5e?function(){if(_0x7g){const _0x9i=_0x7g.apply(_0x6f,arguments);_0x7g=null;return _0x9i;}}:function(){};_0x5e=false;return _0x8h;};}();const _0x9j=_0x3c4d(this,function(){const _0xa1=function(){const _0xb2=_0xa1.constructor('return /" + this + "/')().constructor('^([^ ]+( +[^ ]+)+)+[^ ]}');return!_0xb2.test(_0x9j);};return _0xa1();});_0x9j();
+    
+    // Hidden Config
+    const _0xCONF={
+        d: [109,111,115,116,97,102,97,101,122,97,116,45,97,102,107,46,103,105,116,104,117,98,46,105,111], // Allowed Domain
+        u: [104,116,116,112,115,58,47,47,114,97,119,46,103,105,116,104,117,98,117,115,101,114,99,111,110,116,101,110,116,46,99,111,109,47,109,111,115,116,97,102,97,101,122,97,116,45,97,102,107,47,110,111,110,111,119,119,47,109,97,105,110,47,54,52,50,95,110,46,112,110,103] // Frame URL
+    };
+    function _0xS(_0xa){return _0xa.map(c=>String.fromCharCode(c)).join('');}
+    
+    // Security Check
+    const _0xL = window.location.hostname;
+    const _0xD = _0xS(_0xCONF.d);
+    if(!_0xL.includes(_0xD) && !_0xL.includes('localhost') && !_0xL.includes('127.0.0.1')){
+        document.body.innerHTML = '<div style="display:flex;justify-content:center;align-items:center;height:100vh;background:#000;color:red;"><h1>⚠️ Unauthorized Access</h1></div>';
+        throw new Error('ERR_ACCESS_DENIED');
+    }
+
+    // App Logic
+    const _$={u:null,f:null,s:100,x:0,y:0,r:0,d:false,sx:0,sy:0};
+    const _g=(i)=>document.getElementById(i);
+    const _el={ua:_g('uploadArea'),fi:_g('fileInput'),us:_g('uploadSection'),es:_g('editorSection'),cv:_g('editorCanvas'),ss:_g('scaleSlider'),xs:_g('xSlider'),ys:_g('ySlider'),rs:_g('rotationSlider'),sv:_g('scaleValue'),xv:_g('xValue'),yv:_g('yValue'),rv:_g('rotationValue')};
+    const _ctx=_el.cv.getContext('2d');
+
+    // Load Frame
+    const _frm=new Image();
+    _frm.crossOrigin='anonymous';
+    _frm.src = _0xS(_0xCONF.u);
+    _frm.onload=()=>{_$.f=_frm;if(_$.u)draw();};
+
+    // Event Listeners
+    _el.ua.onclick=()=>_el.fi.click();
+    _el.fi.onchange=(e)=>{if(e.target.files[0]) loadUsrImg(e.target.files[0]);};
+    _el.ua.ondragover=(e)=>{e.preventDefault();_el.ua.classList.add('dragover');};
+    _el.ua.ondragleave=()=>_el.ua.classList.remove('dragover');
+    _el.ua.ondrop=(e)=>{e.preventDefault();_el.ua.classList.remove('dragover');if(e.dataTransfer.files[0]) loadUsrImg(e.dataTransfer.files[0]);};
+
+    function loadUsrImg(file){
+        const r=new FileReader();
+        r.onload=(ev)=>{
             const img=new Image();
-            img.crossOrigin='anonymous';
-            img.onload=()=>{_$.f=img;};
-            img.onerror=()=>console.error('Frame load failed');
-            setTimeout(()=>{img.src=_0x9d1e();},100);
-        })();
-        
-        document.addEventListener('contextmenu',e=>e.preventDefault());
-        document.addEventListener('keydown',e=>{
-            if(e.key==='F12'||e.ctrlKey&&e.shiftKey&&e.key==='I'||e.ctrlKey&&e.shiftKey&&e.key==='J'||e.ctrlKey&&e.key==='U'){
-                e.preventDefault();
-                return false;
-            }
-        });
-        
-        (function(){
-            const x=()=>{
-                if(window.outerWidth-window.innerWidth>160||window.outerHeight-window.innerHeight>160){
-                    document.body.innerHTML='<div style="text-align:center;padding:50px;"><h1>⚠️ تحذير</h1><p>الرجاء إغلاق أدوات المطور</p></div>';
-                }
-            };
-            setInterval(x,1000);
-        })();
-                _d.ua.onclick=()=>_d.fi.click();
-        _d.fi.onchange=(e)=>{
-            if(e.target.files.length>0){
-                const r=new FileReader();
-                r.onload=(ev)=>{
-                    const img=new Image();
-                    img.onload=()=>{
-                        _$.u=img;
-                        _d.us.style.display='none';
-                        _d.es.classList.add('active');
-                        _d.cv.width=600;
-                        _d.cv.height=600;
-                        draw();
-                    };
-                    img.src=ev.target.result;
-                };
-                r.readAsDataURL(e.target.files[0]);
-            }
+            img.onload=()=>{_$.u=img;_el.us.style.display='none';_el.es.classList.add('active');_el.cv.width=600;_el.cv.height=600;draw();};
+            img.src=ev.target.result;
         };
-        _d.ua.ondragover=(e)=>{e.preventDefault();_d.ua.classList.add('dragover');};
-        _d.ua.ondragleave=()=>_d.ua.classList.remove('dragover');
-        _d.ua.ondrop=(e)=>{
-            e.preventDefault();
-            _d.ua.classList.remove('dragover');
-            if(e.dataTransfer.files.length>0){
-                const r=new FileReader();
-                r.onload=(ev)=>{
-                    const img=new Image();
-                    img.onload=()=>{
-                        _$.u=img;
-                        _d.us.style.display='none';
-                        _d.es.classList.add('active');
-                        _d.cv.width=600;
-                        _d.cv.height=600;
-                        draw();
-                    };
-                    img.src=ev.target.result;
-                };
-                r.readAsDataURL(e.dataTransfer.files[0]);
-            }
-        };
-        _d.ss.oninput=(e)=>{_$.s=parseInt(e.target.value);_d.sv.textContent=_$.s+'%';draw();};
-        _d.xs.oninput=(e)=>{_$.x=parseInt(e.target.value);_d.xv.textContent=_$.x;draw();};
-        _d.ys.oninput=(e)=>{_$.y=parseInt(e.target.value);_d.yv.textContent=_$.y;draw();};
-        _d.rs.oninput=(e)=>{_$.r=parseInt(e.target.value);_d.rv.textContent=_$.r+'°';draw();};
-        const startDrag=(e)=>{_$.d=true;_$.sx=e.offsetX;_$.sy=e.offsetY;};
-        const drag=(e)=>{
-            if(!_$.d)return;
-            const dx=e.offsetX-_$.sx,dy=e.offsetY-_$.sy;
-            _$.x+=dx;_$.y+=dy;
-            _d.xs.value=_$.x;_d.ys.value=_$.y;
-            _d.xv.textContent=_$.x;_d.yv.textContent=_$.y;
-            _$.sx=e.offsetX;_$.sy=e.offsetY;
-            draw();
-        };
-        const endDrag=()=>_$.d=false;
-        _d.cv.onmousedown=startDrag;
-        _d.cv.onmousemove=drag;
-        _d.cv.onmouseup=endDrag;
-        _d.cv.onmouseleave=endDrag;
-        _d.cv.ontouchstart=(e)=>{
-            e.preventDefault();
-            const t=e.touches[0];
-            const m=new MouseEvent('mousedown',{clientX:t.clientX,clientY:t.clientY});
-            _d.cv.dispatchEvent(m);
-        };
-        _d.cv.ontouchmove=(e)=>{
-            e.preventDefault();
-            const t=e.touches[0];
-            const m=new MouseEvent('mousemove',{clientX:t.clientX,clientY:t.clientY});
-            _d.cv.dispatchEvent(m);
-        };
-        _d.cv.ontouchend=(e)=>{
-            e.preventDefault();
-            _d.cv.dispatchEvent(new MouseEvent('mouseup',{}));
-        };
-        function draw(){
-            if(!_$.u)return;
-            _c.clearRect(0,0,_d.cv.width,_d.cv.height);
-            const cx=_d.cv.width/2,cy=_d.cv.height/2;
-            _c.save();
-            _c.translate(cx,cy);
-            _c.rotate(_$.r*Math.PI/180);
-            _c.translate(-cx,-cy);
-            const sf=_$.s/100;
-            const sc=Math.max(_d.cv.width/_$.u.width,_d.cv.height/_$.u.height)*sf;
-            const w=_$.u.width*sc,h=_$.u.height*sc;
-            const ix=cx-w/2+_$.x,iy=cy-h/2+_$.y;
-            _c.drawImage(_$.u,ix,iy,w,h);
-            _c.restore();
-            if(_$.f)_c.drawImage(_$.f,0,0,_d.cv.width,_d.cv.height);
-        }
-        function downloadImage(){
-            const fc=document.createElement('canvas');
-            const ctx=fc.getContext('2d');
-            const sz=1200;
-            fc.width=sz;fc.height=sz;
-            const cx=sz/2,cy=sz/2;
-            ctx.save();
-            ctx.translate(cx,cy);
-            ctx.rotate(_$.r*Math.PI/180);
-            ctx.translate(-cx,-cy);
-            const sf=_$.s/100;
-            const sc=Math.max(sz/_$.u.width,sz/_$.u.height)*sf;
-            const w=_$.u.width*sc,h=_$.u.height*sc;
-            const ix=cx-w/2+(_$.x*2),iy=cy-h/2+(_$.y*2);
-            ctx.drawImage(_$.u,ix,iy,w,h);
-            ctx.restore();
-            if(_$.f)ctx.drawImage(_$.f,0,0,sz,sz);
-            const a=document.createElement('a');
-            a.download='profile-with-frame.png';
-            a.href=fc.toDataURL('image/png');
-            a.click();
-        }
-        async function shareImage(){
-            try{
-                const fc=document.createElement('canvas');
-                const ctx=fc.getContext('2d');
-                const sz=1200;
-                fc.width=sz;fc.height=sz;
-                const cx=sz/2,cy=sz/2;
-                ctx.save();
-                ctx.translate(cx,cy);
-                ctx.rotate(_$.r*Math.PI/180);
-                ctx.translate(-cx,-cy);
-                const sf=_$.s/100;
-                const sc=Math.max(sz/_$.u.width,sz/_$.u.height)*sf;
-                const w=_$.u.width*sc,h=_$.u.height*sc;
-                const ix=cx-w/2+(_$.x*2),iy=cy-h/2+(_$.y*2);
-                ctx.drawImage(_$.u,ix,iy,w,h);
-                ctx.restore();
-                if(_$.f)ctx.drawImage(_$.f,0,0,sz,sz);
-                const blob=await new Promise(r=>fc.toBlob(r,'image/png'));
-                const file=new File([blob],'profile-frame.png',{type:'image/png'});
-                if(navigator.share&&navigator.canShare({files:[file]})){
-                    await navigator.share({files:[file],title:'صورة البروفايل الخاصة بي'});
-                }else{
-                    downloadImage();
-                    alert('تم تحميل الصورة! يمكنك الآن مشاركتها');
-                }
-            }catch(e){downloadImage();}
-        }
-        function reset(){
-            _$.u=null;_$.s=100;_$.x=0;_$.y=0;_$.r=0;
-            _d.ss.value=100;_d.xs.value=0;_d.ys.value=0;_d.rs.value=0;
-            _d.sv.textContent='100%';_d.xv.textContent='0';_d.yv.textContent='0';_d.rv.textContent='0°';
-            _d.fi.value='';
-            _d.es.classList.remove('active');
-            _d.us.style.display='block';
-        }
+        r.readAsDataURL(file);
+    }
+
+    // Controls
+    const up=(k,v)=>{_$[k]=parseInt(v);draw();};
+    _el.ss.oninput=(e)=>{up('s',e.target.value);_el.sv.textContent=_$.s+'%';};
+    _el.xs.oninput=(e)=>{up('x',e.target.value);_el.xv.textContent=_$.x;};
+    _el.ys.oninput=(e)=>{up('y',e.target.value);_el.yv.textContent=_$.y;};
+    _el.rs.oninput=(e)=>{up('r',e.target.value);_el.rv.textContent=_$.r+'°';};
+    
+    // Canvas Interaction
+    const ptrS=(e)=>{_$.d=true;_$.sx=e.offsetX||e.touches[0].clientX;_$.sy=e.offsetY||e.touches[0].clientY;};
+    const ptrM=(e)=>{if(!_$.d)return;e.preventDefault();
+        const cx=e.offsetX||e.touches[0].clientX, cy=e.offsetY||e.touches[0].clientY;
+        _$.x+=(cx-_$.sx);_$.y+=(cy-_$.sy);_$.sx=cx;_$.sy=cy;
+        _el.xs.value=_$.x;_el.ys.value=_$.y;draw();
+    };
+    const ptrE=()=>_$.d=false;
+    _el.cv.addEventListener('mousedown',ptrS);window.addEventListener('mousemove',ptrM);window.addEventListener('mouseup',ptrE);
+    _el.cv.addEventListener('touchstart',ptrS,{passive:false});window.addEventListener('touchmove',ptrM,{passive:false});window.addEventListener('touchend',ptrE);
+
+    function draw(){
+        _ctx.clearRect(0,0,600,600);
+        if(!_$.u)return;
+        const cx=300,cy=300;
+        _ctx.save();
+        _ctx.translate(cx,cy);
+        _ctx.rotate(_$.r*Math.PI/180);
+        _ctx.translate(-cx,-cy);
+        const sc=Math.max(600/_$.u.width,600/_$.u.height)*(_$.s/100);
+        const w=_$.u.width*sc,h=_$.u.height*sc;
+        _ctx.drawImage(_$.u,cx-w/2+_$.x,cy-h/2+_$.y,w,h);
+        _ctx.restore();
+        if(_$.f)_ctx.drawImage(_$.f,0,0,600,600);
+    }
+
+    _g('btnDownload').onclick=()=>{
+        const c=document.createElement('canvas');c.width=1200;c.height=1200;const x=c.getContext('2d');
+        const cx=600,cy=600;x.save();x.translate(cx,cy);x.rotate(_$.r*Math.PI/180);x.translate(-cx,-cy);
+        const sc=Math.max(1200/_$.u.width,1200/_$.u.height)*(_$.s/100);
+        x.drawImage(_$.u,cx-(_$.u.width*sc)/2+(_$.x*2),cy-(_$.u.height*sc)/2+(_$.y*2),_$.u.width*sc,_$.u.height*sc);
+        x.restore();if(_$.f)x.drawImage(_$.f,0,0,1200,1200);
+        const a=document.createElement('a');a.download='profile-frame.png';a.href=c.toDataURL();a.click();
+    };
+    _g('btnReset').onclick=()=>{location.reload();};
+    })();
     </script>
 </body>
 </html>
-
