@@ -5,136 +5,267 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>محرر الإطار المخصص</title>
     <style>
-        *{margin:0;padding:0;box-sizing:border-box}body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);min-height:100vh;padding:20px}.container{background:white;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,0.3);max-width:1000px;width:100%;margin:0 auto;padding:40px}h1{color:#2d3748;text-align:center;margin-bottom:10px;font-size:2.5em}.subtitle{text-align:center;color:#667eea;margin-bottom:40px;font-size:1.1em}.upload-section{text-align:center;margin-bottom:30px}.upload-box{border:3px dashed #667eea;border-radius:15px;padding:40px;text-align:center;cursor:pointer;transition:all 0.3s;background:#f8f9fa;display:inline-block;min-width:400px}.upload-box:hover{background:#e9ecef;border-color:#764ba2;transform:translateY(-2px)}.upload-box.dragover{background:#dee2e6;border-color:#764ba2}.upload-box.uploaded{border-color:#28a745;background:#d4edda}.upload-icon{font-size:4em;margin-bottom:15px}.upload-box h3{color:#495057;margin-bottom:10px;font-size:1.5em}.upload-box p{color:#6c757d;font-size:1em}input[type="file"]{display:none}.editor-section{display:none;margin-top:30px}.editor-section.active{display:block}.preview-container{position:relative;max-width:600px;margin:0 auto 30px;background:#f0f0f0;border-radius:50%;overflow:hidden;aspect-ratio:1}#editorCanvas{display:block;width:100%;height:100%;cursor:move;touch-action:none}.controls{background:#f8f9fa;padding:25px;border-radius:15px;margin-bottom:20px}.control-group{margin-bottom:20px}.control-group label{display:block;margin-bottom:10px;color:#2d3748;font-weight:600;font-size:1.1em}.control-row{display:flex;align-items:center;gap:15px}input[type="range"]{flex:1;height:8px;border-radius:5px;background:#dee2e6;outline:none;-webkit-appearance:none}input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:20px;height:20px;border-radius:50%;background:#667eea;cursor:pointer}input[type="range"]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:#667eea;cursor:pointer;border:none}.value-display{min-width:60px;text-align:center;font-weight:600;color:#667eea;font-size:1.1em}.btn{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;border:none;padding:15px 40px;border-radius:50px;font-size:1.1em;cursor:pointer;transition:transform 0.2s;margin:10px;font-weight:600}.btn:hover{transform:translateY(-2px);box-shadow:0 10px 20px rgba(102,126,234,0.4)}.btn-secondary{background:linear-gradient(135deg,#6c757d 0%,#495057 100%)}.buttons{text-align:center;margin-top:20px}.info{background:#e7f3ff;border-right:4px solid #667eea;padding:20px;border-radius:10px;margin-top:20px;color:#2d3748}.info h4{margin-bottom:10px;color:#667eea}.info ul{margin-right:20px;line-height:1.8}@media (max-width:768px){.container{padding:20px}h1{font-size:1.8em}.upload-box{min-width:100%}.preview-container{max-width:100%}}
+        /* CSS Styles */
+        *{margin:0;padding:0;box-sizing:border-box}body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:linear-gradient(135deg,#1a202c 0%,#2d3748 100%);min-height:100vh;padding:20px;color:#fff}.container{background:white;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,0.5);max-width:1000px;width:100%;margin:0 auto;padding:40px;color:#333}h1{color:#2d3748;text-align:center;margin-bottom:10px;font-size:2.5em}.subtitle{text-align:center;color:#667eea;margin-bottom:40px;font-size:1.1em}.upload-section{text-align:center;margin-bottom:30px}.upload-box{border:3px dashed #667eea;border-radius:15px;padding:40px;text-align:center;cursor:pointer;transition:all 0.3s;background:#f8f9fa;display:inline-block;min-width:100%;max-width:500px}.upload-box:hover{background:#e9ecef;border-color:#764ba2}.upload-icon{font-size:4em;margin-bottom:15px}.editor-section{display:none;margin-top:30px}.editor-section.active{display:block}.main-grid{display:grid;grid-template-columns:1fr 1fr;gap:30px}@media (max-width:768px){.main-grid{grid-template-columns:1fr}}.preview-container{position:relative;width:100%;background:#f0f0f0;border-radius:20px;overflow:hidden;aspect-ratio:1;box-shadow:0 10px 30px rgba(0,0,0,0.1)}#editorCanvas{display:block;width:100%;height:100%;cursor:move}.controls-area{background:#f8f9fa;padding:20px;border-radius:15px}.control-group{margin-bottom:15px}.control-group label{display:block;margin-bottom:8px;font-weight:600;color:#4a5568}input[type="range"]{width:100%;height:6px;background:#cbd5e0;border-radius:5px;outline:none;-webkit-appearance:none}input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#667eea;cursor:pointer}.btn{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;border:none;padding:12px 30px;border-radius:50px;font-size:1em;cursor:pointer;width:100%;margin-bottom:10px;font-weight:bold}.btn-secondary{background:#cbd5e0;color:#4a5568}
+        
+        /* تصميم قسم اختيار الإطارات الجديد */
+        .frames-selection {margin-top: 20px; text-align: center;}
+        .frames-selection h3 {margin-bottom: 15px; color: #4a5568;}
+        .frames-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .frame-option {
+            position: relative;
+            cursor: pointer;
+            border: 3px solid transparent;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.2s;
+            aspect-ratio: 1;
+        }
+        .frame-option img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .frame-option.selected {
+            border-color: #667eea;
+            box-shadow: 0 0 15px rgba(102, 126, 234, 0.5);
+            transform: scale(1.05);
+        }
+        .frame-option:hover {
+            transform: translateY(-2px);
+        }
+        /* علامة الصح على الإطار المختار */
+        .check-mark {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: #667eea;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .frame-option.selected .check-mark {
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
-    <div class="container" id="mainApp">
-        <h1>🎨 محرر الإطار المخصص</h1>
-        <div class="subtitle">ارفع صورتك واضبط موضعها للحصول على بروفايل احترافي</div>
+    <div class="container">
+        <h1>🎨 محرر الصور والبراويز</h1>
+        <div class="subtitle">اختر الإطار، ارفع صورتك، وحمل النتيجة فوراً</div>
+
         <div class="upload-section" id="uploadSection">
             <div class="upload-box" id="uploadArea">
                 <div class="upload-icon">📷</div>
-                <h3>ارفع صورتك الشخصية</h3>
-                <p>اضغط هنا أو اسحب صورتك</p>
-                <input type="file" id="fileInput" accept="image/*">
+                <h3>اضغط لرفع صورتك الشخصية</h3>
+                <input type="file" id="fileInput" accept="image/*" style="display:none">
             </div>
         </div>
+
         <div class="editor-section" id="editorSection">
-            <div class="preview-container"><canvas id="editorCanvas"></canvas></div>
-            <div class="controls">
-                <div class="control-group"><label>🔍 حجم الصورة</label><div class="control-row"><input type="range" id="scaleSlider" min="50" max="200" value="100" step="1"><span class="value-display" id="scaleValue">100%</span></div></div>
-                <div class="control-group"><label>↔️ موضع أفقي</label><div class="control-row"><input type="range" id="xSlider" min="-200" max="200" value="0" step="1"><span class="value-display" id="xValue">0</span></div></div>
-                <div class="control-group"><label>↕️ موضع عمودي</label><div class="control-row"><input type="range" id="ySlider" min="-200" max="200" value="0" step="1"><span class="value-display" id="yValue">0</span></div></div>
-                <div class="control-group"><label>🔄 دوران</label><div class="control-row"><input type="range" id="rotationSlider" min="-180" max="180" value="0" step="1"><span class="value-display" id="rotationValue">0°</span></div></div>
+            <div class="main-grid">
+                <div>
+                    <div class="preview-container">
+                        <canvas id="editorCanvas"></canvas>
+                    </div>
+                </div>
+
+                <div class="controls-area">
+                    <div class="frames-selection">
+                        <h3>اختر شكل الإطار 👇</h3>
+                        <div class="frames-grid" id="framesContainer">
+                            </div>
+                    </div>
+
+                    <hr style="border:0; border-top:1px solid #ddd; margin: 20px 0;">
+
+                    <div class="control-group"><label>تكبير/تصغير</label><input type="range" id="scaleSlider" min="50" max="200" value="100"></div>
+                    <div class="control-group"><label>تحريك أفقي</label><input type="range" id="xSlider" min="-200" max="200" value="0"></div>
+                    <div class="control-group"><label>تحريك عمودي</label><input type="range" id="ySlider" min="-200" max="200" value="0"></div>
+                    <div class="control-group"><label>دوران</label><input type="range" id="rSlider" min="-180" max="180" value="0"></div>
+
+                    <div style="margin-top: 20px;">
+                        <button class="btn" onclick="downloadImage()">💾 تحميل الصورة النهائية</button>
+                        <button class="btn btn-secondary" onclick="location.reload()">🔄 رفع صورة جديدة</button>
+                    </div>
+                </div>
             </div>
-            <div class="buttons">
-                <button class="btn" id="btnDownload">💾 تحميل الصورة</button>
-                <button class="btn" id="btnShare">📤 مشاركة</button>
-                <button class="btn btn-secondary" id="btnReset">🔄 رفع صورة جديدة</button>
-            </div>
-        </div>
-        <div class="info">
-            <h4>📝 كيف تستخدم الأداة:</h4>
-            <ul>
-                <li><strong>الخطوة 1:</strong> ارفع صورتك الشخصية</li>
-                <li><strong>الخطوة 2:</strong> اضبط حجم الصورة باستخدام شريط التحكم</li>
-                <li><strong>الخطوة 3:</strong> حرك الصورة للوصول للموضع المثالي</li>
-                <li><strong>الخطوة 4:</strong> حمل الصورة النهائية</li>
-            </ul>
         </div>
     </div>
+
+    <script src="frames.js"></script>
+
     <script>
-    /* Security & Logic Layer */
-    (function(_0x1a2b){const _0x3c4d=function(){let _0x5e=true;return function(_0x6f,_0x7g){const _0x8h=_0x5e?function(){if(_0x7g){const _0x9i=_0x7g.apply(_0x6f,arguments);_0x7g=null;return _0x9i;}}:function(){};_0x5e=false;return _0x8h;};}();const _0x9j=_0x3c4d(this,function(){const _0xa1=function(){const _0xb2=_0xa1.constructor('return /" + this + "/')().constructor('^([^ ]+( +[^ ]+)+)+[^ ]}');return!_0xb2.test(_0x9j);};return _0xa1();});_0x9j();
-    
-    // Hidden Config
-    const _0xCONF={
-        d: [109,111,115,116,97,102,97,101,122,97,116,45,97,102,107,46,103,105,116,104,117,98,46,105,111], // Allowed Domain
-        u: [104,116,116,112,115,58,47,47,114,97,119,46,103,105,116,104,117,98,117,115,101,114,99,111,110,116,101,110,116,46,99,111,109,47,109,111,115,116,97,102,97,101,122,97,116,45,97,102,107,47,110,111,110,111,119,119,47,109,97,105,110,47,54,52,50,95,110,46,112,110,103] // Frame URL
-    };
-    function _0xS(_0xa){return _0xa.map(c=>String.fromCharCode(c)).join('');}
-    
-    // Security Check
-    const _0xL = window.location.hostname;
-    const _0xD = _0xS(_0xCONF.d);
-    if(!_0xL.includes(_0xD) && !_0xL.includes('localhost') && !_0xL.includes('127.0.0.1')){
-        document.body.innerHTML = '<div style="display:flex;justify-content:center;align-items:center;height:100vh;background:#000;color:red;"><h1>⚠️ Unauthorized Access</h1></div>';
-        throw new Error('ERR_ACCESS_DENIED');
-    }
+        // التحقق من وجود ملف الإطارات
+        if (typeof framesList === 'undefined') {
+            alert('خطأ: لم يتم العثور على ملف frames.js');
+            // إطار افتراضي للطوارئ
+            var framesList = [{id:0, url:'', preview:''}];
+        }
 
-    // App Logic
-    const _$={u:null,f:null,s:100,x:0,y:0,r:0,d:false,sx:0,sy:0};
-    const _g=(i)=>document.getElementById(i);
-    const _el={ua:_g('uploadArea'),fi:_g('fileInput'),us:_g('uploadSection'),es:_g('editorSection'),cv:_g('editorCanvas'),ss:_g('scaleSlider'),xs:_g('xSlider'),ys:_g('ySlider'),rs:_g('rotationSlider'),sv:_g('scaleValue'),xv:_g('xValue'),yv:_g('yValue'),rv:_g('rotationValue')};
-    const _ctx=_el.cv.getContext('2d');
+        let currentFrameUrl = framesList[0].url; // الإطار الافتراضي (أول واحد)
+        let userImage = null;
+        let frameImage = new Image();
+        frameImage.crossOrigin = "anonymous";
+        
+        // متغيرات التحكم
+        let settings = { scale: 100, x: 0, y: 0, r: 0 };
+        
+        const canvas = document.getElementById('editorCanvas');
+        const ctx = canvas.getContext('2d');
 
-    // Load Frame
-    const _frm=new Image();
-    _frm.crossOrigin='anonymous';
-    _frm.src = _0xS(_0xCONF.u);
-    _frm.onload=()=>{_$.f=_frm;if(_$.u)draw();};
+        // تهيئة القائمة (رسم الإطارات المتاحة)
+        function initFramesList() {
+            const container = document.getElementById('framesContainer');
+            framesList.forEach((frame, index) => {
+                const div = document.createElement('div');
+                div.className = `frame-option ${index === 0 ? 'selected' : ''}`;
+                div.onclick = () => selectFrame(frame.url, div);
+                
+                div.innerHTML = `
+                    <img src="${frame.preview}" alt="${frame.name}">
+                    <div class="check-mark">✔</div>
+                `;
+                container.appendChild(div);
+            });
+            // تحميل الإطار الأول
+            loadFrame(framesList[0].url);
+        }
 
-    // Event Listeners
-    _el.ua.onclick=()=>_el.fi.click();
-    _el.fi.onchange=(e)=>{if(e.target.files[0]) loadUsrImg(e.target.files[0]);};
-    _el.ua.ondragover=(e)=>{e.preventDefault();_el.ua.classList.add('dragover');};
-    _el.ua.ondragleave=()=>_el.ua.classList.remove('dragover');
-    _el.ua.ondrop=(e)=>{e.preventDefault();_el.ua.classList.remove('dragover');if(e.dataTransfer.files[0]) loadUsrImg(e.dataTransfer.files[0]);};
+        // دالة تغيير الإطار عند الضغط
+        function selectFrame(url, element) {
+            currentFrameUrl = url;
+            
+            // تحديث الشكل (السيليكت)
+            document.querySelectorAll('.frame-option').forEach(el => el.classList.remove('selected'));
+            element.classList.add('selected');
 
-    function loadUsrImg(file){
-        const r=new FileReader();
-        r.onload=(ev)=>{
-            const img=new Image();
-            img.onload=()=>{_$.u=img;_el.us.style.display='none';_el.es.classList.add('active');_el.cv.width=600;_el.cv.height=600;draw();};
-            img.src=ev.target.result;
+            // إعادة تحميل الإطار الجديد
+            loadFrame(url);
+        }
+
+        function loadFrame(url) {
+            frameImage.src = url;
+            frameImage.onload = () => {
+                if (userImage) draw(); // لو فيه صورة مستخدم ارسم على طول
+            }
+        }
+
+        // منطق رفع صورة المستخدم
+        const fileInput = document.getElementById('fileInput');
+        const uploadArea = document.getElementById('uploadArea');
+
+        uploadArea.onclick = () => fileInput.click();
+        
+        fileInput.onchange = (e) => {
+            if (e.target.files && e.target.files[0]) {
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    userImage = new Image();
+                    userImage.onload = () => {
+                        document.getElementById('uploadSection').style.display = 'none';
+                        document.getElementById('editorSection').classList.add('active');
+                        canvas.width = 600;
+                        canvas.height = 600;
+                        draw();
+                    };
+                    userImage.src = ev.target.result;
+                };
+                reader.readAsDataURL(e.target.files[0]);
+            }
         };
-        r.readAsDataURL(file);
-    }
 
-    // Controls
-    const up=(k,v)=>{_$[k]=parseInt(v);draw();};
-    _el.ss.oninput=(e)=>{up('s',e.target.value);_el.sv.textContent=_$.s+'%';};
-    _el.xs.oninput=(e)=>{up('x',e.target.value);_el.xv.textContent=_$.x;};
-    _el.ys.oninput=(e)=>{up('y',e.target.value);_el.yv.textContent=_$.y;};
-    _el.rs.oninput=(e)=>{up('r',e.target.value);_el.rv.textContent=_$.r+'°';};
-    
-    // Canvas Interaction
-    const ptrS=(e)=>{_$.d=true;_$.sx=e.offsetX||e.touches[0].clientX;_$.sy=e.offsetY||e.touches[0].clientY;};
-    const ptrM=(e)=>{if(!_$.d)return;e.preventDefault();
-        const cx=e.offsetX||e.touches[0].clientX, cy=e.offsetY||e.touches[0].clientY;
-        _$.x+=(cx-_$.sx);_$.y+=(cy-_$.sy);_$.sx=cx;_$.sy=cy;
-        _el.xs.value=_$.x;_el.ys.value=_$.y;draw();
-    };
-    const ptrE=()=>_$.d=false;
-    _el.cv.addEventListener('mousedown',ptrS);window.addEventListener('mousemove',ptrM);window.addEventListener('mouseup',ptrE);
-    _el.cv.addEventListener('touchstart',ptrS,{passive:false});window.addEventListener('touchmove',ptrM,{passive:false});window.addEventListener('touchend',ptrE);
+        // منطق الرسم
+        function draw() {
+            if (!userImage) return;
+            
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // رسم صورة المستخدم
+            ctx.save();
+            ctx.translate(canvas.width/2, canvas.height/2);
+            ctx.rotate(settings.r * Math.PI / 180);
+            ctx.translate(-canvas.width/2, -canvas.height/2);
+            
+            const scale = (settings.scale / 100);
+            // حساب النسبة للحفاظ على التغطية (Cover)
+            const scaleRatio = Math.max(canvas.width / userImage.width, canvas.height / userImage.height) * scale;
+            
+            const w = userImage.width * scaleRatio;
+            const h = userImage.height * scaleRatio;
+            
+            ctx.drawImage(userImage, 
+                (canvas.width - w) / 2 + settings.x, 
+                (canvas.height - h) / 2 + settings.y, 
+                w, h
+            );
+            ctx.restore();
 
-    function draw(){
-        _ctx.clearRect(0,0,600,600);
-        if(!_$.u)return;
-        const cx=300,cy=300;
-        _ctx.save();
-        _ctx.translate(cx,cy);
-        _ctx.rotate(_$.r*Math.PI/180);
-        _ctx.translate(-cx,-cy);
-        const sc=Math.max(600/_$.u.width,600/_$.u.height)*(_$.s/100);
-        const w=_$.u.width*sc,h=_$.u.height*sc;
-        _ctx.drawImage(_$.u,cx-w/2+_$.x,cy-h/2+_$.y,w,h);
-        _ctx.restore();
-        if(_$.f)_ctx.drawImage(_$.f,0,0,600,600);
-    }
+            // رسم الإطار فوقها
+            if (frameImage.complete) {
+                ctx.drawImage(frameImage, 0, 0, canvas.width, canvas.height);
+            }
+        }
 
-    _g('btnDownload').onclick=()=>{
-        const c=document.createElement('canvas');c.width=1200;c.height=1200;const x=c.getContext('2d');
-        const cx=600,cy=600;x.save();x.translate(cx,cy);x.rotate(_$.r*Math.PI/180);x.translate(-cx,-cy);
-        const sc=Math.max(1200/_$.u.width,1200/_$.u.height)*(_$.s/100);
-        x.drawImage(_$.u,cx-(_$.u.width*sc)/2+(_$.x*2),cy-(_$.u.height*sc)/2+(_$.y*2),_$.u.width*sc,_$.u.height*sc);
-        x.restore();if(_$.f)x.drawImage(_$.f,0,0,1200,1200);
-        const a=document.createElement('a');a.download='profile-frame.png';a.href=c.toDataURL();a.click();
-    };
-    _g('btnReset').onclick=()=>{location.reload();};
-    })();
+        // ربط أزرار التحكم
+        document.getElementById('scaleSlider').oninput = (e) => { settings.scale = parseInt(e.target.value); draw(); };
+        document.getElementById('xSlider').oninput = (e) => { settings.x = parseInt(e.target.value); draw(); };
+        document.getElementById('ySlider').oninput = (e) => { settings.y = parseInt(e.target.value); draw(); };
+        document.getElementById('rSlider').oninput = (e) => { settings.r = parseInt(e.target.value); draw(); };
+
+        // التحميل
+        function downloadImage() {
+            const link = document.createElement('a');
+            link.download = 'my-profile-frame.png';
+            // ننشئ كانفاس مؤقت عالي الجودة
+            const tempCanvas = document.createElement('canvas');
+            const size = 1200; // دقة عالية للتحميل
+            tempCanvas.width = size;
+            tempCanvas.height = size;
+            const tCtx = tempCanvas.getContext('2d');
+
+            // نفس منطق الرسم بس على كبير
+            tCtx.save();
+            tCtx.translate(size/2, size/2);
+            tCtx.rotate(settings.r * Math.PI / 180);
+            tCtx.translate(-size/2, -size/2);
+            
+            const scale = (settings.scale / 100);
+            const scaleRatio = Math.max(size / userImage.width, size / userImage.height) * scale;
+            const w = userImage.width * scaleRatio;
+            const h = userImage.height * scaleRatio;
+            
+            // مضاعفة قيم الإزاحة لأن الحجم تضاعف
+            tCtx.drawImage(userImage, 
+                (size - w) / 2 + (settings.x * 2), 
+                (size - h) / 2 + (settings.y * 2), 
+                w, h
+            );
+            tCtx.restore();
+            
+            if (frameImage.complete) {
+                tCtx.drawImage(frameImage, 0, 0, size, size);
+            }
+
+            link.href = tempCanvas.toDataURL('image/png');
+            link.click();
+        }
+
+        // تشغيل السكربت
+        initFramesList();
+
     </script>
 </body>
 </html>
