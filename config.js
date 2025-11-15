@@ -16,8 +16,8 @@ const frames = [
     {
         id: 1,
         name: 'التصميم الكلاسيكي',
-        url: 'https://i.imgur.com/example1.png', // ضع رابط الإطار الأول هنا
-        thumb: 'https://i.imgur.com/example1-thumb.png' // صورة معاينة صغيرة
+        url: 'https://raw.githubusercontent.com/mostafaezat-afk/nonoww/main/ff22.png', // ضع رابط الإطار الأول هنا
+        thumb: 'https://raw.githubusercontent.com/mostafaezat-afk/nonoww/main/ff22.png' // صورة معاينة صغيرة
     },
     {
         id: 2,
@@ -37,4 +37,5 @@ const frames = [
         url: 'https://i.imgur.com/example4.png', // ضع رابط الإطار الرابع هنا
         thumb: 'https://i.imgur.com/example4-thumb.png'
     }
+
 ];
