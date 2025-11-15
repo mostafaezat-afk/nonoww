@@ -14,7 +14,7 @@ const framesList = [
         id: 2,
         name: "الإطار الثاني",
         url: "https://raw.githubusercontent.com/mostafaezat-afk/nonoww/main/ff33", // ضع رابط الفريم 2 هنا
-        thumb: "https://raw.githubusercontent.com/mostafaezat-afk/nonoww/main/33.png"
+        thumb: "https://raw.githubusercontent.com/mostafaezat-afk/nonoww/main/ff33.png"
     },
     {
         id: 3,
@@ -30,3 +30,4 @@ const framesList = [
     }
 
 ];
+
