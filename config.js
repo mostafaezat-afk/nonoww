@@ -16,8 +16,8 @@ const frames = [
     {
         id: 1,
         name: 'التصميم الكلاسيكي',
-        url: 'https://raw.githubusercontent.com/mostafaezat-afk/nonoww/main/ff22.png', // ضع رابط الإطار الأول هنا
-        thumb: 'https://raw.githubusercontent.com/mostafaezat-afk/nonoww/main/ff22.png' // صورة معاينة صغيرة
+        url: 'https://raw.githubusercontent.com/mostafaezat-afk/nonoww/main/12.png', // ضع رابط الإطار الأول هنا
+        thumb: 'https://raw.githubusercontent.com/mostafaezat-afk/nonoww/main/12.png' // صورة معاينة صغيرة
     },
     {
         id: 2,
@@ -39,3 +39,4 @@ const frames = [
     }
 
 ];
+
