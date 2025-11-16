@@ -456,6 +456,35 @@
                 </label>
                 <input type="range" id="posY" min="-200" max="200" value="0">
             </div>
+            <div class="control-group">
+                <label>
+                    <span>📐 حجم الصورة الشخصية</span>
+                    <span class="control-value" id="imageSizeValue">310</span>
+                </label>
+                <input type="range" id="imageSize" min="250" max="550" value="310">
+            </div>
+            <div class="control-group">
+                <label>
+                    <span>↔️ موضع الصورة أفقياً</span>
+                    <span class="control-value" id="imagePosXValue">340</span>
+                </label>
+                <input type="range" id="imagePosX" min="200" max="880" value="340">
+            </div>
+            <div class="control-group">
+                <label>
+                    <span>↕️ موضع الصورة عمودياً</span>
+                    <span class="control-value" id="imagePosYValue">350</span>
+                </label>
+                <input type="range" id="imagePosY" min="150" max="650" value="350">
+            </div>
+            <div class="control-group">
+                <label>
+                    <span>✨ فلتر التجميل</span>
+                    <span class="control-value" id="beautyFilterValue">0%</span>
+                </label>
+                <input type="range" id="beautyFilter" min="0" max="100" value="0">
+                <p style="font-size: 0.85em; color: #6c757d; margin-top: 8px;">يجعل البشرة أكثر نعومة وإشراقاً</p>
+            </div>
         </div>
 
         <div id="signatureTab" class="tab-content">
@@ -464,29 +493,36 @@
                     <span>📏 حجم خط الاسم</span>
                     <span class="control-value" id="nameSizeValue">45</span>
                 </label>
-                <input type="range" id="nameSize" min="20" max="60" value="45">
+                <input type="range" id="nameSize" min="20" max="80" value="45">
             </div>
             <div class="control-group">
                 <label>
                     <span>📏 حجم خط الوظيفة</span>
                     <span class="control-value" id="jobSizeValue">26</span>
                 </label>
-                <input type="range" id="jobSize" min="16" max="40" value="26">
+                <input type="range" id="jobSize" min="16" max="50" value="26">
             </div>
             <div class="control-group">
                 <label>
                     <span>↔️ موضع التوقيع أفقياً</span>
-                    <span class="control-value" id="signaturePosXValue">340</span>
+                    <span class="control-value" id="signaturePosXValue">540</span>
                 </label>
-                <input type="range" id="signaturePosX" min="200" max="880" value="340">
+                <input type="range" id="signaturePosX" min="100" max="980" value="540">
             </div>
             <div class="control-group">
                 <label>
-                    <span>↕️ المسافة من الدائرة للتوقيع</span>
-                    <span class="control-value" id="signatureOffsetYValue">60</span>
+                    <span>↕️ المسافة من الأسفل (الاسم)</span>
+                    <span class="control-value" id="nameOffsetYValue">200</span>
                 </label>
-                <input type="range" id="signatureOffsetY" min="20" max="150" value="60">
-                <p style="font-size: 0.85em; color: #6c757d; margin-top: 8px;">⭐ النص يتحرك تلقائياً مع الدائرة! استخدم هذا للتحكم في البعد بينهما فقط</p>
+                <input type="range" id="nameOffsetY" min="50" max="500" value="200">
+                <p style="font-size: 0.85em; color: #6c757d; margin-top: 8px;">💡 المسافة من الحد السفلي للبطاقة إلى الاسم</p>
+            </div>
+            <div class="control-group">
+                <label>
+                    <span>📐 المسافة بين الاسم والوظيفة</span>
+                    <span class="control-value" id="jobSpacingValue">15</span>
+                </label>
+                <input type="range" id="jobSpacing" min="5" max="50" value="15">
             </div>
             <div class="control-group">
                 <label>🎨 لون الاسم</label>
@@ -508,35 +544,6 @@
         </div>
 
         <div id="colorsTab" class="tab-content">
-            <div class="control-group">
-                <label>
-                    <span>📐 حجم الصورة الشخصية</span>
-                    <span class="control-value" id="imageSizeValue">310</span>
-                </label>
-                <input type="range" id="imageSize" min="250" max="550" value="310">
-            </div>
-            <div class="control-group">
-                <label>
-                    <span>↔️ موضع الصورة أفقياً</span>
-                    <span class="control-value" id="imagePosXValue">340</span>
-                </label>
-                <input type="range" id="imagePosX" min="200" max="880" value="340">
-            </div>
-            <div class="control-group">
-                <label>
-                    <span>↕️ موضع الصورة عمودياً</span>
-                    <span class="control-value" id="imagePosYValue">575</span>
-                </label>
-                <input type="range" id="imagePosY" min="150" max="650" value="575">
-            </div>
-            <div class="control-group">
-                <label>
-                    <span>✨ فلتر التجميل</span>
-                    <span class="control-value" id="beautyFilterValue">0%</span>
-                </label>
-                <input type="range" id="beautyFilter" min="0" max="100" value="0">
-                <p style="font-size: 0.85em; color: #6c757d; margin-top: 8px;">يجعل البشرة أكثر نعومة وإشراقاً</p>
-            </div>
             <div class="control-group">
                 <button class="btn btn-secondary" onclick="resetControls()" style="width: 100%;">
                     <span>🔄</span>
@@ -561,1039 +568,8 @@
 </div>
 
 <script>
-    // ✅ ضع رابط Google Apps Script الخاص بك هنا
-    const API_URL = 'https://script.google.com/macros/s/AKfycbwOwsyPS9kehjvBYNrk8m16XyXIUEcUz4vVfxQip6NyyKNh4Ycy8ZdmO6K9NQFjOXo_/exec';
-    
-    // ألوان النصوص
-    const textColors = [
-        { color: '#8B1538', name: 'عنابي' },
-        { color: '#FFFFFF', name: 'أبيض' },
-        { color: '#000000', name: 'أسود' },
-        { color: '#c0392b', name: 'أحمر' },
-        { color: '#FFD700', name: 'ذهبي' },
-        { color: '#27ae60', name: 'أخضر' },
-        { color: '#2980b9', name: 'أزرق' }
-    ];
-
-    const canvas = document.getElementById('canvas');
-    const ctx = canvas.getContext('2d');
-    canvas.width = 1080;
-    canvas.height = 1080;
-
-    let userImg = null;
-    let frameImg = new Image();
-    frameImg.crossOrigin = "anonymous";
-    let currentFrame = null;
-    let frames = [];
-    
-    let userName = '';
-    let userJob = '';
-    
-    // ✅ الإعدادات الافتراضية - سيتم تحديثها من Google Sheets
-    let settings = { 
-        scale: 100, 
-        x: 0, 
-        y: 0,
-        nameSize: 45,
-        jobSize: 26,
-        signaturePosX: 340,
-        signatureOffsetY: 60,
-        nameColor: '#8B1538',
-        jobColor: '#000000',
-        bgColor: 'transparent',
-        imageSize: 310,
-        imagePosX: 340,
-        imagePosY: 575,
-        beautyFilter: 0,
-        showJob: true
-    };
-
-    // ═══════════════════════════════════════════════════════
-    // ✅ تحميل الإعدادات من Google Sheets
-    // ═══════════════════════════════════════════════════════
-    async function loadSettingsFromAPI() {
-        try {
-            const response = await fetch(`${API_URL}?action=getSettings`);
-            const data = await response.json();
-            
-            if (data.success && data.settings) {
-                // دمج الإعدادات من الشيت مع الإعدادات الافتراضية
-                settings = { ...settings, ...data.settings };
-                
-                // تحديث عناصر التحكم بالقيم الجديدة
-                updateControlsFromSettings();
-                
-                console.log('✅ تم تحميل الإعدادات من Google Sheets:', settings);
-            } else {
-                console.log('📌 سيتم استخدام الإعدادات الافتراضية');
-            }
-        } catch (error) {
-            console.error('❌ فشل تحميل الإعدادات:', error);
-            console.log('📌 سيتم استخدام الإعدادات الافتراضية');
-        }
-    }
-
-    // ✅ تحديث عناصر التحكم من الإعدادات المحملة
-    function updateControlsFromSettings() {
-        // تحديث القيم في عناصر HTML
-        document.getElementById('scale').value = settings.scale;
-        document.getElementById('posX').value = settings.x;
-        document.getElementById('posY').value = settings.y;
-        document.getElementById('nameSize').value = settings.nameSize;
-        document.getElementById('jobSize').value = settings.jobSize;
-        document.getElementById('signaturePosX').value = settings.signaturePosX;
-        document.getElementById('signatureOffsetY').value = settings.signatureOffsetY;
-        document.getElementById('imageSize').value = settings.imageSize;
-        document.getElementById('imagePosX').value = settings.imagePosX;
-        document.getElementById('imagePosY').value = settings.imagePosY;
-        document.getElementById('beautyFilter').value = settings.beautyFilter;
-        document.getElementById('showJob').checked = settings.showJob;
-        
-        // تحديث العرض
-        document.getElementById('scaleValue').textContent = settings.scale + '%';
-        document.getElementById('posXValue').textContent = settings.x;
-        document.getElementById('posYValue').textContent = settings.y;
-        document.getElementById('nameSizeValue').textContent = settings.nameSize;
-        document.getElementById('jobSizeValue').textContent = settings.jobSize;
-        document.getElementById('signaturePosXValue').textContent = settings.signaturePosX;
-        document.getElementById('signatureOffsetYValue').textContent = settings.signatureOffsetY;
-        document.getElementById('imageSizeValue').textContent = settings.imageSize;
-        document.getElementById('imagePosXValue').textContent = settings.imagePosX;
-        document.getElementById('imagePosYValue').textContent = settings.imagePosY;
-        document.getElementById('beautyFilterValue').textContent = settings.beautyFilter + '%';
-    }
-
-    // التحقق من النطاقات
-    async function checkDomainAccess() {
-        try {
-            const response = await fetch(`${API_URL}?action=checkDomain&domain=${window.location.hostname}`);
-            const data = await response.json();
-            
-            if (!data.allowed && window.location.hostname !== '') {
-                document.body.innerHTML = '<div style="display:flex;justify-content:center;align-items:center;height:100vh;background:#000;color:red;font-family:sans-serif;text-align:center;"><h1>🚫 Access Denied<br>تم رفض الوصول</h1></div>';
-                throw new Error('Unauthorized Domain');
-            }
-        } catch (error) {
-            const currentHost = window.location.hostname;
-            if (currentHost !== 'localhost' && currentHost !== '127.0.0.1' && currentHost !== '') {
-                document.body.innerHTML = '<div style="display:flex;justify-content:center;align-items:center;height:100vh;background:#000;color:red;font-family:sans-serif;text-align:center;"><h1>🚫 Access Denied<br>تم رفض الوصول</h1></div>';
-                throw new Error('Domain Check Failed');
-            }
-        }
-    }
-
-    // تحميل الإطارات من API
-    async function loadFrames() {
-        const grid = document.getElementById('framesGrid');
-        const loading = document.getElementById('framesLoading');
-        
-        try {
-            const response = await fetch(`${API_URL}?action=getFrames`);
-            const data = await response.json();
-            
-            if (data.success && data.frames) {
-                frames = data.frames;
-            }
-        } catch (error) {
-            console.error('فشل تحميل الإطارات:', error);
-        }
-        
-        loading.style.display = 'none';
-        grid.innerHTML = '';
-        
-        frames.forEach((frame, index) => {
-            const card = document.createElement('div');
-            card.className = `frame-card ${index === 0 ? 'active' : ''}`;
-            card.innerHTML = `
-                <div class="frame-check">✓</div>
-                <img src="${frame.thumb}" alt="${frame.name}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27300%27 height=%27200%27%3E%3Crect fill=%27%23e74c3c%27 width=%27300%27 height=%27200%27/%3E%3Ctext x=%2750%25%27 y=%2750%25%27 dominant-baseline=%27middle%27 text-anchor=%27middle%27 fill=%27white%27 font-size=%2720%27%3E${frame.name}%3C/text%3E%3C/svg%3E'">
-                <div class="frame-name">${frame.name}</div>
-            `;
-            card.onclick = () => selectFrame(frame, card);
-            grid.appendChild(card);
-        });
-        
-        if (frames.length > 0) {
-            currentFrame = frames[0];
-            frameImg.src = frames[0].url;
-            frameImg.onload = function() {
-                console.log('✅ تم تحميل الإطار الأول');
-            };
-        }
-    }
-
-    function loadColors() {
-        const nameColorContainer = document.getElementById('nameColorOptions');
-        textColors.forEach((tc) => {
-            const option = document.createElement('div');
-            option.className = `color-option ${tc.color === settings.nameColor ? 'active' : ''}`;
-            option.style.background = tc.color;
-            if (tc.color === '#FFFFFF') {
-                option.style.border = '2px solid #dee2e6';
-            }
-            option.title = tc.name;
-            option.onclick = () => {
-                nameColorContainer.querySelectorAll('.color-option').forEach(o => o.classList.remove('active'));
-                option.classList.add('active');
-                settings.nameColor = tc.color;
-                draw();
-            };
-            nameColorContainer.appendChild(option);
-        });
-
-        const jobColorContainer = document.getElementById('jobColorOptions');
-        textColors.forEach((tc) => {
-            const option = document.createElement('div');
-            option.className = `color-option ${tc.color === settings.jobColor ? 'active' : ''}`;
-            option.style.background = tc.color;
-            if (tc.color === '#FFFFFF') {
-                option.style.border = '2px solid #dee2e6';
-            }
-            option.title = tc.name;
-            option.onclick = () => {
-                jobColorContainer.querySelectorAll('.color-option').forEach(o => o.classList.remove('active'));
-                option.classList.add('active');
-                settings.jobColor = tc.color;
-                draw();
-            };
-            jobColorContainer.appendChild(option);
-        });
-    }
-
-    function selectFrame(frame, cardElement) {
-        document.querySelectorAll('.frame-card').forEach(c => c.classList.remove('active'));
-        cardElement.classList.add('active');
-        currentFrame = frame;
-        
-        frameImg.src = frame.url;
-        frameImg.onload = function() {
-            draw();
-        };
-        frameImg.onerror = function() {
-            console.error('فشل تحميل الإطار:', frame.url);
-            alert('⚠️ فشل تحميل الإطار. تأكد من صحة الرابط.');
-        };
-    }
-
-    document.getElementById('fileInput').onchange = function(e) {
-        if (e.target.files && e.target.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                userImg = new Image();
-                userImg.onload = function() {
-                    document.querySelector('.upload-text').textContent = '✓ تم رفع الصورة';
-                    document.querySelector('.upload-box').style.borderColor = '#27ae60';
-                };
-                userImg.src = event.target.result;
-            };
-            reader.readAsDataURL(e.target.files[0]);
-        }
-    };
-
-    function generateCard() {
-        userName = document.getElementById('nameInput').value.trim();
-        userJob = document.getElementById('jobInput').value.trim();
-
-        if (!userName || !userImg) {
-            alert('⚠️ الرجاء إدخال الاسم ورفع الصورة على الأقل');
-            return;
-        }
-
-        if (!currentFrame) {
-            alert('⚠️ الرجاء الانتظار حتى يتم تحميل الإطارات');
-            return;
-        }
-
-        document.querySelector('.form-section').style.display = 'none';
-        document.getElementById('framesSection').style.display = 'block';
-        document.getElementById('previewSection').style.display = 'block';
-        document.getElementById('tabsContainer').style.display = 'block';
-        document.getElementById('buttonSection').style.display = 'block';
-        
-        frameImg.src = currentFrame.url;
-        frameImg.onload = function() {
-            draw();
-        };
-    }
-
-    function draw() {
-        if (!currentFrame) {
-            return;
-        }
-        
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        // رسم الصورة الشخصية
-        if (userImg) {
-            const imgSize = settings.imageSize;
-            const imgX = settings.imagePosX;
-            const imgY = settings.imagePosY;
-
-            ctx.save();
-            
-            if (settings.beautyFilter > 0) {
-                ctx.filter = `blur(${settings.beautyFilter * 0.02}px) brightness(${1 + settings.beautyFilter * 0.001})`;
-            }
-            
-            ctx.beginPath();
-            ctx.arc(imgX, imgY, imgSize / 2, 0, Math.PI * 2);
-            ctx.clip();
-
-            const scaleFactor = settings.scale / 100;
-            const ratio = Math.max(imgSize / userImg.width, imgSize / userImg.height);
-            const imgW = userImg.width * ratio * scaleFactor;
-            const imgH = userImg.height * ratio * scaleFactor;
-            
-            ctx.drawImage(userImg, imgX - imgW/2 + settings.x, imgY - imgH/2 + settings.y, imgW, imgH);
-            ctx.restore();
-        }
-
-        // رسم الإطار
-        if (frameImg.complete && frameImg.naturalWidth > 0) {
-            ctx.drawImage(frameImg, 0, 0, canvas.width, canvas.height);
-        }
-
-        // رسم النص
-        const textStartY = settings.imagePosY + (settings.imageSize / 2) + settings.signatureOffsetY;
-
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-
-        // الاسم
-        ctx.font = `bold ${settings.nameSize}px Cairo, Arial`;
-        ctx.strokeStyle = 'white';
-        ctx.lineWidth = 4;
-        ctx.strokeText(userName, settings.signaturePosX, textStartY);
-        ctx.fillStyle = settings.nameColor;
-        ctx.fillText(userName, settings.signaturePosX, textStartY);
-
-        // الوظيفة
-        if (settings.showJob && userJob) {
-            const jobY = textStartY + settings.nameSize + 15;
-            ctx.font = `${settings.jobSize}px Cairo, Arial`;
-            ctx.strokeStyle = 'white';
-            ctx.lineWidth = 3;
-            ctx.strokeText(userJob, settings.signaturePosX, jobY);
-            ctx.fillStyle = settings.jobColor;
-            ctx.fillText(userJob, settings.signaturePosX, jobY);
-        }
-    }
-
-    function switchTab(tabName) {
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-        
-        event.target.classList.add('active');
-        document.getElementById(tabName + 'Tab').classList.add('active');
-    }
-
-    // ربط عناصر التحكم
-    document.getElementById('scale').oninput = (e) => { 
-        settings.scale = parseInt(e.target.value); 
-        document.getElementById('scaleValue').textContent = settings.scale + '%';
-        draw(); 
-    };
-    document.getElementById('posX').oninput = (e) => { 
-        settings.x = parseInt(e.target.value); 
-        document.getElementById('posXValue').textContent = settings.x;
-        draw(); 
-    };
-    document.getElementById('posY').oninput = (e) => { 
-        settings.y = parseInt(e.target.value); 
-        document.getElementById('posYValue').textContent = settings.y;
-        draw(); 
-    };
-    document.getElementById('nameSize').oninput = (e) => { 
-        settings.nameSize = parseInt(e.target.value); 
-        document.getElementById('nameSizeValue').textContent = settings.nameSize;
-        draw(); 
-    };
-    document.getElementById('jobSize').oninput = (e) => { 
-        settings.jobSize = parseInt(e.target.value); 
-        document.getElementById('jobSizeValue').textContent = settings.jobSize;
-        draw(); 
-    };
-    document.getElementById('signaturePosX').oninput = (e) => { 
-        settings.signaturePosX = parseInt(e.target.value); 
-        document.getElementById('signaturePosXValue').textContent = settings.signaturePosX;
-        draw(); 
-    };
-    document.getElementById('signatureOffsetY').oninput = (e) => { 
-        settings.signatureOffsetY = parseInt(e.target.value); 
-        document.getElementById('signatureOffsetYValue').textContent = settings.signatureOffsetY;
-        draw(); 
-    };
-    document.getElementById('imageSize').oninput = (e) => { 
-        settings.imageSize = parseInt(e.target.value); 
-        document.getElementById('imageSizeValue').textContent = settings.imageSize;
-        draw(); 
-    };
-    document.getElementById('imagePosX').oninput = (e) => { 
-        settings.imagePosX = parseInt(e.target.value); 
-        document.getElementById('imagePosXValue').textContent = settings.imagePosX;
-        draw(); 
-    };
-    document.getElementById('imagePosY').oninput = (e) => { 
-        settings.imagePosY = parseInt(e.target.value); 
-        document.getElementById('imagePosYValue').textContent = settings.imagePosY;
-        draw(); 
-    };
-    document.getElementById('beautyFilter').oninput = (e) => { 
-        settings.beautyFilter = parseInt(e.target.value); 
-        document.getElementById('beautyFilterValue').textContent = settings.beautyFilter + '%';
-        draw(); 
-    };
-    document.getElementById('showJob').onchange = (e) => { 
-        settings.showJob = e.target.checked;
-        draw(); 
-    };
-
-    // ✅ إعادة تعيين الإعدادات - يقرأ من Google Sheets
-    async function resetControls() {
-        await loadSettingsFromAPI();
-        updateControlsFromSettings();
-        draw();
-    }
-
-    // دعم اللمس للموبايل
-    let touchStartDist = 0;
-    let touchStartScale = 100;
-    let lastTouchPos = { x: 0, y: 0 };
-    let touchStartPos = { x: 0, y: 0 };
-
-    canvas.addEventListener('touchstart', function(e) {
-        e.preventDefault();
-        if (e.touches.length === 2) {
-            const touch1 = e.touches[0];
-            const touch2 = e.touches[1];
-            touchStartDist = Math.hypot(
-                touch2.clientX - touch1.clientX,
-                touch2.clientY - touch1.clientY
-            );
-            touchStartScale = settings.scale;
-        } else if (e.touches.length === 1) {
-            lastTouchPos = {
-                x: e.touches[0].clientX,
-                y: e.touches[0].clientY
-            };
-            touchStartPos = { x: settings.x, y: settings.y };
-        }
-    }, { passive: false });
-
-    canvas.addEventListener('touchmove', function(e) {
-        e.preventDefault();
-        if (e.touches.length === 2) {
-            const touch1 = e.touches[0];
-            const touch2 = e.touches[1];
-            const currentDist = Math.hypot(
-                touch2.clientX - touch1.clientX,
-                touch2.clientY - touch1.clientY
-            );
-            const scale = (currentDist / touchStartDist) * touchStartScale;
-            settings.scale = Math.max(50, Math.min(200, scale));
-            document.getElementById('scale').value = settings.scale;
-            document.getElementById('scaleValue').textContent = settings.scale + '%';
-            draw();
-        } else if (e.touches.length === 1) {
-            const deltaX = e.touches[0].clientX - lastTouchPos.x;
-            const deltaY = e.touches[0].clientY - lastTouchPos.y;
-            
-            settings.x = Math.max(-200, Math.min(200, touchStartPos.x + deltaX * 0.5));
-            settings.y = Math.max(-200, Math.min(200, touchStartPos.y + deltaY * 0.5));
-            
-            document.getElementById('posX').value = settings.x;
-            document.getElementById('posY').value = settings.y;
-            document.getElementById('posXValue').textContent = settings.x;
-            document.getElementById('posYValue').textContent = settings.y;
-            draw();
-        }
-    }, { passive: false });
-
-    function downloadImage() {
-        const link = document.createElement('a');
-        link.download = 'election-support-card.png';
-        link.href = canvas.toDataURL('image/png', 1.0);
-        link.click();
-    }
-
-    // ✅ تحميل كل شيء عند بدء الصفحة
-    window.onload = async function() {
-        await checkDomainAccess();
-        await loadSettingsFromAPI();  // ✅ تحميل الإعدادات من Google Sheets
-        await loadFrames();
-        loadColors();
-    };
-</script>
-
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>مولد بطاقات دعم المرشحين</title>
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        
-        @font-face {
-            font-family: 'Cairo';
-            src: url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap');
-        }
-        
-        body { 
-            font-family: 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-            min-height: 100vh;
-            padding: 15px;
-            color: #333; 
-            user-select: none;
-            touch-action: manipulation;
-        }
-        
-        .container { 
-            max-width: 600px; 
-            margin: 0 auto; 
-            background: white; 
-            border-radius: 25px; 
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            overflow: hidden;
-        }
-        
-        .header {
-            background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%);
-            padding: 30px 20px;
-            text-align: center;
-            color: white;
-            position: relative;
-            overflow: hidden;
-        }
-        .header::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-            animation: shimmer 3s infinite;
-        }
-        @keyframes shimmer {
-            0%, 100% { transform: translate(0, 0); }
-            50% { transform: translate(10%, 10%); }
-        }
-        .header h1 { 
-            font-size: 1.8em; 
-            margin-bottom: 8px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-            position: relative;
-            z-index: 1;
-        }
-        .header p { 
-            font-size: 0.9em; 
-            opacity: 0.95;
-            position: relative;
-            z-index: 1;
-        }
-
-        .form-section {
-            padding: 20px;
-            background: #f8f9fa;
-        }
-        
-        .input-group {
-            margin-bottom: 20px;
-            background: white;
-            padding: 15px;
-            border-radius: 15px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }
-        
-        .input-group label {
-            display: block;
-            font-weight: 700;
-            margin-bottom: 10px;
-            color: #495057;
-            font-size: 1em;
-        }
-        
-        .input-group input[type="text"] {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e9ecef;
-            border-radius: 10px;
-            font-size: 1em;
-            font-family: 'Cairo', sans-serif;
-            transition: all 0.3s;
-            background: white;
-        }
-        
-        .input-group input[type="text"]:focus {
-            outline: none;
-            border-color: #e74c3c;
-            box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
-            transform: translateY(-2px);
-        }
-
-        .upload-box {
-            border: 3px dashed #e74c3c; 
-            background: white;
-            padding: 40px 20px; 
-            text-align: center;
-            border-radius: 20px; 
-            cursor: pointer; 
-            transition: all 0.3s;
-            margin-bottom: 20px;
-        }
-        .upload-box:hover, .upload-box:active { 
-            border-color: #c0392b; 
-            background: #fff5f5; 
-            transform: scale(1.02);
-        }
-        .upload-icon { font-size: 60px; margin-bottom: 15px; }
-        .upload-text { 
-            font-size: 1.1em; 
-            font-weight: 600; 
-            color: #e74c3c;
-            margin-bottom: 8px;
-        }
-
-        .frames-section {
-            padding: 20px;
-            background: white;
-            border-top: 3px solid #e9ecef;
-        }
-        .section-title {
-            font-size: 1.1em;
-            font-weight: 700;
-            color: #495057;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .frames-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-        }
-        .frame-card {
-            cursor: pointer;
-            padding: 10px;
-            border: 3px solid transparent;
-            border-radius: 15px;
-            background: #f8f9fa;
-            transition: all 0.3s;
-            position: relative;
-            text-align: center;
-        }
-        .frame-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
-        }
-        .frame-card.active {
-            border-color: #e74c3c;
-            background: linear-gradient(135deg, #fff5f5 0%, #ffe8e8 100%);
-            box-shadow: 0 5px 20px rgba(231, 76, 60, 0.3);
-        }
-        .frame-card img {
-            width: 100%;
-            height: 120px;
-            object-fit: cover;
-            border-radius: 10px;
-            margin-bottom: 8px;
-        }
-        .frame-name {
-            font-size: 0.9em;
-            font-weight: 600;
-            color: #495057;
-        }
-        .frame-check {
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            width: 25px;
-            height: 25px;
-            border-radius: 50%;
-            background: #e74c3c;
-            color: white;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-        }
-        .frame-card.active .frame-check {
-            display: flex;
-        }
-
-        .preview-section {
-            display: none;
-            padding: 20px;
-            background: #f8f9fa;
-        }
-        
-        .canvas-container {
-            background: linear-gradient(135deg, #e3e8f0 0%, #c5d3e8 100%);
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: inset 0 2px 10px rgba(0,0,0,0.1);
-        }
-        
-        canvas { 
-            width: 100%; 
-            height: auto; 
-            display: block;
-            cursor: move;
-            box-shadow: 0 15px 50px rgba(0,0,0,0.3);
-            border-radius: 15px;
-            background: white;
-        }
-
-        .tabs-container {
-            padding: 0 20px 20px;
-            background: #f8f9fa;
-        }
-        .tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            background: white;
-            padding: 8px;
-            border-radius: 15px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }
-        .tab {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            background: transparent;
-            border-radius: 10px;
-            font-size: 0.9em;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            color: #6c757d;
-            font-family: 'Cairo', sans-serif;
-        }
-        .tab.active {
-            background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%);
-            color: white;
-            box-shadow: 0 3px 10px rgba(231, 76, 60, 0.3);
-        }
-        .tab-content {
-            display: none;
-            background: white;
-            padding: 15px;
-            border-radius: 15px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }
-        .tab-content.active {
-            display: block;
-        }
-
-        .control-group { 
-            margin-bottom: 20px;
-        }
-        .control-group label { 
-            display: flex; 
-            justify-content: space-between; 
-            font-weight: 600; 
-            margin-bottom: 10px; 
-            color: #495057;
-            font-size: 0.95em;
-        }
-        .control-value {
-            background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%);
-            color: white;
-            padding: 2px 10px;
-            border-radius: 12px;
-            font-size: 0.85em;
-        }
-        input[type=range] { 
-            width: 100%; 
-            height: 8px; 
-            background: #e9ecef;
-            border-radius: 10px; 
-            outline: none; 
-            -webkit-appearance: none;
-            cursor: pointer;
-        }
-        input[type=range]::-webkit-slider-thumb { 
-            -webkit-appearance: none; 
-            width: 24px; 
-            height: 24px; 
-            background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%);
-            border-radius: 50%; 
-            cursor: pointer; 
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-            transition: all 0.2s;
-        }
-        input[type=range]::-webkit-slider-thumb:hover {
-            transform: scale(1.2);
-        }
-
-        .color-options {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-top: 10px;
-        }
-        .color-option {
-            width: 50px;
-            height: 50px;
-            border-radius: 12px;
-            cursor: pointer;
-            border: 3px solid transparent;
-            transition: all 0.3s;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-        }
-        .color-option:hover {
-            transform: scale(1.1);
-        }
-        .color-option.active {
-            border-color: #e74c3c;
-            box-shadow: 0 0 0 4px rgba(231, 76, 60, 0.2);
-        }
-
-        .button-section {
-            padding: 20px;
-            background: #f8f9fa;
-        }
-        .btn-group { 
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-        .btn { 
-            padding: 16px; 
-            border: none; 
-            border-radius: 15px; 
-            font-size: 1em; 
-            font-weight: 700; 
-            cursor: pointer; 
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            font-family: 'Cairo', sans-serif;
-        }
-        .btn:active {
-            transform: scale(0.95);
-        }
-        .btn-primary { 
-            background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%);
-            color: white;
-            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
-        }
-        .btn-secondary { 
-            background: white;
-            color: #e74c3c;
-            border: 2px solid #e74c3c;
-        }
-
-        .loading {
-            text-align: center;
-            padding: 20px;
-            color: #6c757d;
-        }
-
-        @media (max-width: 480px) {
-            .header h1 { font-size: 1.5em; }
-            .tabs { flex-direction: column; }
-            .frames-grid { grid-template-columns: 1fr; }
-        }
-    </style>
-</head>
-<body>
-
-<div class="container">
-    <div class="header">
-        <h1>🗳️ مولد بطاقات الدعم الانتخابي</h1>
-        <p>صمم بطاقة دعم احترافية للمرشح</p>
-    </div>
-
-    <div class="form-section">
-        <div class="input-group">
-            <label>👤 الاسم</label>
-            <input type="text" id="nameInput" placeholder="مثال: مصطفى عزت هارون">
-        </div>
-
-        <div class="input-group">
-            <label>💼 الوظيفة أو اللقب</label>
-            <input type="text" id="jobInput" placeholder="مثال: محامى بالاستناف العالى ومجلس ... اختيارى">
-        </div>
-
-        <div class="upload-box" onclick="document.getElementById('fileInput').click()">
-            <div class="upload-icon">📸</div>
-            <div class="upload-text">اضغط لرفع صورتك</div>
-            <input type="file" id="fileInput" accept="image/*" style="display: none;">
-        </div>
-
-        <button class="btn btn-primary" onclick="generateCard()" style="width: 100%;">
-            <span>🎨</span>
-            <span>إنشاء بطاقة الدعم</span>
-        </button>
-    </div>
-
-    <div class="frames-section" id="framesSection" style="display: none;">
-        <div class="section-title">
-            <span>🖼️</span>
-            <span>اختر تصميم البطاقة</span>
-        </div>
-        <div class="loading" id="framesLoading">⏳ جاري تحميل التصاميم...</div>
-        <div class="frames-grid" id="framesGrid"></div>
-    </div>
-
-    <div class="preview-section" id="previewSection">
-        <div class="section-title">
-            <span>👁️</span>
-            <span>معاينة بطاقة الدعم</span>
-        </div>
-        <div class="canvas-container">
-            <canvas id="canvas"></canvas>
-        </div>
-    </div>
-
-    <div class="tabs-container" id="tabsContainer" style="display: none;">
-        <div class="tabs">
-            <button class="tab active" onclick="switchTab('image')">📸 الصورة</button>
-            <button class="tab" onclick="switchTab('signature')">✍️ التوقيع</button>
-            <button class="tab" onclick="switchTab('colors')">🎨 الألوان</button>
-        </div>
-
-        <div id="imageTab" class="tab-content active">
-            <div class="control-group">
-                <label>
-                    <span>🔎 التكبير والتصغير</span>
-                    <span class="control-value" id="scaleValue">100%</span>
-                </label>
-                <input type="range" id="scale" min="50" max="200" value="100">
-            </div>
-            <div class="control-group">
-                <label>
-                    <span>↔️ التحريك الأفقي</span>
-                    <span class="control-value" id="posXValue">0</span>
-                </label>
-                <input type="range" id="posX" min="-200" max="200" value="0">
-            </div>
-            <div class="control-group">
-                <label>
-                    <span>↕️ التحريك العمودي</span>
-                    <span class="control-value" id="posYValue">0</span>
-                </label>
-                <input type="range" id="posY" min="-200" max="200" value="0">
-            </div>
-        </div>
-
-        <div id="signatureTab" class="tab-content">
-            <div class="control-group">
-                <label>
-                    <span>📏 حجم خط الاسم</span>
-                    <span class="control-value" id="nameSizeValue">45</span>
-                </label>
-                <input type="range" id="nameSize" min="20" max="60" value="45">
-            </div>
-            <div class="control-group">
-                <label>
-                    <span>📏 حجم خط الوظيفة</span>
-                    <span class="control-value" id="jobSizeValue">26</span>
-                </label>
-                <input type="range" id="jobSize" min="16" max="40" value="26">
-            </div>
-            <div class="control-group">
-                <label>
-                    <span>↔️ موضع التوقيع أفقياً</span>
-                    <span class="control-value" id="signaturePosXValue">340</span>
-                </label>
-                <input type="range" id="signaturePosX" min="200" max="880" value="340">
-            </div>
-            <div class="control-group">
-                <label>
-                    <span>↕️ المسافة من الدائرة للتوقيع</span>
-                    <span class="control-value" id="signatureOffsetYValue">60</span>
-                </label>
-                <input type="range" id="signatureOffsetY" min="20" max="150" value="60">
-                <p style="font-size: 0.85em; color: #6c757d; margin-top: 8px;">⭐ النص يتحرك تلقائياً مع الدائرة! استخدم هذا للتحكم في البعد بينهما فقط</p>
-            </div>
-            <div class="control-group">
-                <label>🎨 لون الاسم</label>
-                <div class="color-options" id="nameColorOptions"></div>
-            </div>
-            <div class="control-group">
-                <label>🎨 لون الوظيفة</label>
-                <div class="color-options" id="jobColorOptions"></div>
-            </div>
-            <div class="control-group">
-                <label style="margin-bottom: 10px;">
-                    <span>📝 إظهار الوظيفة</span>
-                </label>
-                <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; background: #f8f9fa; padding: 10px; border-radius: 10px;">
-                    <input type="checkbox" id="showJob" checked style="width: 20px; height: 20px; cursor: pointer;">
-                    <span style="font-weight: 500;">عرض الوظيفة في البطاقة</span>
-                </label>
-            </div>
-        </div>
-
-        <div id="colorsTab" class="tab-content">
-            <div class="control-group">
-                <label>
-                    <span>📐 حجم الصورة الشخصية</span>
-                    <span class="control-value" id="imageSizeValue">310</span>
-                </label>
-                <input type="range" id="imageSize" min="250" max="550" value="310">
-            </div>
-            <div class="control-group">
-                <label>
-                    <span>↔️ موضع الصورة أفقياً</span>
-                    <span class="control-value" id="imagePosXValue">340</span>
-                </label>
-                <input type="range" id="imagePosX" min="200" max="880" value="340">
-            </div>
-            <div class="control-group">
-                <label>
-                    <span>↕️ موضع الصورة عمودياً</span>
-                    <span class="control-value" id="imagePosYValue">575</span>
-                </label>
-                <input type="range" id="imagePosY" min="150" max="650" value="575">
-            </div>
-            <div class="control-group">
-                <label>
-                    <span>✨ فلتر التجميل</span>
-                    <span class="control-value" id="beautyFilterValue">0%</span>
-                </label>
-                <input type="range" id="beautyFilter" min="0" max="100" value="0">
-                <p style="font-size: 0.85em; color: #6c757d; margin-top: 8px;">يجعل البشرة أكثر نعومة وإشراقاً</p>
-            </div>
-            <div class="control-group">
-                <button class="btn btn-secondary" onclick="resetControls()" style="width: 100%;">
-                    <span>🔄</span>
-                    <span>إعادة تعيين الإعدادات</span>
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <div class="button-section" id="buttonSection" style="display: none;">
-        <div class="btn-group">
-            <button class="btn btn-primary" onclick="downloadImage()">
-                <span>💾</span>
-                <span>حفظ البطاقة</span>
-            </button>
-            <button class="btn btn-secondary" onclick="location.reload()">
-                <span>🔄</span>
-                <span>بطاقة جديدة</span>
-            </button>
-        </div>
-    </div>
-</div>
-
-<script>
-    // ✅ ضع رابط Google Apps Script الخاص بك هنا
     const API_URL = 'https://script.google.com/macros/s/AKfycbyhn2O-hbv-WoPy2oZkBOjndX1RN46MxFxPJCu2wE83kHzxjYJxk8lCGEyEf5OOuThO/exec';
     
-    // ألوان النصوص
     const textColors = [
         { color: '#8B1538', name: 'عنابي' },
         { color: '#FFFFFF', name: 'أبيض' },
@@ -1618,81 +594,69 @@
     let userName = '';
     let userJob = '';
     
-    // ✅ الإعدادات الافتراضية - سيتم تحديثها من Google Sheets
+    // ✅ الإعدادات الكاملة - مع الصورة والنص
     let settings = { 
-        scale: 100, 
-        x: 0, 
+        scale: 100,
+        x: 0,
         y: 0,
-        nameSize: 45,
-        jobSize: 26,
-        signaturePosX: 340,
-        signatureOffsetY: 60,
-        nameColor: '#8B1538',
-        jobColor: '#000000',
-        bgColor: 'transparent',
         imageSize: 310,
         imagePosX: 340,
-        imagePosY: 575,
+        imagePosY: 350,
         beautyFilter: 0,
+        nameSize: 45,
+        jobSize: 26,
+        signaturePosX: 540,
+        nameOffsetY: 200,
+        jobSpacing: 15,
+        nameColor: '#8B1538',
+        jobColor: '#000000',
         showJob: true
     };
 
-    // ═══════════════════════════════════════════════════════
-    // ✅ تحميل الإعدادات من Google Sheets
-    // ═══════════════════════════════════════════════════════
     async function loadSettingsFromAPI() {
         try {
             const response = await fetch(`${API_URL}?action=getSettings`);
             const data = await response.json();
             
             if (data.success && data.settings) {
-                // دمج الإعدادات من الشيت مع الإعدادات الافتراضية
                 settings = { ...settings, ...data.settings };
-                
-                // تحديث عناصر التحكم بالقيم الجديدة
                 updateControlsFromSettings();
-                
                 console.log('✅ تم تحميل الإعدادات من Google Sheets:', settings);
-            } else {
-                console.log('📌 سيتم استخدام الإعدادات الافتراضية');
             }
         } catch (error) {
             console.error('❌ فشل تحميل الإعدادات:', error);
-            console.log('📌 سيتم استخدام الإعدادات الافتراضية');
         }
     }
 
-    // ✅ تحديث عناصر التحكم من الإعدادات المحملة
     function updateControlsFromSettings() {
-        // تحديث القيم في عناصر HTML
         document.getElementById('scale').value = settings.scale;
         document.getElementById('posX').value = settings.x;
         document.getElementById('posY').value = settings.y;
-        document.getElementById('nameSize').value = settings.nameSize;
-        document.getElementById('jobSize').value = settings.jobSize;
-        document.getElementById('signaturePosX').value = settings.signaturePosX;
-        document.getElementById('signatureOffsetY').value = settings.signatureOffsetY;
         document.getElementById('imageSize').value = settings.imageSize;
         document.getElementById('imagePosX').value = settings.imagePosX;
         document.getElementById('imagePosY').value = settings.imagePosY;
         document.getElementById('beautyFilter').value = settings.beautyFilter;
+        document.getElementById('nameSize').value = settings.nameSize;
+        document.getElementById('jobSize').value = settings.jobSize;
+        document.getElementById('signaturePosX').value = settings.signaturePosX;
+        document.getElementById('nameOffsetY').value = settings.nameOffsetY;
+        document.getElementById('jobSpacing').value = settings.jobSpacing;
         document.getElementById('showJob').checked = settings.showJob;
         
-        // تحديث العرض
         document.getElementById('scaleValue').textContent = settings.scale + '%';
         document.getElementById('posXValue').textContent = settings.x;
         document.getElementById('posYValue').textContent = settings.y;
-        document.getElementById('nameSizeValue').textContent = settings.nameSize;
-        document.getElementById('jobSizeValue').textContent = settings.jobSize;
-        document.getElementById('signaturePosXValue').textContent = settings.signaturePosX;
-        document.getElementById('signatureOffsetYValue').textContent = settings.signatureOffsetY;
         document.getElementById('imageSizeValue').textContent = settings.imageSize;
         document.getElementById('imagePosXValue').textContent = settings.imagePosX;
         document.getElementById('imagePosYValue').textContent = settings.imagePosY;
         document.getElementById('beautyFilterValue').textContent = settings.beautyFilter + '%';
+        document.getElementById('nameSizeValue').textContent = settings.nameSize;
+        document.getElementById('jobSizeValue').textContent = settings.jobSize;
+        document.getElementById('signaturePosXValue').textContent = settings.signaturePosX;
+        document.getElementById('nameOffsetYValue').textContent = settings.nameOffsetY;
+        document.getElementById('jobSpacingValue').textContent = settings.jobSpacing;
     }
 
-    // التحقق من النطاقات
     async function checkDomainAccess() {
         try {
             const response = await fetch(`${API_URL}?action=checkDomain&domain=${window.location.hostname}`);
@@ -1711,7 +675,6 @@
         }
     }
 
-    // تحميل الإطارات من API
     async function loadFrames() {
         const grid = document.getElementById('framesGrid');
         const loading = document.getElementById('framesLoading');
@@ -1845,6 +808,7 @@
         };
     }
 
+    // ✅ دالة الرسم الكاملة - الطبقات الثلاث بالترتيب الصحيح
     function draw() {
         if (!currentFrame) {
             return;
@@ -1852,7 +816,9 @@
         
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // رسم الصورة الشخصية
+        // ═══════════════════════════════════════════════════
+        // الطبقة 1: رسم الصورة الشخصية أولاً (في الخلف)
+        // ═══════════════════════════════════════════════════
         if (userImg) {
             const imgSize = settings.imageSize;
             const imgX = settings.imagePosX;
@@ -1864,6 +830,7 @@
                 ctx.filter = `blur(${settings.beautyFilter * 0.02}px) brightness(${1 + settings.beautyFilter * 0.001})`;
             }
             
+            // قص الصورة على شكل دائرة
             ctx.beginPath();
             ctx.arc(imgX, imgY, imgSize / 2, 0, Math.PI * 2);
             ctx.clip();
@@ -1877,28 +844,32 @@
             ctx.restore();
         }
 
-        // رسم الإطار
+        // ═══════════════════════════════════════════════════
+        // الطبقة 2: رسم الإطار فوق الصورة (في الوسط)
+        // ═══════════════════════════════════════════════════
         if (frameImg.complete && frameImg.naturalWidth > 0) {
             ctx.drawImage(frameImg, 0, 0, canvas.width, canvas.height);
         }
 
-        // رسم النص
-        const textStartY = settings.imagePosY + (settings.imageSize / 2) + settings.signatureOffsetY;
-
+        // ═══════════════════════════════════════════════════
+        // الطبقة 3: رسم النص فوق كل شيء (في الأمام)
+        // ═══════════════════════════════════════════════════
+        const nameY = canvas.height - settings.nameOffsetY;
+        
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
 
-        // الاسم
+        // رسم الاسم
         ctx.font = `bold ${settings.nameSize}px Cairo, Arial`;
         ctx.strokeStyle = 'white';
         ctx.lineWidth = 4;
-        ctx.strokeText(userName, settings.signaturePosX, textStartY);
+        ctx.strokeText(userName, settings.signaturePosX, nameY);
         ctx.fillStyle = settings.nameColor;
-        ctx.fillText(userName, settings.signaturePosX, textStartY);
+        ctx.fillText(userName, settings.signaturePosX, nameY);
 
-        // الوظيفة
+        // رسم الوظيفة
         if (settings.showJob && userJob) {
-            const jobY = textStartY + settings.nameSize + 15;
+            const jobY = nameY + settings.nameSize + settings.jobSpacing;
             ctx.font = `${settings.jobSize}px Cairo, Arial`;
             ctx.strokeStyle = 'white';
             ctx.lineWidth = 3;
@@ -1932,26 +903,6 @@
         document.getElementById('posYValue').textContent = settings.y;
         draw(); 
     };
-    document.getElementById('nameSize').oninput = (e) => { 
-        settings.nameSize = parseInt(e.target.value); 
-        document.getElementById('nameSizeValue').textContent = settings.nameSize;
-        draw(); 
-    };
-    document.getElementById('jobSize').oninput = (e) => { 
-        settings.jobSize = parseInt(e.target.value); 
-        document.getElementById('jobSizeValue').textContent = settings.jobSize;
-        draw(); 
-    };
-    document.getElementById('signaturePosX').oninput = (e) => { 
-        settings.signaturePosX = parseInt(e.target.value); 
-        document.getElementById('signaturePosXValue').textContent = settings.signaturePosX;
-        draw(); 
-    };
-    document.getElementById('signatureOffsetY').oninput = (e) => { 
-        settings.signatureOffsetY = parseInt(e.target.value); 
-        document.getElementById('signatureOffsetYValue').textContent = settings.signatureOffsetY;
-        draw(); 
-    };
     document.getElementById('imageSize').oninput = (e) => { 
         settings.imageSize = parseInt(e.target.value); 
         document.getElementById('imageSizeValue').textContent = settings.imageSize;
@@ -1972,12 +923,36 @@
         document.getElementById('beautyFilterValue').textContent = settings.beautyFilter + '%';
         draw(); 
     };
+    document.getElementById('nameSize').oninput = (e) => { 
+        settings.nameSize = parseInt(e.target.value); 
+        document.getElementById('nameSizeValue').textContent = settings.nameSize;
+        draw(); 
+    };
+    document.getElementById('jobSize').oninput = (e) => { 
+        settings.jobSize = parseInt(e.target.value); 
+        document.getElementById('jobSizeValue').textContent = settings.jobSize;
+        draw(); 
+    };
+    document.getElementById('signaturePosX').oninput = (e) => { 
+        settings.signaturePosX = parseInt(e.target.value); 
+        document.getElementById('signaturePosXValue').textContent = settings.signaturePosX;
+        draw(); 
+    };
+    document.getElementById('nameOffsetY').oninput = (e) => { 
+        settings.nameOffsetY = parseInt(e.target.value); 
+        document.getElementById('nameOffsetYValue').textContent = settings.nameOffsetY;
+        draw(); 
+    };
+    document.getElementById('jobSpacing').oninput = (e) => { 
+        settings.jobSpacing = parseInt(e.target.value); 
+        document.getElementById('jobSpacingValue').textContent = settings.jobSpacing;
+        draw(); 
+    };
     document.getElementById('showJob').onchange = (e) => { 
         settings.showJob = e.target.checked;
         draw(); 
     };
 
-    // ✅ إعادة تعيين الإعدادات - يقرأ من Google Sheets
     async function resetControls() {
         await loadSettingsFromAPI();
         updateControlsFromSettings();
@@ -2045,10 +1020,9 @@
         link.click();
     }
 
-    // ✅ تحميل كل شيء عند بدء الصفحة
     window.onload = async function() {
         await checkDomainAccess();
-        await loadSettingsFromAPI();  // ✅ تحميل الإعدادات من Google Sheets
+        await loadSettingsFromAPI();
         await loadFrames();
         loadColors();
     };
