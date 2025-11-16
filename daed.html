@@ -462,30 +462,31 @@
             <div class="control-group">
                 <label>
                     <span>📏 حجم خط الاسم</span>
-                    <span class="control-value" id="nameSizeValue">48</span>
+                    <span class="control-value" id="nameSizeValue">45</span>
                 </label>
-                <input type="range" id="nameSize" min="20" max="60" value="48">
+                <input type="range" id="nameSize" min="20" max="60" value="45">
             </div>
             <div class="control-group">
                 <label>
                     <span>📏 حجم خط الوظيفة</span>
-                    <span class="control-value" id="jobSizeValue">28</span>
+                    <span class="control-value" id="jobSizeValue">26</span>
                 </label>
-                <input type="range" id="jobSize" min="16" max="40" value="28">
+                <input type="range" id="jobSize" min="16" max="40" value="26">
             </div>
             <div class="control-group">
                 <label>
                     <span>↔️ موضع التوقيع أفقياً</span>
-                    <span class="control-value" id="signaturePosXValue">540</span>
+                    <span class="control-value" id="signaturePosXValue">340</span>
                 </label>
-                <input type="range" id="signaturePosX" min="200" max="880" value="540">
+                <input type="range" id="signaturePosX" min="200" max="880" value="340">
             </div>
             <div class="control-group">
                 <label>
-                    <span>↕️ موضع التوقيع عمودياً</span>
-                    <span class="control-value" id="signaturePosYValue">750</span>
+                    <span>↕️ المسافة من الدائرة للتوقيع</span>
+                    <span class="control-value" id="signatureOffsetYValue">60</span>
                 </label>
-                <input type="range" id="signaturePosY" min="600" max="950" value="750">
+                <input type="range" id="signatureOffsetY" min="20" max="150" value="60">
+                <p style="font-size: 0.85em; color: #6c757d; margin-top: 8px;">⭐ النص يتحرك تلقائياً مع الدائرة! استخدم هذا للتحكم في البعد بينهما فقط</p>
             </div>
             <div class="control-group">
                 <label>🎨 لون الاسم</label>
@@ -508,29 +509,25 @@
 
         <div id="colorsTab" class="tab-content">
             <div class="control-group">
-                <label>🎨 لون خلفية البطاقة</label>
-                <div class="color-options" id="colorOptions"></div>
-            </div>
-            <div class="control-group">
                 <label>
                     <span>📐 حجم الصورة الشخصية</span>
-                    <span class="control-value" id="imageSizeValue">350</span>
+                    <span class="control-value" id="imageSizeValue">310</span>
                 </label>
-                <input type="range" id="imageSize" min="250" max="550" value="350">
+                <input type="range" id="imageSize" min="250" max="550" value="310">
             </div>
             <div class="control-group">
                 <label>
                     <span>↔️ موضع الصورة أفقياً</span>
-                    <span class="control-value" id="imagePosXValue">540</span>
+                    <span class="control-value" id="imagePosXValue">340</span>
                 </label>
-                <input type="range" id="imagePosX" min="200" max="880" value="540">
+                <input type="range" id="imagePosX" min="200" max="880" value="340">
             </div>
             <div class="control-group">
                 <label>
                     <span>↕️ موضع الصورة عمودياً</span>
-                    <span class="control-value" id="imagePosYValue">350</span>
+                    <span class="control-value" id="imagePosYValue">575</span>
                 </label>
-                <input type="range" id="imagePosY" min="150" max="650" value="350">
+                <input type="range" id="imagePosY" min="150" max="650" value="575">
             </div>
             <div class="control-group">
                 <label>
@@ -587,13 +584,13 @@
         { color: '#34495e', name: 'رمادي داكن' }
     ];
 
-    // ألوان النصوص - تم تعديل اللون الافتراضي إلى ذهبي
+    // ألوان النصوص - اللون العنابي افتراضي (مثل تصميمك)
     const textColors = [
-        { color: '#FFD700', name: 'ذهبي' },
-        { color: '#FFFFFF', name: 'أبيض' },
-        { color: '#c0392b', name: 'أحمر' },
-        { color: '#000000', name: 'أسود' },
         { color: '#8B1538', name: 'عنابي' },
+        { color: '#FFFFFF', name: 'أبيض' },
+        { color: '#000000', name: 'أسود' },
+        { color: '#c0392b', name: 'أحمر' },
+        { color: '#FFD700', name: 'ذهبي' },
         { color: '#27ae60', name: 'أخضر' },
         { color: '#2980b9', name: 'أزرق' }
     ];
@@ -620,11 +617,11 @@
         nameSize: 45,
         jobSize: 26,
         signaturePosX: 340,  // موضع الدائرة في تصميمك (يسار)
-        signaturePosY: 820,  // تحت الدائرة مباشرة
+        signatureOffsetY: 60,  // المسافة من أسفل الدائرة إلى الاسم
         nameColor: '#8B1538',  // عنابي مثل النص في تصميمك
         jobColor: '#000000',   // أسود للوظيفة
         bgColor: 'transparent',  // بدون خلفية، نستخدم الإطار فقط
-        imageSize: 610,  // حجم الدائرة في تصميمك تقريباً
+        imageSize: 310,  // حجم الدائرة في تصميمك تقريباً
         imagePosX: 340,  // X للدائرة الذهبية في تصميمك
         imagePosY: 575,  // Y للدائرة الذهبية في تصميمك
         beautyFilter: 0,
@@ -695,27 +692,11 @@
     }
 
     function loadColors() {
-        // ألوان الخلفية
-        const bgContainer = document.getElementById('colorOptions');
-        bgColors.forEach((bg, index) => {
-            const option = document.createElement('div');
-            option.className = `color-option ${index === 0 ? 'active' : ''}`;
-            option.style.background = bg.color;
-            option.title = bg.name;
-            option.onclick = () => {
-                bgContainer.querySelectorAll('.color-option').forEach(o => o.classList.remove('active'));
-                option.classList.add('active');
-                settings.bgColor = bg.color;
-                draw();
-            };
-            bgContainer.appendChild(option);
-        });
-
-        // ألوان خط الاسم - اللون الذهبي افتراضي
+        // ألوان خط الاسم - العنابي افتراضي (مثل تصميمك)
         const nameColorContainer = document.getElementById('nameColorOptions');
         textColors.forEach((tc, index) => {
             const option = document.createElement('div');
-            option.className = `color-option ${tc.color === '#FFD700' ? 'active' : ''}`;
+            option.className = `color-option ${tc.color === '#8B1538' ? 'active' : ''}`;
             option.style.background = tc.color;
             if (tc.color === '#FFFFFF') {
                 option.style.border = '2px solid #dee2e6';
@@ -730,11 +711,11 @@
             nameColorContainer.appendChild(option);
         });
 
-        // ألوان خط الوظيفة - الأبيض افتراضي
+        // ألوان خط الوظيفة - الأسود افتراضي
         const jobColorContainer = document.getElementById('jobColorOptions');
         textColors.forEach((tc, index) => {
             const option = document.createElement('div');
-            option.className = `color-option ${tc.color === '#FFFFFF' ? 'active' : ''}`;
+            option.className = `color-option ${tc.color === '#000000' ? 'active' : ''}`;
             option.style.background = tc.color;
             if (tc.color === '#FFFFFF') {
                 option.style.border = '2px solid #dee2e6';
@@ -811,10 +792,15 @@
             return;
         }
         
-        ctx.fillStyle = settings.bgColor;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        // مسح الكانفاس بدون خلفية (شفاف)
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // رسم الصورة الشخصية في الدائرة
+        // رسم الإطار أولاً (تصميمك الخاص)
+        if (frameImg.complete && frameImg.naturalWidth > 0) {
+            ctx.drawImage(frameImg, 0, 0, canvas.width, canvas.height);
+        }
+
+        // رسم الصورة الشخصية في الدائرة الذهبية
         if (userImg) {
             const imgSize = settings.imageSize;
             const imgX = settings.imagePosX;
@@ -827,6 +813,7 @@
                 ctx.filter = `blur(${settings.beautyFilter * 0.02}px) brightness(${1 + settings.beautyFilter * 0.001})`;
             }
             
+            // قص الصورة على شكل دائرة
             ctx.beginPath();
             ctx.arc(imgX, imgY, imgSize / 2, 0, Math.PI * 2);
             ctx.clip();
@@ -838,65 +825,39 @@
             
             ctx.drawImage(userImg, imgX - imgW/2 + settings.x, imgY - imgH/2 + settings.y, imgW, imgH);
             ctx.restore();
-
-            // إطار دائري ذهبي حول الصورة
-            ctx.strokeStyle = '#FFD700';
-            ctx.lineWidth = 10;
-            ctx.beginPath();
-            ctx.arc(imgX, imgY, imgSize / 2, 0, Math.PI * 2);
-            ctx.stroke();
         }
 
-        // رسم الإطار
-        if (frameImg.complete && frameImg.naturalWidth > 0) {
-            ctx.drawImage(frameImg, 0, 0, canvas.width, canvas.height);
-        }
-
-        // حساب موضع النص تحت الدائرة الذهبية
-        const textStartY = settings.imagePosY + (settings.imageSize / 2) + 80;
+        // حساب موضع النص تلقائياً تحت الدائرة مباشرة
+        const textStartY = settings.imagePosY + (settings.imageSize / 2) + settings.signatureOffsetY;
 
         // رسم النص (الاسم والوظيفة)
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
 
-        // رسم الاسم مع حدود للتميز
+        // رسم الاسم بخط عريض
         ctx.font = `bold ${settings.nameSize}px Cairo, Arial`;
         
-        // الحدود (shadow) للنص
-        ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
-        ctx.shadowBlur = 10;
-        ctx.shadowOffsetX = 2;
-        ctx.shadowOffsetY = 2;
+        // حدود بيضاء حول النص لجعله واضح
+        ctx.strokeStyle = 'white';
+        ctx.lineWidth = 4;
+        ctx.strokeText(userName, settings.signaturePosX, textStartY);
         
-        // لون الخط الأساسي
+        // لون النص الأساسي
         ctx.fillStyle = settings.nameColor;
         ctx.fillText(userName, settings.signaturePosX, textStartY);
-        
-        // إزالة الظل
-        ctx.shadowColor = 'transparent';
-        ctx.shadowBlur = 0;
-        ctx.shadowOffsetX = 0;
-        ctx.shadowOffsetY = 0;
 
         // رسم الوظيفة إذا كانت مفعلة
         if (settings.showJob && userJob) {
-            const jobY = textStartY + settings.nameSize + 20;
+            const jobY = textStartY + settings.nameSize + 15;
             ctx.font = `${settings.jobSize}px Cairo, Arial`;
             
-            // ظل خفيف للوظيفة
-            ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
-            ctx.shadowBlur = 5;
-            ctx.shadowOffsetX = 1;
-            ctx.shadowOffsetY = 1;
+            // حدود بيضاء للوظيفة
+            ctx.strokeStyle = 'white';
+            ctx.lineWidth = 3;
+            ctx.strokeText(userJob, settings.signaturePosX, jobY);
             
             ctx.fillStyle = settings.jobColor;
             ctx.fillText(userJob, settings.signaturePosX, jobY);
-            
-            // إزالة الظل
-            ctx.shadowColor = 'transparent';
-            ctx.shadowBlur = 0;
-            ctx.shadowOffsetX = 0;
-            ctx.shadowOffsetY = 0;
         }
     }
 
@@ -938,9 +899,9 @@
         document.getElementById('signaturePosXValue').textContent = settings.signaturePosX;
         draw(); 
     };
-    document.getElementById('signaturePosY').oninput = (e) => { 
-        settings.signaturePosY = parseInt(e.target.value); 
-        document.getElementById('signaturePosYValue').textContent = settings.signaturePosY;
+    document.getElementById('signatureOffsetY').oninput = (e) => { 
+        settings.signatureOffsetY = parseInt(e.target.value); 
+        document.getElementById('signatureOffsetYValue').textContent = settings.signatureOffsetY;
         draw(); 
     };
     document.getElementById('imageSize').oninput = (e) => { 
@@ -973,16 +934,16 @@
             scale: 100,
             x: 0,
             y: 0,
-            nameSize: 48,
-            jobSize: 28,
-            signaturePosX: 540,
-            signaturePosY: 750,
-            nameColor: '#FFD700',
-            jobColor: '#FFFFFF',
-            bgColor: '#c0392b',
-            imageSize: 350,
-            imagePosX: 540,
-            imagePosY: 350,
+            nameSize: 45,
+            jobSize: 26,
+            signaturePosX: 340,
+            signatureOffsetY: 60,
+            nameColor: '#8B1538',
+            jobColor: '#000000',
+            bgColor: 'transparent',
+            imageSize: 310,
+            imagePosX: 340,
+            imagePosY: 575,
             beautyFilter: 0,
             showJob: true
         };
@@ -990,26 +951,26 @@
         document.getElementById('scale').value = 100;
         document.getElementById('posX').value = 0;
         document.getElementById('posY').value = 0;
-        document.getElementById('nameSize').value = 48;
-        document.getElementById('jobSize').value = 28;
-        document.getElementById('signaturePosX').value = 540;
-        document.getElementById('signaturePosY').value = 750;
-        document.getElementById('imageSize').value = 350;
-        document.getElementById('imagePosX').value = 540;
-        document.getElementById('imagePosY').value = 350;
+        document.getElementById('nameSize').value = 45;
+        document.getElementById('jobSize').value = 26;
+        document.getElementById('signaturePosX').value = 340;
+        document.getElementById('signatureOffsetY').value = 60;
+        document.getElementById('imageSize').value = 310;
+        document.getElementById('imagePosX').value = 340;
+        document.getElementById('imagePosY').value = 575;
         document.getElementById('beautyFilter').value = 0;
         document.getElementById('showJob').checked = true;
         
         document.getElementById('scaleValue').textContent = '100%';
         document.getElementById('posXValue').textContent = '0';
         document.getElementById('posYValue').textContent = '0';
-        document.getElementById('nameSizeValue').textContent = '48';
-        document.getElementById('jobSizeValue').textContent = '28';
-        document.getElementById('signaturePosXValue').textContent = '540';
-        document.getElementById('signaturePosYValue').textContent = '750';
-        document.getElementById('imageSizeValue').textContent = '350';
-        document.getElementById('imagePosXValue').textContent = '540';
-        document.getElementById('imagePosYValue').textContent = '350';
+        document.getElementById('nameSizeValue').textContent = '45';
+        document.getElementById('jobSizeValue').textContent = '26';
+        document.getElementById('signaturePosXValue').textContent = '340';
+        document.getElementById('signatureOffsetYValue').textContent = '60';
+        document.getElementById('imageSizeValue').textContent = '310';
+        document.getElementById('imagePosXValue').textContent = '340';
+        document.getElementById('imagePosYValue').textContent = '575';
         document.getElementById('beautyFilterValue').textContent = '0%';
         
         draw();
