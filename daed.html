@@ -609,21 +609,21 @@
     let userName = '';
     let userJob = '';
     
-    // الإعدادات الافتراضية - موضع الدائرة الذهبية في تصميمك
+    // الإعدادات الافتراضية - تم تعديل signatureOffsetY و imageSize
     let settings = { 
         scale: 100, 
         x: 0, 
         y: 0,
         nameSize: 45,
         jobSize: 26,
-        signaturePosX: 340,  // موضع الدائرة في تصميمك (يسار)
-        signatureOffsetY: 20,  // المسافة من أسفل الدائرة إلى الاسم
-        nameColor: '#8B1538',  // عنابي مثل النص في تصميمك
-        jobColor: '#000000',   // أسود للوظيفة
-        bgColor: 'transparent',  // بدون خلفية، نستخدم الإطار فقط
-        imageSize: 610,  // حجم الدائرة في تصميمك تقريباً
-        imagePosX: 340,  // X للدائرة الذهبية في تصميمك
-        imagePosY: 575,  // Y للدائرة الذهبية في تصميمك
+        signaturePosX: 340,
+        signatureOffsetY: 60,  // ✅ تم التعديل من 20 إلى 60
+        nameColor: '#8B1538',
+        jobColor: '#000000',
+        bgColor: 'transparent',
+        imageSize: 310,  // ✅ تم التعديل من 610 إلى 310
+        imagePosX: 340,
+        imagePosY: 575,
         beautyFilter: 0,
         showJob: true
     };
@@ -945,11 +945,11 @@
             nameSize: 45,
             jobSize: 26,
             signaturePosX: 340,
-            signatureOffsetY: 60,
+            signatureOffsetY: 60,  // ✅ القيمة الافتراضية الجديدة
             nameColor: '#8B1538',
             jobColor: '#000000',
             bgColor: 'transparent',
-            imageSize: 310,
+            imageSize: 310,  // ✅ القيمة الافتراضية الجديدة
             imagePosX: 340,
             imagePosY: 575,
             beautyFilter: 0,
@@ -1054,3 +1054,4 @@
 
 </body>
 </html>
+
