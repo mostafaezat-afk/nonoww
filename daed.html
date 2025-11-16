@@ -196,7 +196,6 @@
             display: flex;
         }
 
-        /* ✅ التخطيط الجديد - جانبي على الكمبيوتر */
         .editor-layout {
             display: none;
             background: #f8f9fa;
@@ -368,7 +367,6 @@
             color: #6c757d;
         }
 
-        /* ✅ الإطار العائم على الموبايل */
         .floating-preview {
             display: none;
             position: fixed;
@@ -387,7 +385,6 @@
             box-shadow: none;
         }
 
-        /* ✅ التخطيط المتجاوب */
         @media (min-width: 1024px) {
             .container {
                 max-width: 100%;
@@ -485,12 +482,10 @@
         <div class="frames-grid" id="framesGrid"></div>
     </div>
 
-    <!-- ✅ الإطار العائم للموبايل -->
     <div class="floating-preview" id="floatingPreview">
         <canvas id="floatingCanvas"></canvas>
     </div>
 
-    <!-- ✅ التخطيط الجديد - جانبي -->
     <div class="editor-layout" id="editorLayout">
         <div class="canvas-container">
             <canvas id="canvas"></canvas>
@@ -516,35 +511,28 @@
                         <span>↔️ التحريك الأفقي</span>
                         <span class="control-value" id="posXValue">0</span>
                     </label>
-                    <input type="range" id="posX" min="-200" max="200" value="0">
+                    <input type="range" id="posX" min="-500" max="500" value="0">
                 </div>
                 <div class="control-group">
                     <label>
                         <span>↕️ التحريك العمودي</span>
                         <span class="control-value" id="posYValue">0</span>
                     </label>
-                    <input type="range" id="posY" min="-200" max="200" value="0">
+                    <input type="range" id="posY" min="-500" max="500" value="0">
                 </div>
                 <div class="control-group">
                     <label>
-                        <span>📐 حجم الصورة الشخصية</span>
-                        <span class="control-value" id="imageSizeValue">310</span>
+                        <span>📐 عرض الصورة</span>
+                        <span class="control-value" id="imageWidthValue">1080</span>
                     </label>
-                    <input type="range" id="imageSize" min="250" max="550" value="310">
+                    <input type="range" id="imageWidth" min="500" max="1500" value="1080">
                 </div>
                 <div class="control-group">
                     <label>
-                        <span>↔️ موضع الصورة أفقياً</span>
-                        <span class="control-value" id="imagePosXValue">340</span>
+                        <span>📐 ارتفاع الصورة</span>
+                        <span class="control-value" id="imageHeightValue">1080</span>
                     </label>
-                    <input type="range" id="imagePosX" min="200" max="880" value="340">
-                </div>
-                <div class="control-group">
-                    <label>
-                        <span>↕️ موضع الصورة عمودياً</span>
-                        <span class="control-value" id="imagePosYValue">350</span>
-                    </label>
-                    <input type="range" id="imagePosY" min="150" max="650" value="350">
+                    <input type="range" id="imageHeight" min="500" max="1500" value="1080">
                 </div>
                 <div class="control-group">
                     <label>
@@ -673,9 +661,8 @@
         scale: 100,
         x: 0,
         y: 0,
-        imageSize: 310,
-        imagePosX: 340,
-        imagePosY: 350,
+        imageWidth: 1080,
+        imageHeight: 1080,
         beautyFilter: 0,
         nameSize: 45,
         jobSize: 26,
@@ -706,9 +693,8 @@
         document.getElementById('scale').value = settings.scale;
         document.getElementById('posX').value = settings.x;
         document.getElementById('posY').value = settings.y;
-        document.getElementById('imageSize').value = settings.imageSize;
-        document.getElementById('imagePosX').value = settings.imagePosX;
-        document.getElementById('imagePosY').value = settings.imagePosY;
+        document.getElementById('imageWidth').value = settings.imageWidth;
+        document.getElementById('imageHeight').value = settings.imageHeight;
         document.getElementById('beautyFilter').value = settings.beautyFilter;
         document.getElementById('nameSize').value = settings.nameSize;
         document.getElementById('jobSize').value = settings.jobSize;
@@ -720,9 +706,8 @@
         document.getElementById('scaleValue').textContent = settings.scale + '%';
         document.getElementById('posXValue').textContent = settings.x;
         document.getElementById('posYValue').textContent = settings.y;
-        document.getElementById('imageSizeValue').textContent = settings.imageSize;
-        document.getElementById('imagePosXValue').textContent = settings.imagePosX;
-        document.getElementById('imagePosYValue').textContent = settings.imagePosY;
+        document.getElementById('imageWidthValue').textContent = settings.imageWidth;
+        document.getElementById('imageHeightValue').textContent = settings.imageHeight;
         document.getElementById('beautyFilterValue').textContent = settings.beautyFilter + '%';
         document.getElementById('nameSizeValue').textContent = settings.nameSize;
         document.getElementById('jobSizeValue').textContent = settings.jobSize;
@@ -880,45 +865,43 @@
         };
     }
 
-    // ✅ دالة الرسم المُحدثة - بدون خلفية بيضاء
+    // ✅ دالة الرسم الجديدة - الصورة كاملة بدون قص
     function draw() {
         if (!currentFrame) {
             return;
         }
         
-        // رسم على الكانفاس الرئيسي
         drawOnCanvas(ctx);
-        
-        // رسم على الكانفاس العائم
         drawOnCanvas(floatingCtx);
     }
 
     function drawOnCanvas(context) {
-        // ✅ مسح الكانفاس بالكامل (شفاف)
         context.clearRect(0, 0, 1080, 1080);
 
-        // الطبقة 1: رسم الصورة الشخصية
+        // ✅ الطبقة 1: رسم الصورة الشخصية كاملة (بدون قص دائري)
         if (userImg) {
-            const imgSize = settings.imageSize;
-            const imgX = settings.imagePosX;
-            const imgY = settings.imagePosY;
-
             context.save();
             
             if (settings.beautyFilter > 0) {
                 context.filter = `blur(${settings.beautyFilter * 0.02}px) brightness(${1 + settings.beautyFilter * 0.001})`;
             }
             
-            context.beginPath();
-            context.arc(imgX, imgY, imgSize / 2, 0, Math.PI * 2);
-            context.clip();
-
             const scaleFactor = settings.scale / 100;
-            const ratio = Math.max(imgSize / userImg.width, imgSize / userImg.height);
-            const imgW = userImg.width * ratio * scaleFactor;
-            const imgH = userImg.height * ratio * scaleFactor;
+            const imgW = settings.imageWidth * scaleFactor;
+            const imgH = settings.imageHeight * scaleFactor;
             
-            context.drawImage(userImg, imgX - imgW/2 + settings.x, imgY - imgH/2 + settings.y, imgW, imgH);
+            const centerX = 540;
+            const centerY = 540;
+            
+            // رسم الصورة مباشرة بدون قص
+            context.drawImage(
+                userImg, 
+                centerX - imgW/2 + settings.x, 
+                centerY - imgH/2 + settings.y, 
+                imgW, 
+                imgH
+            );
+            
             context.restore();
         }
 
@@ -974,19 +957,14 @@
         document.getElementById('posYValue').textContent = settings.y;
         draw(); 
     };
-    document.getElementById('imageSize').oninput = (e) => { 
-        settings.imageSize = parseInt(e.target.value); 
-        document.getElementById('imageSizeValue').textContent = settings.imageSize;
+    document.getElementById('imageWidth').oninput = (e) => { 
+        settings.imageWidth = parseInt(e.target.value); 
+        document.getElementById('imageWidthValue').textContent = settings.imageWidth;
         draw(); 
     };
-    document.getElementById('imagePosX').oninput = (e) => { 
-        settings.imagePosX = parseInt(e.target.value); 
-        document.getElementById('imagePosXValue').textContent = settings.imagePosX;
-        draw(); 
-    };
-    document.getElementById('imagePosY').oninput = (e) => { 
-        settings.imagePosY = parseInt(e.target.value); 
-        document.getElementById('imagePosYValue').textContent = settings.imagePosY;
+    document.getElementById('imageHeight').oninput = (e) => { 
+        settings.imageHeight = parseInt(e.target.value); 
+        document.getElementById('imageHeightValue').textContent = settings.imageHeight;
         draw(); 
     };
     document.getElementById('beautyFilter').oninput = (e) => { 
@@ -1072,8 +1050,8 @@
             const deltaX = e.touches[0].clientX - lastTouchPos.x;
             const deltaY = e.touches[0].clientY - lastTouchPos.y;
             
-            settings.x = Math.max(-200, Math.min(200, touchStartPos.x + deltaX * 0.5));
-            settings.y = Math.max(-200, Math.min(200, touchStartPos.y + deltaY * 0.5));
+            settings.x = Math.max(-500, Math.min(500, touchStartPos.x + deltaX * 0.5));
+            settings.y = Math.max(-500, Math.min(500, touchStartPos.y + deltaY * 0.5));
             
             document.getElementById('posX').value = settings.x;
             document.getElementById('posY').value = settings.y;
