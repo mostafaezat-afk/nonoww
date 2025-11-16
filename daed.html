@@ -565,7 +565,7 @@
 
 <script>
     // ضع هنا رابط Google Apps Script الخاص بك بعد نشره
-    const API_URL = 'https://script.google.com/macros/s/AKfycbw53YcwK4QXcrNTzxQ84ft4UpxX83yQONK0Su0tCrrxmCGr4AbvLIesWHV94VBh-gOn/exec';
+    const API_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
     
     // الإطارات الاحتياطية (في حالة فشل التحميل من API)
     const fallbackFrames = [
@@ -612,21 +612,21 @@
     let userName = '';
     let userJob = '';
     
-    // الإعدادات الافتراضية المحدثة
+    // الإعدادات الافتراضية - موضع الدائرة الذهبية في تصميمك
     let settings = { 
         scale: 100, 
         x: 0, 
         y: 0,
-        nameSize: 48,
-        jobSize: 28,
-        signaturePosX: 540,
-        signaturePosY: 750,  // تم تعديله ليكون تحت الدائرة
-        nameColor: '#FFD700',  // ذهبي كلون افتراضي
-        jobColor: '#FFFFFF',   // أبيض للوظيفة
-        bgColor: '#c0392b',
-        imageSize: 350,  // حجم أصغر للدائرة
-        imagePosX: 540,
-        imagePosY: 350,  // أعلى قليلاً
+        nameSize: 45,
+        jobSize: 26,
+        signaturePosX: 340,  // موضع الدائرة في تصميمك (يسار)
+        signaturePosY: 820,  // تحت الدائرة مباشرة
+        nameColor: '#8B1538',  // عنابي مثل النص في تصميمك
+        jobColor: '#000000',   // أسود للوظيفة
+        bgColor: 'transparent',  // بدون خلفية، نستخدم الإطار فقط
+        imageSize: 310,  // حجم الدائرة في تصميمك تقريباً
+        imagePosX: 340,  // X للدائرة الذهبية في تصميمك
+        imagePosY: 575,  // Y للدائرة الذهبية في تصميمك
         beautyFilter: 0,
         showJob: true
     };
