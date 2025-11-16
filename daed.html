@@ -455,30 +455,30 @@
             <div class="control-group">
                 <label>
                     <span>📏 حجم خط الاسم</span>
-                    <span class="control-value" id="nameSizeValue">48</span>
+                    <span class="control-value" id="nameSizeValue">52</span>
                 </label>
-                <input type="range" id="nameSize" min="20" max="60" value="48">
+                <input type="range" id="nameSize" min="20" max="60" value="52">
             </div>
             <div class="control-group">
                 <label>
                     <span>📏 حجم خط الوظيفة</span>
-                    <span class="control-value" id="jobSizeValue">28</span>
+                    <span class="control-value" id="jobSizeValue">26</span>
                 </label>
-                <input type="range" id="jobSize" min="16" max="40" value="28">
+                <input type="range" id="jobSize" min="16" max="40" value="26">
             </div>
             <div class="control-group">
                 <label>
                     <span>↔️ موضع التوقيع أفقياً</span>
-                    <span class="control-value" id="signaturePosXValue">540</span>
+                    <span class="control-value" id="signaturePosXValue">340</span>
                 </label>
-                <input type="range" id="signaturePosX" min="200" max="880" value="540">
+                <input type="range" id="signaturePosX" min="200" max="880" value="340">
             </div>
             <div class="control-group">
                 <label>
                     <span>↕️ موضع التوقيع عمودياً</span>
-                    <span class="control-value" id="signaturePosYValue">820</span>
+                    <span class="control-value" id="signaturePosYValue">450</span>
                 </label>
-                <input type="range" id="signaturePosY" min="700" max="1000" value="820">
+                <input type="range" id="signaturePosY" min="700" max="1000" value="450">
             </div>
             <div class="control-group">
                 <label>🎨 لون الاسم</label>
@@ -507,23 +507,23 @@
             <div class="control-group">
                 <label>
                     <span>📐 حجم الصورة الشخصية</span>
-                    <span class="control-value" id="imageSizeValue">400</span>
+                    <span class="control-value" id="imageSizeValue">320</span>
                 </label>
-                <input type="range" id="imageSize" min="250" max="550" value="400">
+                <input type="range" id="imageSize" min="250" max="550" value="320">
             </div>
             <div class="control-group">
                 <label>
                     <span>↔️ موضع الصورة أفقياً</span>
-                    <span class="control-value" id="imagePosXValue">540</span>
+                    <span class="control-value" id="imagePosXValue">720</span>
                 </label>
-                <input type="range" id="imagePosX" min="200" max="880" value="540">
+                <input type="range" id="imagePosX" min="200" max="880" value="720">
             </div>
             <div class="control-group">
                 <label>
                     <span>↕️ موضع الصورة عمودياً</span>
-                    <span class="control-value" id="imagePosYValue">400</span>
+                    <span class="control-value" id="imagePosYValue">380</span>
                 </label>
-                <input type="range" id="imagePosY" min="150" max="650" value="400">
+                <input type="range" id="imagePosY" min="150" max="650" value="380">
             </div>
             <div class="control-group">
                 <label>
@@ -571,8 +571,8 @@
         {
             id: 1,
             name: 'التصميم الكلاسيكي',
-            url: 'https://raw.githubusercontent.com/mostafaezat-afk/nonoww/main/1222.png',
-            thumb: 'https://raw.githubusercontent.com/mostafaezat-afk/nonoww/main/1222.png'
+            url: 'https://via.placeholder.com/1080x1080/c0392b/ffffff?text=Frame+1',
+            thumb: 'https://via.placeholder.com/300x200/c0392b/ffffff?text=Frame+1'
         },
         {
             id: 2,
@@ -617,11 +617,11 @@
 
     // ألوان النصوص
     const textColors = [
+        { color: '#D4AF37', name: 'ذهبي' },
         { color: '#8B1538', name: 'عنابي' },
         { color: '#FFFFFF', name: 'أبيض' },
         { color: '#c0392b', name: 'أحمر' },
         { color: '#000000', name: 'أسود' },
-        { color: '#FFD700', name: 'ذهبي' },
         { color: '#27ae60', name: 'أخضر' },
         { color: '#2980b9', name: 'أزرق' }
     ];
@@ -643,16 +643,16 @@
         scale: 100, 
         x: 0, 
         y: 0,
-        nameSize: 48,
-        jobSize: 28,
-        signaturePosX: 540,
-        signaturePosY: 820,
-        nameColor: '#8B1538',
+        nameSize: 52,
+        jobSize: 26,
+        signaturePosX: 340,
+        signaturePosY: 450,
+        nameColor: '#D4AF37',
         jobColor: '#000000',
         bgColor: '#c0392b',
-        imageSize: 400,
-        imagePosX: 540,
-        imagePosY: 400,
+        imageSize: 320,
+        imagePosX: 720,
+        imagePosY: 380,
         beautyFilter: 0,
         showJob: true
     };
@@ -706,7 +706,7 @@
         const nameColorContainer = document.getElementById('nameColorOptions');
         textColors.forEach((tc, index) => {
             const option = document.createElement('div');
-            option.className = `color-option ${tc.color === '#8B1538' ? 'active' : ''}`;
+            option.className = `color-option ${tc.color === '#D4AF37' ? 'active' : ''}`;
             option.style.background = tc.color;
             if (tc.color === '#FFFFFF') {
                 option.style.border = '2px solid #dee2e6';
@@ -943,16 +943,16 @@
             scale: 100,
             x: 0,
             y: 0,
-            nameSize: 48,
-            jobSize: 28,
-            signaturePosX: 540,
-            signaturePosY: 820,
-            nameColor: '#8B1538',
+            nameSize: 52,
+            jobSize: 26,
+            signaturePosX: 340,
+            signaturePosY: 450,
+            nameColor: '#D4AF37',
             jobColor: '#000000',
             bgColor: '#c0392b',
-            imageSize: 400,
-            imagePosX: 540,
-            imagePosY: 400,
+            imageSize: 320,
+            imagePosX: 720,
+            imagePosY: 380,
             beautyFilter: 0,
             showJob: true
         };
@@ -960,26 +960,26 @@
         document.getElementById('scale').value = 100;
         document.getElementById('posX').value = 0;
         document.getElementById('posY').value = 0;
-        document.getElementById('nameSize').value = 48;
-        document.getElementById('jobSize').value = 28;
-        document.getElementById('signaturePosX').value = 540;
-        document.getElementById('signaturePosY').value = 820;
-        document.getElementById('imageSize').value = 400;
-        document.getElementById('imagePosX').value = 540;
-        document.getElementById('imagePosY').value = 400;
+        document.getElementById('nameSize').value = 52;
+        document.getElementById('jobSize').value = 26;
+        document.getElementById('signaturePosX').value = 340;
+        document.getElementById('signaturePosY').value = 450;
+        document.getElementById('imageSize').value = 320;
+        document.getElementById('imagePosX').value = 720;
+        document.getElementById('imagePosY').value = 380;
         document.getElementById('beautyFilter').value = 0;
         document.getElementById('showJob').checked = true;
         
         document.getElementById('scaleValue').textContent = '100%';
         document.getElementById('posXValue').textContent = '0';
         document.getElementById('posYValue').textContent = '0';
-        document.getElementById('nameSizeValue').textContent = '48';
-        document.getElementById('jobSizeValue').textContent = '28';
-        document.getElementById('signaturePosXValue').textContent = '540';
-        document.getElementById('signaturePosYValue').textContent = '820';
-        document.getElementById('imageSizeValue').textContent = '400';
-        document.getElementById('imagePosXValue').textContent = '540';
-        document.getElementById('imagePosYValue').textContent = '400';
+        document.getElementById('nameSizeValue').textContent = '52';
+        document.getElementById('jobSizeValue').textContent = '26';
+        document.getElementById('signaturePosXValue').textContent = '340';
+        document.getElementById('signaturePosYValue').textContent = '450';
+        document.getElementById('imageSizeValue').textContent = '320';
+        document.getElementById('imagePosXValue').textContent = '720';
+        document.getElementById('imagePosYValue').textContent = '380';
         document.getElementById('beautyFilterValue').textContent = '0%';
         
         draw();
