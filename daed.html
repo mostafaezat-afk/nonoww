@@ -367,22 +367,30 @@
             color: #6c757d;
         }
 
+        /* ✅ الإطار العائم المُحدث - يأخذ نصف الشاشة العلوي */
         .floating-preview {
             display: none;
             position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0.5);
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 50vh;
             z-index: 1000;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-            padding: 10px;
+            background: linear-gradient(135deg, #e3e8f0 0%, #c5d3e8 100%);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            padding: 15px;
             pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .floating-preview canvas {
-            max-width: 300px;
-            box-shadow: none;
+            max-width: 90%;
+            max-height: 90%;
+            width: auto;
+            height: auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border-radius: 10px;
         }
 
         @media (min-width: 1024px) {
@@ -424,11 +432,11 @@
             }
             
             .floating-preview {
-                display: block;
+                display: flex !important;
             }
             
             .tabs-container {
-                padding-top: 60px;
+                margin-top: calc(50vh + 20px);
             }
         }
 
@@ -436,9 +444,6 @@
             .header h1 { font-size: 1.3em; }
             .tabs { flex-direction: column; }
             .frames-grid { grid-template-columns: 1fr; }
-            .floating-preview {
-                transform: translate(-50%, -50%) scale(0.4);
-            }
         }
     </style>
 </head>
@@ -482,6 +487,7 @@
         <div class="frames-grid" id="framesGrid"></div>
     </div>
 
+    <!-- ✅ الإطار العائم المُحدث -->
     <div class="floating-preview" id="floatingPreview">
         <canvas id="floatingCanvas"></canvas>
     </div>
@@ -522,20 +528,6 @@
                 </div>
                 <div class="control-group">
                     <label>
-                        <span>📐 عرض الصورة</span>
-                        <span class="control-value" id="imageWidthValue">1080</span>
-                    </label>
-                    <input type="range" id="imageWidth" min="500" max="1500" value="1080">
-                </div>
-                <div class="control-group">
-                    <label>
-                        <span>📐 ارتفاع الصورة</span>
-                        <span class="control-value" id="imageHeightValue">1080</span>
-                    </label>
-                    <input type="range" id="imageHeight" min="500" max="1500" value="1080">
-                </div>
-                <div class="control-group">
-                    <label>
                         <span>✨ فلتر التجميل</span>
                         <span class="control-value" id="beautyFilterValue">0%</span>
                     </label>
@@ -551,13 +543,6 @@
                         <span class="control-value" id="nameSizeValue">45</span>
                     </label>
                     <input type="range" id="nameSize" min="20" max="80" value="45">
-                </div>
-                <div class="control-group">
-                    <label>
-                        <span>📏 حجم خط الوظيفة</span>
-                        <span class="control-value" id="jobSizeValue">26</span>
-                    </label>
-                    <input type="range" id="jobSize" min="16" max="50" value="26">
                 </div>
                 <div class="control-group">
                     <label>
@@ -661,11 +646,8 @@
         scale: 100,
         x: 0,
         y: 0,
-        imageWidth: 1080,
-        imageHeight: 1080,
         beautyFilter: 0,
         nameSize: 45,
-        jobSize: 26,
         signaturePosX: 540,
         nameOffsetY: 200,
         jobSpacing: 15,
@@ -693,11 +675,8 @@
         document.getElementById('scale').value = settings.scale;
         document.getElementById('posX').value = settings.x;
         document.getElementById('posY').value = settings.y;
-        document.getElementById('imageWidth').value = settings.imageWidth;
-        document.getElementById('imageHeight').value = settings.imageHeight;
         document.getElementById('beautyFilter').value = settings.beautyFilter;
         document.getElementById('nameSize').value = settings.nameSize;
-        document.getElementById('jobSize').value = settings.jobSize;
         document.getElementById('signaturePosX').value = settings.signaturePosX;
         document.getElementById('nameOffsetY').value = settings.nameOffsetY;
         document.getElementById('jobSpacing').value = settings.jobSpacing;
@@ -706,11 +685,8 @@
         document.getElementById('scaleValue').textContent = settings.scale + '%';
         document.getElementById('posXValue').textContent = settings.x;
         document.getElementById('posYValue').textContent = settings.y;
-        document.getElementById('imageWidthValue').textContent = settings.imageWidth;
-        document.getElementById('imageHeightValue').textContent = settings.imageHeight;
         document.getElementById('beautyFilterValue').textContent = settings.beautyFilter + '%';
         document.getElementById('nameSizeValue').textContent = settings.nameSize;
-        document.getElementById('jobSizeValue').textContent = settings.jobSize;
         document.getElementById('signaturePosXValue').textContent = settings.signaturePosX;
         document.getElementById('nameOffsetYValue').textContent = settings.nameOffsetY;
         document.getElementById('jobSpacingValue').textContent = settings.jobSpacing;
@@ -865,7 +841,6 @@
         };
     }
 
-    // ✅ دالة الرسم الجديدة - الصورة كاملة بدون قص
     function draw() {
         if (!currentFrame) {
             return;
@@ -878,7 +853,6 @@
     function drawOnCanvas(context) {
         context.clearRect(0, 0, 1080, 1080);
 
-        // ✅ الطبقة 1: رسم الصورة الشخصية كاملة (بدون قص دائري)
         if (userImg) {
             context.save();
             
@@ -887,13 +861,12 @@
             }
             
             const scaleFactor = settings.scale / 100;
-            const imgW = settings.imageWidth * scaleFactor;
-            const imgH = settings.imageHeight * scaleFactor;
+            const imgW = 1080 * scaleFactor;
+            const imgH = 1080 * scaleFactor;
             
             const centerX = 540;
             const centerY = 540;
             
-            // رسم الصورة مباشرة بدون قص
             context.drawImage(
                 userImg, 
                 centerX - imgW/2 + settings.x, 
@@ -905,12 +878,10 @@
             context.restore();
         }
 
-        // الطبقة 2: رسم الإطار
         if (frameImg.complete && frameImg.naturalWidth > 0) {
             context.drawImage(frameImg, 0, 0, 1080, 1080);
         }
 
-        // الطبقة 3: رسم النص
         const nameY = 1080 - settings.nameOffsetY;
         
         context.textAlign = 'center';
@@ -925,7 +896,7 @@
 
         if (settings.showJob && userJob) {
             const jobY = nameY + settings.nameSize + settings.jobSpacing;
-            context.font = `${settings.jobSize}px Cairo, Arial`;
+            context.font = `26px Cairo, Arial`;
             context.strokeStyle = 'white';
             context.lineWidth = 3;
             context.strokeText(userJob, settings.signaturePosX, jobY);
@@ -957,16 +928,6 @@
         document.getElementById('posYValue').textContent = settings.y;
         draw(); 
     };
-    document.getElementById('imageWidth').oninput = (e) => { 
-        settings.imageWidth = parseInt(e.target.value); 
-        document.getElementById('imageWidthValue').textContent = settings.imageWidth;
-        draw(); 
-    };
-    document.getElementById('imageHeight').oninput = (e) => { 
-        settings.imageHeight = parseInt(e.target.value); 
-        document.getElementById('imageHeightValue').textContent = settings.imageHeight;
-        draw(); 
-    };
     document.getElementById('beautyFilter').oninput = (e) => { 
         settings.beautyFilter = parseInt(e.target.value); 
         document.getElementById('beautyFilterValue').textContent = settings.beautyFilter + '%';
@@ -975,11 +936,6 @@
     document.getElementById('nameSize').oninput = (e) => { 
         settings.nameSize = parseInt(e.target.value); 
         document.getElementById('nameSizeValue').textContent = settings.nameSize;
-        draw(); 
-    };
-    document.getElementById('jobSize').oninput = (e) => { 
-        settings.jobSize = parseInt(e.target.value); 
-        document.getElementById('jobSizeValue').textContent = settings.jobSize;
         draw(); 
     };
     document.getElementById('signaturePosX').oninput = (e) => { 
