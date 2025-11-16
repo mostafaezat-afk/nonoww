@@ -621,7 +621,7 @@
         nameColor: '#8B1538',  // عنابي مثل النص في تصميمك
         jobColor: '#000000',   // أسود للوظيفة
         bgColor: 'transparent',  // بدون خلفية، نستخدم الإطار فقط
-        imageSize: 610,  // حجم الدائرة في تصميمك تقريباً
+        imageSize: 310,  // حجم الدائرة في تصميمك تقريباً
         imagePosX: 340,  // X للدائرة الذهبية في تصميمك
         imagePosY: 575,  // Y للدائرة الذهبية في تصميمك
         beautyFilter: 0,
@@ -792,15 +792,12 @@
             return;
         }
         
-        // مسح الكانفاس بدون خلفية (شفاف)
+        // مسح الكانفاس بالكامل
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // رسم الإطار أولاً (تصميمك الخاص)
-        if (frameImg.complete && frameImg.naturalWidth > 0) {
-            ctx.drawImage(frameImg, 0, 0, canvas.width, canvas.height);
-        }
-
-        // رسم الصورة الشخصية في الدائرة الذهبية
+        // ═══════════════════════════════════════════════════
+        // الطبقة 1: رسم الصورة الشخصية أولاً (في الخلف)
+        // ═══════════════════════════════════════════════════
         if (userImg) {
             const imgSize = settings.imageSize;
             const imgX = settings.imagePosX;
@@ -813,7 +810,8 @@
                 ctx.filter = `blur(${settings.beautyFilter * 0.02}px) brightness(${1 + settings.beautyFilter * 0.001})`;
             }
             
-            // قص الصورة على شكل دائرة
+            // قص الصورة على شكل دائرة (clipping)
+            // الصورة ستظهر فقط داخل هذه الدائرة
             ctx.beginPath();
             ctx.arc(imgX, imgY, imgSize / 2, 0, Math.PI * 2);
             ctx.clip();
@@ -827,10 +825,20 @@
             ctx.restore();
         }
 
+        // ═══════════════════════════════════════════════════
+        // الطبقة 2: رسم الإطار فوق الصورة (في الوسط)
+        // الدائرة الذهبية في تصميمك ستُظهر الصورة من خلفها
+        // ═══════════════════════════════════════════════════
+        if (frameImg.complete && frameImg.naturalWidth > 0) {
+            ctx.drawImage(frameImg, 0, 0, canvas.width, canvas.height);
+        }
+
         // حساب موضع النص تلقائياً تحت الدائرة مباشرة
         const textStartY = settings.imagePosY + (settings.imageSize / 2) + settings.signatureOffsetY;
 
-        // رسم النص (الاسم والوظيفة)
+        // ═══════════════════════════════════════════════════
+        // الطبقة 3: رسم النص فوق كل شيء (في الأمام)
+        // ═══════════════════════════════════════════════════
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
 
