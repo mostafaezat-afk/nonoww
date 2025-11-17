@@ -15,31 +15,45 @@
         .header h1 { font-size: 1.5em; margin-bottom: 8px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); position: relative; z-index: 1; }
         .header p { font-size: 0.9em; opacity: 0.95; position: relative; z-index: 1; }
         
-        /* النافذة العائمة - مرئية على الموبايل */
+        /* النافذة العائمة - ثلث الشاشة */
         .floating-preview { 
             display: none; 
             position: fixed; 
             top: 0; 
             left: 0; 
             width: 100%; 
-            height: 50vh; 
+            height: 33vh; 
             z-index: 999; 
             background: linear-gradient(135deg, #e3e8f0 0%, #c5d3e8 100%); 
             box-shadow: 0 5px 20px rgba(0,0,0,0.3); 
             padding: 10px; 
-            pointer-events: none; 
-        }
-        .floating-preview canvas { 
-            width: 100%; 
-            height: 100%; 
-            object-fit: contain; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3); 
-            border-radius: 10px; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
         .editor-layout { background: #f8f9fa; }
-        .canvas-container { background: transparent; padding: 20px; display: flex; align-items: center; justify-content: center; min-height: 70vh; }
-        canvas { width: 100%; max-width: 600px; height: auto; display: block; cursor: move; box-shadow: 0 15px 50px rgba(0,0,0,0.3); border-radius: 15px; }
+        .canvas-container { 
+            background: linear-gradient(135deg, #e3e8f0 0%, #c5d3e8 100%); 
+            padding: 20px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            min-height: 70vh; 
+        }
+        
+        #canvas { 
+            max-width: 90%; 
+            max-height: 90%; 
+            width: auto; 
+            height: auto; 
+            display: block; 
+            cursor: move; 
+            box-shadow: 0 15px 50px rgba(0,0,0,0.3); 
+            border-radius: 15px; 
+            background: white;
+        }
+        
         .tabs-container { padding: 20px; background: white; }
         .tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 20px; background: #f8f9fa; padding: 8px; border-radius: 15px; }
         .tab { padding: 10px 8px; border: none; background: transparent; border-radius: 10px; font-size: 0.8em; font-weight: 600; cursor: pointer; transition: all 0.3s; color: #6c757d; font-family: 'Cairo', sans-serif; text-align: center;}
@@ -83,7 +97,7 @@
         
         @media (min-width: 1024px) { 
             .editor-layout { display: grid; grid-template-columns: 1fr 450px; gap: 0; min-height: calc(100vh - 80px); }
-            .canvas-container { background: linear-gradient(135deg, #e3e8f0 0%, #c5d3e8 100%); border-left: 3px solid #e9ecef; display: flex !important; }
+            .canvas-container { display: flex !important; }
             .tabs-container { background: white; border-left: none; overflow-y: auto; max-height: calc(100vh - 80px); }
             .floating-preview { display: none !important; }
             .tabs { grid-template-columns: repeat(5, 1fr); }
@@ -92,8 +106,8 @@
         @media (max-width: 1023px) { 
             .editor-layout { display: block; }
             .canvas-container { display: none !important; }
-            .floating-preview { display: block !important; }
-            .tabs-container { margin-top: 50vh; padding-top: 20px; padding-bottom: 120px; }
+            .floating-preview { display: flex !important; }
+            .tabs-container { margin-top: 33vh; padding-top: 20px; padding-bottom: 120px; }
         }
         
         @media (max-width: 480px) { .header h1 { font-size: 1.3em; }}
@@ -106,15 +120,12 @@
         <p>صمم بطاقة دعم احترافية للمرشح</p>
     </div>
     
-    <!-- النافذة العائمة -->
     <div class="floating-preview" id="floatingPreview">
-        <canvas id="floatingCanvas"></canvas>
+        <canvas id="canvas"></canvas>
     </div>
     
     <div class="editor-layout" id="editorLayout">
-        <div class="canvas-container">
-            <canvas id="canvas"></canvas>
-        </div>
+        <div class="canvas-container" id="canvasContainer"></div>
         <div class="tabs-container">
             <div class="tabs">
                 <button class="tab active" onclick="switchTab('data')">📝 البيانات</button>
@@ -174,13 +185,13 @@
                     <input type="range" id="nameSize" min="20" max="80" value="45">
                 </div>
                 <div class="control-group">
-                    <label><span>↔️ موضع الاسم أفقياً</span><span class="control-value" id="namePosXValue">540</span></label>
-                    <input type="range" id="namePosX" min="100" max="980" value="540">
+                    <label><span>↔️ موضع الاسم أفقياً</span><span class="control-value" id="namePosXValue">270</span></label>
+                    <input type="range" id="namePosX" min="100" max="980" value="270">
                 </div>
                 <div class="control-group">
-                    <label><span>↕️ المسافة من الأسفل</span><span class="control-value" id="nameOffsetYValue">555</span></label>
-                    <input type="range" id="nameOffsetY" min="400" max="700" value="555">
-                    <p style="font-size: 0.85em; color: #6c757d; margin-top: 8px;">💡 الاسم يظهر تحت الدائرة الذهبية</p>
+                    <label><span>↕️ المسافة من الأسفل</span><span class="control-value" id="nameOffsetYValue">270</span></label>
+                    <input type="range" id="nameOffsetY" min="100" max="700" value="270">
+                    <p style="font-size: 0.85em; color: #6c757d; margin-top: 8px;">💡 النص في الربع السفلي الأيسر</p>
                 </div>
                 <div class="control-group">
                     <label><span>📐 المسافة بين الاسم والوظيفة</span><span class="control-value" id="jobSpacingValue">15</span></label>
@@ -215,40 +226,78 @@
     
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
-    const floatingCanvas = document.getElementById('floatingCanvas');
-    const floatingCtx = floatingCanvas.getContext('2d');
+    canvas.width = 1080; canvas.height = 1080;
     
-    // تحديد حجم الكانفاس
-    canvas.width = 1080;
-    canvas.height = 1080;
-    floatingCanvas.width = 1080;
-    floatingCanvas.height = 1080;
-    
-    let userImg = null;
-    let frameImg = new Image();
+    let userImg = null, frameImg = new Image(), currentFrame = null, frames = [], userName = '', userJob = '';
     frameImg.crossOrigin = "anonymous";
-    let currentFrame = null;
-    let frames = [];
-    let userName = '';
-    let userJob = '';
     
-    let settings = {scale:50,x:0,y:0,beautyFilter:0,nameSize:45,namePosX:540,nameOffsetY:555,jobSpacing:15,nameColor:'#8B1538',jobColor:'#000000',showJob:true};
+    // الإعدادات الافتراضية - النص في الربع السفلي الأيسر
+    let settings = {
+        scale: 50,
+        x: 0,
+        y: 0,
+        beautyFilter: 0,
+        nameSize: 45,
+        namePosX: 270,      // ربع العرض من اليسار
+        nameOffsetY: 270,   // ربع الارتفاع من الأسفل
+        jobSpacing: 15,
+        nameColor: '#8B1538',
+        jobColor: '#000000',
+        showJob: true
+    };
+    
+    // تحميل الإعدادات من Google Sheets
+    async function loadSettingsFromAPI() {
+        try {
+            const response = await fetch(`${API_URL}?action=getSettings`);
+            const data = await response.json();
+            if (data.success && data.settings) {
+                settings = { ...settings, ...data.settings };
+                updateControlsFromSettings();
+                console.log('✅ تم تحميل الإعدادات من Sheets:', settings);
+            }
+        } catch (error) {
+            console.error('❌ فشل تحميل الإعدادات:', error);
+        }
+    }
+    
+    function updateControlsFromSettings() {
+        document.getElementById('scale').value = settings.scale;
+        document.getElementById('posX').value = settings.x;
+        document.getElementById('posY').value = settings.y;
+        document.getElementById('beautyFilter').value = settings.beautyFilter;
+        document.getElementById('nameSize').value = settings.nameSize;
+        document.getElementById('namePosX').value = settings.namePosX;
+        document.getElementById('nameOffsetY').value = settings.nameOffsetY;
+        document.getElementById('jobSpacing').value = settings.jobSpacing;
+        document.getElementById('showJob').checked = settings.showJob;
+        document.getElementById('scaleValue').textContent = settings.scale + '%';
+        document.getElementById('posXValue').textContent = settings.x;
+        document.getElementById('posYValue').textContent = settings.y;
+        document.getElementById('beautyFilterValue').textContent = settings.beautyFilter + '%';
+        document.getElementById('nameSizeValue').textContent = settings.nameSize;
+        document.getElementById('namePosXValue').textContent = settings.namePosX;
+        document.getElementById('nameOffsetYValue').textContent = settings.nameOffsetY;
+        document.getElementById('jobSpacingValue').textContent = settings.jobSpacing;
+    }
+    
+    function moveCanvas() {
+        const canvasContainer = document.getElementById('canvasContainer');
+        const floatingPreview = document.getElementById('floatingPreview');
+        if (window.innerWidth >= 1024) {
+            if (!canvasContainer.contains(canvas)) canvasContainer.appendChild(canvas);
+        } else {
+            if (!floatingPreview.contains(canvas)) floatingPreview.appendChild(canvas);
+        }
+    }
     
     async function loadFrames() {
-        const grid = document.getElementById('framesGrid');
-        const loading = document.getElementById('framesLoading');
-        
+        const grid = document.getElementById('framesGrid'), loading = document.getElementById('framesLoading');
         try {
-            const response = await fetch(`${API_URL}?action=getFrames`);
-            const data = await response.json();
+            const response = await fetch(`${API_URL}?action=getFrames`), data = await response.json();
             if (data.success && data.frames) frames = data.frames;
-        } catch (error) {
-            console.error('فشل تحميل الإطارات:', error);
-        }
-        
-        loading.style.display = 'none';
-        grid.innerHTML = '';
-        
+        } catch (error) { console.error('فشل تحميل الإطارات:', error); }
+        loading.style.display = 'none'; grid.innerHTML = '';
         frames.forEach((frame, index) => {
             const card = document.createElement('div');
             card.className = `frame-card ${index === 0 ? 'active' : ''}`;
@@ -256,26 +305,16 @@
             card.onclick = () => selectFrame(frame, card);
             grid.appendChild(card);
         });
-        
         if (frames.length > 0) {
-            currentFrame = frames[0];
-            frameImg.src = frames[0].url;
-            frameImg.onload = () => {
-                console.log('✅ تم تحميل الإطار الأول');
-                draw(); // رسم فوري
-            };
+            currentFrame = frames[0]; frameImg.src = frames[0].url;
+            frameImg.onload = () => { console.log('✅ تم تحميل الإطار'); draw(); };
         }
     }
     
     function selectFrame(frame, cardElement) {
         document.querySelectorAll('.frame-card').forEach(c => c.classList.remove('active'));
-        cardElement.classList.add('active');
-        currentFrame = frame;
-        frameImg.src = frame.url;
-        frameImg.onload = () => {
-            console.log('✅ تم تحميل الإطار:', frame.name);
-            draw(); // رسم فوري عند تغيير الإطار
-        };
+        cardElement.classList.add('active'); currentFrame = frame; frameImg.src = frame.url;
+        frameImg.onload = () => { console.log('✅ تم تحميل الإطار:', frame.name); draw(); };
     }
     
     function loadColors() {
@@ -289,13 +328,10 @@
             option.title = tc.name;
             option.onclick = () => {
                 nameColorContainer.querySelectorAll('.color-option').forEach(o => o.classList.remove('active'));
-                option.classList.add('active');
-                settings.nameColor = tc.color;
-                draw();
+                option.classList.add('active'); settings.nameColor = tc.color; draw();
             };
             nameColorContainer.appendChild(option);
         });
-        
         const jobColorContainer = document.getElementById('jobColorOptions');
         jobColorContainer.innerHTML = '';
         textColors.forEach((tc) => {
@@ -306,9 +342,7 @@
             option.title = tc.name;
             option.onclick = () => {
                 jobColorContainer.querySelectorAll('.color-option').forEach(o => o.classList.remove('active'));
-                option.classList.add('active');
-                settings.jobColor = tc.color;
-                draw();
+                option.classList.add('active'); settings.jobColor = tc.color; draw();
             };
             jobColorContainer.appendChild(option);
         });
@@ -321,8 +355,7 @@
                 userImg = new Image();
                 userImg.onload = function() {
                     document.querySelector('.upload-text').textContent = '✓ تم رفع الصورة';
-                    document.querySelector('.upload-box').style.borderColor = '#27ae60';
-                    draw(); // رسم فوري
+                    document.querySelector('.upload-box').style.borderColor = '#27ae60'; draw();
                 };
                 userImg.src = event.target.result;
             };
@@ -330,64 +363,32 @@
         }
     };
     
-    document.getElementById('nameInput').oninput = () => {
-        userName = document.getElementById('nameInput').value.trim();
-        draw();
-    };
+    document.getElementById('nameInput').oninput = () => { userName = document.getElementById('nameInput').value.trim(); draw(); };
+    document.getElementById('jobInput').oninput = () => { userJob = document.getElementById('jobInput').value.trim(); draw(); };
     
-    document.getElementById('jobInput').oninput = () => {
-        userJob = document.getElementById('jobInput').value.trim();
-        draw();
-    };
-    
-    // دالة الرسم الرئيسية
     function draw() {
-        console.log('🎨 جاري الرسم...');
-        drawOnCanvas(ctx);
-        drawOnCanvas(floatingCtx);
-    }
-    
-    function drawOnCanvas(context) {
-        // مسح الكانفاس
-        context.clearRect(0, 0, 1080, 1080);
-        
-        // رسم الصورة الشخصية
+        ctx.clearRect(0, 0, 1080, 1080);
         if (userImg) {
-            context.save();
-            if (settings.beautyFilter > 0) {
-                context.filter = `blur(${settings.beautyFilter * 0.02}px) brightness(${1 + settings.beautyFilter * 0.001})`;
-            }
-            const scaleFactor = settings.scale / 100;
-            const imgW = 1080 * scaleFactor;
-            const imgH = 1080 * scaleFactor;
-            const centerX = 540;
-            const centerY = 540;
-            context.drawImage(userImg, centerX - imgW/2 + settings.x, centerY - imgH/2 + settings.y, imgW, imgH);
-            context.restore();
+            ctx.save();
+            if (settings.beautyFilter > 0) ctx.filter = `blur(${settings.beautyFilter * 0.02}px) brightness(${1 + settings.beautyFilter * 0.001})`;
+            const scaleFactor = settings.scale / 100, imgW = 1080 * scaleFactor, imgH = 1080 * scaleFactor, centerX = 540, centerY = 540;
+            ctx.drawImage(userImg, centerX - imgW/2 + settings.x, centerY - imgH/2 + settings.y, imgW, imgH);
+            ctx.restore();
         }
-        
-        // رسم الإطار
-        if (frameImg.complete && frameImg.naturalWidth > 0) {
-            context.drawImage(frameImg, 0, 0, 1080, 1080);
-        }
-        
-        // رسم النص
+        if (frameImg.complete && frameImg.naturalWidth > 0) ctx.drawImage(frameImg, 0, 0, 1080, 1080);
         if (userName) {
             const nameY = 1080 - settings.nameOffsetY;
-            context.textAlign = 'center';
-            context.textBaseline = 'middle';
-            context.font = `bold ${settings.nameSize}px Cairo, Arial`;
-            context.strokeStyle = '#fff';
-            context.lineWidth = 4;
-            context.strokeText(userName, settings.namePosX, nameY);
-            context.fillStyle = settings.nameColor;
-            context.fillText(userName, settings.namePosX, nameY);
-            
+            ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+            ctx.font = `bold ${settings.nameSize}px Cairo, Arial`;
+            ctx.strokeStyle = '#fff'; ctx.lineWidth = 4;
+            ctx.strokeText(userName, settings.namePosX, nameY);
+            ctx.fillStyle = settings.nameColor;
+            ctx.fillText(userName, settings.namePosX, nameY);
             if (settings.showJob && userJob) {
                 const jobY = nameY + settings.nameSize + settings.jobSpacing;
-                context.font = `26px Cairo, Arial`;
-                context.fillStyle = settings.jobColor;
-                context.fillText(userJob, settings.namePosX, jobY);
+                ctx.font = `26px Cairo, Arial`;
+                ctx.fillStyle = settings.jobColor;
+                ctx.fillText(userJob, settings.namePosX, jobY);
             }
         }
     }
@@ -399,7 +400,6 @@
         document.getElementById(tabName + 'Tab').classList.add('active');
     }
     
-    // عناصر التحكم
     document.getElementById('scale').oninput = (e) => { settings.scale = parseInt(e.target.value); document.getElementById('scaleValue').textContent = settings.scale + '%'; draw(); };
     document.getElementById('posX').oninput = (e) => { settings.x = parseInt(e.target.value); document.getElementById('posXValue').textContent = settings.x; draw(); };
     document.getElementById('posY').oninput = (e) => { settings.y = parseInt(e.target.value); document.getElementById('posYValue').textContent = settings.y; draw(); };
@@ -411,25 +411,12 @@
     document.getElementById('showJob').onchange = (e) => { settings.showJob = e.target.checked; draw(); };
     
     function resetControls() {
-        settings = {scale:50,x:0,y:0,beautyFilter:0,nameSize:45,namePosX:540,nameOffsetY:555,jobSpacing:15,nameColor:'#8B1538',jobColor:'#000000',showJob:true};
-        document.getElementById('scale').value = 50; document.getElementById('posX').value = 0; document.getElementById('posY').value = 0;
-        document.getElementById('beautyFilter').value = 0; document.getElementById('nameSize').value = 45; document.getElementById('namePosX').value = 540;
-        document.getElementById('nameOffsetY').value = 555; document.getElementById('jobSpacing').value = 15;
-        document.getElementById('scaleValue').textContent = '50%'; document.getElementById('posXValue').textContent = '0';
-        document.getElementById('posYValue').textContent = '0'; document.getElementById('beautyFilterValue').textContent = '0%';
-        document.getElementById('nameSizeValue').textContent = '45'; document.getElementById('namePosXValue').textContent = '540';
-        document.getElementById('nameOffsetYValue').textContent = '555'; document.getElementById('jobSpacingValue').textContent = '15';
-        loadColors(); draw();
+        settings = {scale:50,x:0,y:0,beautyFilter:0,nameSize:45,namePosX:270,nameOffsetY:270,jobSpacing:15,nameColor:'#8B1538',jobColor:'#000000',showJob:true};
+        updateControlsFromSettings(); loadColors(); draw();
     }
     
-    // دعم اللمس
     let touchStartDist = 0, touchStartScale = 50, lastTouchPos = {x:0,y:0}, touchStartPos = {x:0,y:0};
-    floatingCanvas.addEventListener('touchstart', handleTouchStart, {passive: false});
-    floatingCanvas.addEventListener('touchmove', handleTouchMove, {passive: false});
-    canvas.addEventListener('touchstart', handleTouchStart, {passive: false});
-    canvas.addEventListener('touchmove', handleTouchMove, {passive: false});
-    
-    function handleTouchStart(e) {
+    canvas.addEventListener('touchstart', (e) => {
         e.preventDefault();
         if (e.touches.length === 2) {
             const touch1 = e.touches[0], touch2 = e.touches[1];
@@ -439,9 +426,9 @@
             lastTouchPos = {x: e.touches[0].clientX, y: e.touches[0].clientY};
             touchStartPos = {x: settings.x, y: settings.y};
         }
-    }
+    }, {passive: false});
     
-    function handleTouchMove(e) {
+    canvas.addEventListener('touchmove', (e) => {
         e.preventDefault();
         if (e.touches.length === 2) {
             const touch1 = e.touches[0], touch2 = e.touches[1];
@@ -449,20 +436,15 @@
             const scale = (currentDist / touchStartDist) * touchStartScale;
             settings.scale = Math.max(10, Math.min(200, scale));
             document.getElementById('scale').value = settings.scale;
-            document.getElementById('scaleValue').textContent = settings.scale + '%';
-            draw();
+            document.getElementById('scaleValue').textContent = settings.scale + '%'; draw();
         } else if (e.touches.length === 1) {
-            const deltaX = e.touches[0].clientX - lastTouchPos.x;
-            const deltaY = e.touches[0].clientY - lastTouchPos.y;
+            const deltaX = e.touches[0].clientX - lastTouchPos.x, deltaY = e.touches[0].clientY - lastTouchPos.y;
             settings.x = Math.max(-500, Math.min(500, touchStartPos.x + deltaX * 0.5));
             settings.y = Math.max(-500, Math.min(500, touchStartPos.y + deltaY * 0.5));
-            document.getElementById('posX').value = settings.x;
-            document.getElementById('posY').value = settings.y;
-            document.getElementById('posXValue').textContent = settings.x;
-            document.getElementById('posYValue').textContent = settings.y;
-            draw();
+            document.getElementById('posX').value = settings.x; document.getElementById('posY').value = settings.y;
+            document.getElementById('posXValue').textContent = settings.x; document.getElementById('posYValue').textContent = settings.y; draw();
         }
-    }
+    }, {passive: false});
     
     function downloadImage() {
         const link = document.createElement('a');
@@ -471,12 +453,15 @@
         link.click();
     }
     
-    // تحميل عند بدء الصفحة
-    window.onload = function() {
+    window.onload = async function() {
         console.log('📱 بدء التطبيق...');
-        loadFrames();
+        moveCanvas();
+        await loadSettingsFromAPI();
+        await loadFrames();
         loadColors();
     };
+    
+    window.addEventListener('resize', moveCanvas);
 </script>
 </body>
 </html>
