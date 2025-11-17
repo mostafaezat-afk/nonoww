@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>مولد بطاقات دعم الدكتور عيد</title>
+    <title>مولد بطاقات دعم المرشحين</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap');
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -95,12 +95,22 @@
         .btn-secondary { background: white; color: #e74c3c; border: 2px solid #e74c3c; }
         .loading { text-align: center; padding: 20px; color: #6c757d; }
         
+        /* قسم الشرح */
+        .guide-section { background: #f8f9fa; padding: 30px 20px; border-top: 3px solid #e74c3c; }
+        .guide-title { text-align: center; font-size: 1.3em; font-weight: 700; color: #c0392b; margin-bottom: 20px; }
+        .guide-steps { display: grid; gap: 15px; max-width: 800px; margin: 0 auto; }
+        .guide-step { background: white; padding: 15px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); display: flex; gap: 15px; align-items: start; }
+        .guide-number { min-width: 35px; height: 35px; background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.1em; }
+        .guide-content h3 { font-size: 1em; color: #495057; margin-bottom: 5px; }
+        .guide-content p { font-size: 0.9em; color: #6c757d; line-height: 1.5; }
+        
         @media (min-width: 1024px) { 
             .editor-layout { display: grid; grid-template-columns: 1fr 450px; gap: 0; min-height: calc(100vh - 80px); }
             .canvas-container { display: flex !important; }
             .tabs-container { background: white; border-left: none; overflow-y: auto; max-height: calc(100vh - 80px); }
             .floating-preview { display: none !important; }
             .tabs { grid-template-columns: repeat(5, 1fr); }
+            .guide-section { padding: 40px; }
         }
         
         @media (max-width: 1023px) { 
@@ -219,6 +229,55 @@
             </div>
         </div>
     </div>
+    
+    <!-- قسم الشرح -->
+    <div class="guide-section">
+        <h2 class="guide-title">📖 كيفية استخدام الأداة</h2>
+        <div class="guide-steps">
+            <div class="guide-step">
+                <div class="guide-number">1</div>
+                <div class="guide-content">
+                    <h3>📝 أدخل البيانات</h3>
+                    <p>ابدأ بإدخال الاسم والوظيفة في تبويب "البيانات". يمكنك إخفاء الوظيفة إذا أردت.</p>
+                </div>
+            </div>
+            <div class="guide-step">
+                <div class="guide-number">2</div>
+                <div class="guide-content">
+                    <h3>📸 ارفع الصورة</h3>
+                    <p>اذهب إلى تبويب "الصورة" وارفع صورة المرشح. استخدم أدوات التكبير والتحريك لضبط الصورة داخل الإطار.</p>
+                </div>
+            </div>
+            <div class="guide-step">
+                <div class="guide-number">3</div>
+                <div class="guide-content">
+                    <h3>🖼️ اختر الإطار</h3>
+                    <p>من تبويب "الإطار"، اختر التصميم المناسب لبطاقتك من التصاميم المتاحة.</p>
+                </div>
+            </div>
+            <div class="guide-step">
+                <div class="guide-number">4</div>
+                <div class="guide-content">
+                    <h3>✍️ عدّل النص</h3>
+                    <p>في تبويب "النص"، يمكنك تغيير حجم الخط وموضع الاسم والوظيفة على البطاقة.</p>
+                </div>
+            </div>
+            <div class="guide-step">
+                <div class="guide-number">5</div>
+                <div class="guide-content">
+                    <h3>🎨 اختر الألوان</h3>
+                    <p>من تبويب "الألوان"، اختر الألوان المناسبة للاسم والوظيفة. يمكنك أيضاً إعادة تعيين جميع الإعدادات.</p>
+                </div>
+            </div>
+            <div class="guide-step">
+                <div class="guide-number">6</div>
+                <div class="guide-content">
+                    <h3>💾 احفظ البطاقة</h3>
+                    <p>عند الانتهاء، اضغط على زر "حفظ البطاقة" لتحميل الصورة النهائية بجودة عالية.</p>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <script>
     const API_URL = 'https://script.google.com/macros/s/AKfycbyhn2O-hbv-WoPy2oZkBOjndX1RN46MxFxPJCu2wE83kHzxjYJxk8lCGEyEf5OOuThO/exec';
@@ -231,22 +290,20 @@
     let userImg = null, frameImg = new Image(), currentFrame = null, frames = [], userName = '', userJob = '';
     frameImg.crossOrigin = "anonymous";
     
-    // الإعدادات الافتراضية - النص في الربع السفلي الأيسر
     let settings = {
         scale: 50,
         x: 0,
         y: 0,
         beautyFilter: 0,
         nameSize: 45,
-        namePosX: 270,      // ربع العرض من اليسار
-        nameOffsetY: 270,   // ربع الارتفاع من الأسفل
+        namePosX: 270,
+        nameOffsetY: 270,
         jobSpacing: 15,
         nameColor: '#8B1538',
         jobColor: '#000000',
         showJob: true
     };
     
-    // تحميل الإعدادات من Google Sheets
     async function loadSettingsFromAPI() {
         try {
             const response = await fetch(`${API_URL}?action=getSettings`);
