@@ -12,6 +12,7 @@
         .header { background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%); padding: 20px; text-align: center; color: white; position: relative; overflow: hidden; }
         .header::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%); animation: shimmer 3s infinite; }
         @keyframes shimmer { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(10%, 10%); }}
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; }}
         .header h1 { font-size: 1.5em; margin-bottom: 8px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); position: relative; z-index: 1; }
         .header p { font-size: 0.9em; opacity: 0.95; position: relative; z-index: 1; }
         .floating-preview { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 33vh; z-index: 999; background: linear-gradient(135deg, #e3e8f0 0%, #c5d3e8 100%); box-shadow: 0 5px 20px rgba(0,0,0,0.3); padding: 10px; display: flex; align-items: center; justify-content: center; }
@@ -230,7 +231,7 @@
                 <div class="guide-number">6</div>
                 <div class="guide-content">
                     <h3>💾 احفظ البطاقة</h3>
-                    <p>عند الانتهاء، اضغط "حفظ البطاقة". إذا كنت في متصفح فيسبوك، ستفتح صفحة جديدة - اضغط مطولاً على الصورة لحفظها.</p>
+                    <p>عند الانتهاء، اضغط "حفظ البطاقة". إذا كنت في متصفح فيسبوك، ستظهر رسالة لفتح الرابط في متصفح آخر.</p>
                 </div>
             </div>
         </div>
@@ -273,6 +274,58 @@
             document.body.appendChild(textarea); textarea.select(); document.execCommand('copy');
             document.body.removeChild(textarea);
         }
+    }
+    
+    function downloadImage() {
+        if (isFacebookBrowser()) {
+            showFacebookWarning();
+        } else {
+            const link = document.createElement('a');
+            link.download = 'election-support-card.png';
+            link.href = canvas.toDataURL('image/png', 1.0);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    }
+    
+    function showFacebookWarning() {
+        const overlay = document.createElement('div');
+        overlay.style.cssText = `
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.7); z-index: 9999; 
+            display: flex; align-items: center; justify-content: center;
+            animation: fadeIn 0.3s;
+        `;
+        
+        overlay.innerHTML = `
+            <div style="background: white; border-radius: 20px; padding: 30px; max-width: 90%; max-width: 400px; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.3);">
+                <div style="font-size: 4em; margin-bottom: 15px;">⚠️</div>
+                <h2 style="color: #c0392b; font-size: 1.4em; margin-bottom: 15px; font-family: 'Cairo', sans-serif;">تنبيه متصفح فيسبوك</h2>
+                <p style="color: #495057; line-height: 1.8; margin-bottom: 20px; font-family: 'Cairo', sans-serif;">
+                    متصفح فيسبوك لا يدعم تحميل الملفات بشكل صحيح
+                </p>
+                <div style="background: #fff5f5; padding: 15px; border-radius: 10px; margin-bottom: 20px; border-right: 4px solid #e74c3c; text-align: right;">
+                    <p style="font-weight: 600; margin-bottom: 10px; color: #c0392b;">للحفظ:</p>
+                    <ol style="color: #495057; line-height: 2;">
+                        <li>اضغط "فتح في المتصفح" أدناه</li>
+                        <li>اضغط "حفظ البطاقة" مرة أخرى</li>
+                    </ol>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <button onclick="document.body.removeChild(this.closest('div').parentElement)" 
+                        style="padding: 12px; border: 2px solid #e74c3c; background: white; color: #e74c3c; border-radius: 10px; font-weight: 700; cursor: pointer; font-family: 'Cairo', sans-serif;">
+                        إلغاء
+                    </button>
+                    <button onclick="openInBrowser(); document.body.removeChild(this.closest('div').parentElement);" 
+                        style="padding: 12px; border: none; background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%); color: white; border-radius: 10px; font-weight: 700; cursor: pointer; font-family: 'Cairo', sans-serif;">
+                        فتح في المتصفح
+                    </button>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(overlay);
     }
     
     async function loadSettingsFromAPI() {
@@ -469,58 +522,6 @@
             document.getElementById('posXValue').textContent = settings.x; document.getElementById('posYValue').textContent = settings.y; draw();
         }
     }, {passive: false});
-    
-    function downloadImage() {
-        const imageUrl = canvas.toDataURL('image/png', 1.0);
-        if (!isFacebookBrowser()) {
-            const link = document.createElement('a');
-            link.download = 'election-support-card.png';
-            link.href = imageUrl;
-            link.click();
-        } else {
-            const newWindow = window.open();
-            if (newWindow) {
-                newWindow.document.write(`
-                    <!DOCTYPE html>
-                    <html dir="rtl">
-                    <head>
-                        <meta charset="UTF-8">
-                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                        <title>حفظ البطاقة</title>
-                        <style>
-                            body { margin: 0; padding: 20px; background: #f0f2f5; font-family: 'Cairo', Arial, sans-serif; text-align: center; }
-                            .message { background: white; padding: 20px; border-radius: 15px; margin: 20px auto; max-width: 500px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-                            .message h2 { color: #c0392b; margin-bottom: 15px; font-size: 1.3em; }
-                            .message p { color: #495057; line-height: 1.8; margin: 10px 0; }
-                            .steps { background: #fff5f5; padding: 15px; border-radius: 10px; margin: 15px 0; border-right: 4px solid #e74c3c; }
-                            .steps li { text-align: right; margin: 8px 0; color: #495057; }
-                            img { max-width: 100%; height: auto; margin: 20px 0; box-shadow: 0 8px 24px rgba(0,0,0,0.2); border-radius: 15px; }
-                            .emoji { font-size: 2em; margin: 10px 0; }
-                        </style>
-                    </head>
-                    <body>
-                        <div class="message">
-                            <h2>📱 كيفية حفظ البطاقة</h2>
-                            <div class="emoji">👇</div>
-                            <div class="steps">
-                                <ol>
-                                    <li><strong>اضغط مطولاً</strong> على الصورة أدناه (Long Press)</li>
-                                    <li>اختر <strong>"حفظ الصورة"</strong> أو <strong>"Save Image"</strong></li>
-                                    <li>ستجد الصورة في معرض الصور الخاص بك</li>
-                                </ol>
-                            </div>
-                            <p style="color: #6c757d; font-size: 0.9em;">💡 أو انقر بزر الماوس الأيمن واختر "حفظ الصورة"</p>
-                        </div>
-                        <img src="${imageUrl}" alt="بطاقة دعم انتخابي">
-                    </body>
-                    </html>
-                `);
-                newWindow.document.close();
-            } else {
-                alert('⚠️ يرجى السماح بفتح النوافذ المنبثقة\n\nأو استخدم زر "فتح خارجياً" لفتح الرابط في متصفح Chrome/Safari');
-            }
-        }
-    }
     
     window.onload = async function() {
         console.log('📱 بدء التطبيق...');
