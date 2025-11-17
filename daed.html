@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>مولد بطاقات دعم د عيد عبد الهادى</title>
+    <title>مولد بطاقات دعم المرشحين</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap');
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -14,46 +14,10 @@
         @keyframes shimmer { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(10%, 10%); }}
         .header h1 { font-size: 1.5em; margin-bottom: 8px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); position: relative; z-index: 1; }
         .header p { font-size: 0.9em; opacity: 0.95; position: relative; z-index: 1; }
-        
-        /* النافذة العائمة - ثلث الشاشة */
-        .floating-preview { 
-            display: none; 
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 33vh; 
-            z-index: 999; 
-            background: linear-gradient(135deg, #e3e8f0 0%, #c5d3e8 100%); 
-            box-shadow: 0 5px 20px rgba(0,0,0,0.3); 
-            padding: 10px; 
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
+        .floating-preview { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 33vh; z-index: 999; background: linear-gradient(135deg, #e3e8f0 0%, #c5d3e8 100%); box-shadow: 0 5px 20px rgba(0,0,0,0.3); padding: 10px; display: flex; align-items: center; justify-content: center; }
         .editor-layout { background: #f8f9fa; }
-        .canvas-container { 
-            background: linear-gradient(135deg, #e3e8f0 0%, #c5d3e8 100%); 
-            padding: 20px; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            min-height: 70vh; 
-        }
-        
-        #canvas { 
-            max-width: 90%; 
-            max-height: 90%; 
-            width: auto; 
-            height: auto; 
-            display: block; 
-            cursor: move; 
-            box-shadow: 0 15px 50px rgba(0,0,0,0.3); 
-            border-radius: 15px; 
-            background: white;
-        }
-        
+        .canvas-container { background: linear-gradient(135deg, #e3e8f0 0%, #c5d3e8 100%); padding: 20px; display: flex; align-items: center; justify-content: center; min-height: 70vh; }
+        #canvas { max-width: 90%; max-height: 90%; width: auto; height: auto; display: block; cursor: move; box-shadow: 0 15px 50px rgba(0,0,0,0.3); border-radius: 15px; background: white; }
         .tabs-container { padding: 20px; background: white; }
         .tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 20px; background: #f8f9fa; padding: 8px; border-radius: 15px; }
         .tab { padding: 10px 8px; border: none; background: transparent; border-radius: 10px; font-size: 0.8em; font-weight: 600; cursor: pointer; transition: all 0.3s; color: #6c757d; font-family: 'Cairo', sans-serif; text-align: center;}
@@ -94,8 +58,8 @@
         .btn-primary { background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%); color: white; box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4); }
         .btn-secondary { background: white; color: #e74c3c; border: 2px solid #e74c3c; }
         .loading { text-align: center; padding: 20px; color: #6c757d; }
-        
-        /* قسم الشرح */
+        .fb-alert { display: none; background: #fff3cd; border: 2px solid #ffc107; border-radius: 10px; padding: 12px; margin-bottom: 15px; text-align: center; color: #856404; font-size: 0.9em; }
+        .fb-alert.show { display: block; }
         .guide-section { background: #f8f9fa; padding: 30px 20px; border-top: 3px solid #e74c3c; }
         .guide-title { text-align: center; font-size: 1.3em; font-weight: 700; color: #c0392b; margin-bottom: 20px; }
         .guide-steps { display: grid; gap: 15px; max-width: 800px; margin: 0 auto; }
@@ -103,7 +67,6 @@
         .guide-number { min-width: 35px; height: 35px; background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.1em; }
         .guide-content h3 { font-size: 1em; color: #495057; margin-bottom: 5px; }
         .guide-content p { font-size: 0.9em; color: #6c757d; line-height: 1.5; }
-        
         @media (min-width: 1024px) { 
             .editor-layout { display: grid; grid-template-columns: 1fr 450px; gap: 0; min-height: calc(100vh - 80px); }
             .canvas-container { display: flex !important; }
@@ -112,14 +75,12 @@
             .tabs { grid-template-columns: repeat(5, 1fr); }
             .guide-section { padding: 40px; }
         }
-        
         @media (max-width: 1023px) { 
             .editor-layout { display: block; }
             .canvas-container { display: none !important; }
             .floating-preview { display: flex !important; }
             .tabs-container { margin-top: 33vh; padding-top: 20px; padding-bottom: 120px; }
         }
-        
         @media (max-width: 480px) { .header h1 { font-size: 1.3em; }}
     </style>
 </head>
@@ -129,11 +90,7 @@
         <h1>🗳️ مولد بطاقات الدعم الانتخابي</h1>
         <p>صمم بطاقة دعم احترافية للمرشح</p>
     </div>
-    
-    <div class="floating-preview" id="floatingPreview">
-        <canvas id="canvas"></canvas>
-    </div>
-    
+    <div class="floating-preview" id="floatingPreview"><canvas id="canvas"></canvas></div>
     <div class="editor-layout" id="editorLayout">
         <div class="canvas-container" id="canvasContainer"></div>
         <div class="tabs-container">
@@ -222,15 +179,15 @@
                 </div>
             </div>
             <div class="button-section">
+                <div class="fb-alert" id="fbAlert">⚠️ إذا كنت تستخدم متصفح فيسبوك، اضغط الزر لفتح صفحة الحفظ</div>
                 <div class="btn-group">
                     <button class="btn btn-primary" onclick="downloadImage()"><span>💾</span><span>حفظ البطاقة</span></button>
-                    <button class="btn btn-secondary" onclick="location.reload()"><span>🔄</span><span>بطاقة جديدة</span></button>
+                    <button class="btn btn-secondary" onclick="openInBrowser()"><span>🌐</span><span>فتح خارجياً</span></button>
                 </div>
+                <button class="btn btn-secondary" onclick="location.reload()" style="width: 100%; margin-top: 12px;"><span>🔄</span><span>بطاقة جديدة</span></button>
             </div>
         </div>
     </div>
-    
-    <!-- قسم الشرح -->
     <div class="guide-section">
         <h2 class="guide-title">📖 كيفية استخدام الأداة</h2>
         <div class="guide-steps">
@@ -245,7 +202,7 @@
                 <div class="guide-number">2</div>
                 <div class="guide-content">
                     <h3>📸 ارفع الصورة</h3>
-                    <p>اذهب إلى تبويب "الصورة" وارفع صورتك . استخدم أدوات التكبير والتحريك لضبط الصورة داخل الإطار.</p>
+                    <p>اذهب إلى تبويب "الصورة" وارفع صورة المرشح. استخدم أدوات التكبير والتحريك لضبط الصورة داخل الإطار.</p>
                 </div>
             </div>
             <div class="guide-step">
@@ -273,7 +230,7 @@
                 <div class="guide-number">6</div>
                 <div class="guide-content">
                     <h3>💾 احفظ البطاقة</h3>
-                    <p>عند الانتهاء، اضغط على زر "حفظ البطاقة" لتحميل الصورة النهائية بجودة عالية.</p>
+                    <p>عند الانتهاء، اضغط "حفظ البطاقة". إذا كنت في متصفح فيسبوك، ستفتح صفحة جديدة - اضغط مطولاً على الصورة لحفظها.</p>
                 </div>
             </div>
         </div>
@@ -282,40 +239,51 @@
 <script>
     const API_URL = 'https://script.google.com/macros/s/AKfycbyhn2O-hbv-WoPy2oZkBOjndX1RN46MxFxPJCu2wE83kHzxjYJxk8lCGEyEf5OOuThO/exec';
     const textColors = [{color:'#8B1538',name:'عنابي'},{color:'#FFFFFF',name:'أبيض'},{color:'#000000',name:'أسود'},{color:'#c0392b',name:'أحمر'},{color:'#FFD700',name:'ذهبي'},{color:'#27ae60',name:'أخضر'},{color:'#2980b9',name:'أزرق'}];
-    
-    const canvas = document.getElementById('canvas');
-    const ctx = canvas.getContext('2d');
+    const canvas = document.getElementById('canvas'), ctx = canvas.getContext('2d');
     canvas.width = 1080; canvas.height = 1080;
-    
     let userImg = null, frameImg = new Image(), currentFrame = null, frames = [], userName = '', userJob = '';
     frameImg.crossOrigin = "anonymous";
+    let settings = {scale: 50, x: 0, y: 0, beautyFilter: 0, nameSize: 45, namePosX: 270, nameOffsetY: 270, jobSpacing: 15, nameColor: '#8B1538', jobColor: '#000000', showJob: true};
     
-    let settings = {
-        scale: 50,
-        x: 0,
-        y: 0,
-        beautyFilter: 0,
-        nameSize: 45,
-        namePosX: 270,
-        nameOffsetY: 270,
-        jobSpacing: 15,
-        nameColor: '#8B1538',
-        jobColor: '#000000',
-        showJob: true
-    };
+    function isFacebookBrowser() {
+        const ua = navigator.userAgent || navigator.vendor || window.opera;
+        return (ua.indexOf("FBAN") > -1) || (ua.indexOf("FBAV") > -1) || (ua.indexOf("Instagram") > -1);
+    }
+    
+    if (isFacebookBrowser()) document.getElementById('fbAlert').classList.add('show');
+    
+    function openInBrowser() {
+        const currentUrl = window.location.href;
+        if (navigator.userAgent.match(/Android/i)) {
+            window.location.href = `intent://${currentUrl.replace(/^https?:\/\//, '')}#Intent;scheme=https;package=com.android.chrome;end`;
+        } else if (navigator.userAgent.match(/iPhone|iPad|iPod/i)) {
+            copyToClipboard(currentUrl);
+            alert('✅ تم نسخ الرابط!\n\nالصق الرابط في متصفح سفاري أو كروم لتحميل الصورة بدون مشاكل.');
+        } else {
+            alert('📱 افتح هذا الرابط في متصفح خارجي (Chrome أو Safari) لتحميل الصورة بشكل صحيح.');
+        }
+    }
+    
+    function copyToClipboard(text) {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text);
+        } else {
+            const textarea = document.createElement('textarea');
+            textarea.value = text; textarea.style.position = 'fixed'; textarea.style.opacity = '0';
+            document.body.appendChild(textarea); textarea.select(); document.execCommand('copy');
+            document.body.removeChild(textarea);
+        }
+    }
     
     async function loadSettingsFromAPI() {
         try {
-            const response = await fetch(`${API_URL}?action=getSettings`);
-            const data = await response.json();
+            const response = await fetch(`${API_URL}?action=getSettings`), data = await response.json();
             if (data.success && data.settings) {
                 settings = { ...settings, ...data.settings };
                 updateControlsFromSettings();
                 console.log('✅ تم تحميل الإعدادات من Sheets:', settings);
             }
-        } catch (error) {
-            console.error('❌ فشل تحميل الإعدادات:', error);
-        }
+        } catch (error) { console.error('❌ فشل تحميل الإعدادات:', error); }
     }
     
     function updateControlsFromSettings() {
@@ -339,8 +307,7 @@
     }
     
     function moveCanvas() {
-        const canvasContainer = document.getElementById('canvasContainer');
-        const floatingPreview = document.getElementById('floatingPreview');
+        const canvasContainer = document.getElementById('canvasContainer'), floatingPreview = document.getElementById('floatingPreview');
         if (window.innerWidth >= 1024) {
             if (!canvasContainer.contains(canvas)) canvasContainer.appendChild(canvas);
         } else {
@@ -504,10 +471,55 @@
     }, {passive: false});
     
     function downloadImage() {
-        const link = document.createElement('a');
-        link.download = 'election-support-card.png';
-        link.href = canvas.toDataURL('image/png', 1.0);
-        link.click();
+        const imageUrl = canvas.toDataURL('image/png', 1.0);
+        if (!isFacebookBrowser()) {
+            const link = document.createElement('a');
+            link.download = 'election-support-card.png';
+            link.href = imageUrl;
+            link.click();
+        } else {
+            const newWindow = window.open();
+            if (newWindow) {
+                newWindow.document.write(`
+                    <!DOCTYPE html>
+                    <html dir="rtl">
+                    <head>
+                        <meta charset="UTF-8">
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                        <title>حفظ البطاقة</title>
+                        <style>
+                            body { margin: 0; padding: 20px; background: #f0f2f5; font-family: 'Cairo', Arial, sans-serif; text-align: center; }
+                            .message { background: white; padding: 20px; border-radius: 15px; margin: 20px auto; max-width: 500px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+                            .message h2 { color: #c0392b; margin-bottom: 15px; font-size: 1.3em; }
+                            .message p { color: #495057; line-height: 1.8; margin: 10px 0; }
+                            .steps { background: #fff5f5; padding: 15px; border-radius: 10px; margin: 15px 0; border-right: 4px solid #e74c3c; }
+                            .steps li { text-align: right; margin: 8px 0; color: #495057; }
+                            img { max-width: 100%; height: auto; margin: 20px 0; box-shadow: 0 8px 24px rgba(0,0,0,0.2); border-radius: 15px; }
+                            .emoji { font-size: 2em; margin: 10px 0; }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="message">
+                            <h2>📱 كيفية حفظ البطاقة</h2>
+                            <div class="emoji">👇</div>
+                            <div class="steps">
+                                <ol>
+                                    <li><strong>اضغط مطولاً</strong> على الصورة أدناه (Long Press)</li>
+                                    <li>اختر <strong>"حفظ الصورة"</strong> أو <strong>"Save Image"</strong></li>
+                                    <li>ستجد الصورة في معرض الصور الخاص بك</li>
+                                </ol>
+                            </div>
+                            <p style="color: #6c757d; font-size: 0.9em;">💡 أو انقر بزر الماوس الأيمن واختر "حفظ الصورة"</p>
+                        </div>
+                        <img src="${imageUrl}" alt="بطاقة دعم انتخابي">
+                    </body>
+                    </html>
+                `);
+                newWindow.document.close();
+            } else {
+                alert('⚠️ يرجى السماح بفتح النوافذ المنبثقة\n\nأو استخدم زر "فتح خارجياً" لفتح الرابط في متصفح Chrome/Safari');
+            }
+        }
     }
     
     window.onload = async function() {
