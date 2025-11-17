@@ -5,102 +5,427 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>مولد بطاقات دعم المرشحين</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap');
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        
-        @font-face {
-            font-family: 'Cairo';
-            src: url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap');
+        body { font-family: 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); min-height: 100vh; padding: 0; color: #333; user-select: none; touch-action: manipulation; }
+        .container { max-width: 100%; margin: 0 auto; background: white; min-height: 100vh; }
+        .header { background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%); padding: 20px; text-align: center; color: white; position: relative; overflow: hidden; }
+        .header::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%); animation: shimmer 3s infinite; }
+        @keyframes shimmer { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(10%, 10%); }}
+        .header h1 { font-size: 1.5em; margin-bottom: 8px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); position: relative; z-index: 1; }
+        .header p { font-size: 0.9em; opacity: 0.95; position: relative; z-index: 1; }
+        .form-section { padding: 20px; background: #f8f9fa; }
+        .input-group { margin-bottom: 20px; background: white; padding: 15px; border-radius: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);}
+        .input-group label { display: block; font-weight: 700; margin-bottom: 10px; color: #495057; font-size: 1em; }
+        .input-group input[type="text"] { width: 100%; padding: 12px 15px; border: 2px solid #e9ecef; border-radius: 10px; font-size: 1em; font-family: 'Cairo', sans-serif; transition: all 0.3s; background: white; }
+        .input-group input[type="text"]:focus { outline: none; border-color: #e74c3c; box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1); transform: translateY(-2px); }
+        .upload-box { border: 3px dashed #e74c3c; background: white; padding: 40px 20px; text-align: center; border-radius: 20px; cursor: pointer; transition: all 0.3s; margin-bottom: 20px;}
+        .upload-box:hover, .upload-box:active { border-color: #c0392b; background: #fff5f5; transform: scale(1.02);}
+        .upload-icon { font-size: 60px; margin-bottom: 15px; }
+        .upload-text { font-size: 1.1em; font-weight: 600; color: #e74c3c; margin-bottom: 8px;}
+        .frames-section { padding: 20px; background: white; border-top: 3px solid #e9ecef; }
+        .section-title { font-size: 1.1em; font-weight: 700; color: #495057; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;}
+        .frames-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;}
+        .frame-card { cursor: pointer; padding: 10px; border: 3px solid transparent; border-radius: 15px; background: #f8f9fa; transition: all 0.3s; position: relative; text-align: center;}
+        .frame-card:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.15);}
+        .frame-card.active { border-color: #e74c3c; background: linear-gradient(135deg, #fff5f5 0%, #ffe8e8 100%); box-shadow: 0 5px 20px rgba(231, 76, 60, 0.3);}
+        .frame-card img { width: 100%; height: 120px; object-fit: cover; border-radius: 10px; margin-bottom: 8px;}
+        .frame-name { font-size: 0.9em; font-weight: 600; color: #495057;}
+        .frame-check { position: absolute; top: 15px; left: 15px; width: 25px; height: 25px; border-radius: 50%; background: #e74c3c; color: white; display: none; align-items: center; justify-content: center; font-size: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.3);}
+        .frame-card.active .frame-check { display: flex; }
+        .editor-layout { display: none; background: #f8f9fa;}
+        .canvas-container { background: transparent; padding: 20px; display: flex; align-items: center; justify-content: center; min-height: 70vh; }
+        canvas { width: 100%; max-width: 600px; height: auto; display: block; cursor: move; box-shadow: 0 15px 50px rgba(0,0,0,0.3); border-radius: 15px; }
+        .tabs-container { padding: 20px; background: white;}
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; background: #f8f9fa; padding: 8px; border-radius: 15px;}
+        .tab { flex: 1; padding: 12px; border: none; background: transparent; border-radius: 10px; font-size: 0.9em; font-weight: 600; cursor: pointer; transition: all 0.3s; color: #6c757d; font-family: 'Cairo', sans-serif;}
+        .tab.active { background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%); color: white; box-shadow: 0 3px 10px rgba(231, 76, 60, 0.3); }
+        .tab-content { display: none; background: white; padding: 15px; border-radius: 15px; }
+        .tab-content.active { display: block; }
+        .control-group { margin-bottom: 20px;}
+        .control-group label { display: flex; justify-content: space-between; font-weight: 600; margin-bottom: 10px; color: #495057; font-size: 0.95em;}
+        .control-value { background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%); color: white; padding: 2px 10px; border-radius: 12px; font-size: 0.85em;}
+        input[type=range] { width: 100%; height: 8px; background: #e9ecef; border-radius: 10px; outline: none; -webkit-appearance: none; cursor: pointer;}
+        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 24px; height: 24px; background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%); border-radius: 50%; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.2); transition: all 0.2s;}
+        input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.2);}
+        .color-options { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px;}
+        .color-option { width: 50px; height: 50px; border-radius: 12px; cursor: pointer; border: 3px solid transparent; transition: all 0.3s; box-shadow: 0 2px 8px rgba(0,0,0,0.15);}
+        .color-option:hover { transform: scale(1.1);}
+        .color-option.active { border-color: #e74c3c; box-shadow: 0 0 0 4px rgba(231, 76, 60, 0.2);}
+        .button-section { padding: 20px; background: #f8f9fa;}
+        .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 12px;}
+        .btn { padding: 16px; border: none; border-radius: 15px; font-size: 1em; font-weight: 700; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; font-family: 'Cairo', sans-serif;}
+        .btn:active { transform: scale(0.95);}
+        .btn-primary { background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%); color: white; box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);}
+        .btn-secondary { background: white; color: #e74c3c; border: 2px solid #e74c3c;}
+        .loading { text-align: center; padding: 20px; color: #6c757d;}
+        .floating-preview { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 45vh; z-index: 999; background: linear-gradient(135deg, #e3e8f0 0%, #c5d3e8 100%); box-shadow: 0 5px 20px rgba(0,0,0,0.3); padding: 10px; pointer-events: none;}
+        .floating-preview canvas { width: 100%; height: 100%; object-fit: contain; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border-radius: 10px;}
+        @media (min-width: 1024px) { .editor-layout { display: grid; grid-template-columns: 1fr 400px; gap: 0; min-height: calc(100vh - 80px);} .canvas-container { background: linear-gradient(135deg, #e3e8f0 0%, #c5d3e8 100%); border-left: 3px solid #e9ecef;} .tabs-container { background: white; border-left: none; overflow-y: auto; max-height: calc(100vh - 80px);} .floating-preview { display: none !important;} }
+        @media (max-width: 1023px) { .editor-layout { display: block; } .canvas-container { display: none; } .floating-preview { display: block; } .tabs-container { margin-top: 45vh; padding-top: 20px; } }
+        @media (max-width: 480px) { .header h1 { font-size: 1.3em; } .tabs { flex-direction: column; } .frames-grid { grid-template-columns: 1fr; }}
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>🗳️ مولد بطاقات الدعم الانتخابي</h1>
+        <p>صمم بطاقة دعم احترافية للمرشح</p>
+    </div>
+    <div class="form-section">
+        <div class="input-group">
+            <label>👤 الاسم</label>
+            <input type="text" id="nameInput" placeholder="مثال: مصطفى عزت هارون">
+        </div>
+        <div class="input-group">
+            <label>💼 الوظيفة أو اللقب</label>
+            <input type="text" id="jobInput" placeholder="مثال: محامى بالاستناف العالى ومجلس ... اختيارى">
+        </div>
+        <div class="upload-box" onclick="document.getElementById('fileInput').click()">
+            <div class="upload-icon">📸</div>
+            <div class="upload-text">اضغط لرفع صورتك</div>
+            <input type="file" id="fileInput" accept="image/*" style="display: none;">
+        </div>
+        <button class="btn btn-primary" onclick="generateCard()" style="width: 100%;">
+            <span>🎨</span>
+            <span>إنشاء بطاقة الدعم</span>
+        </button>
+    </div>
+    <div class="frames-section" id="framesSection" style="display: none;">
+        <div class="section-title">
+            <span>🖼️</span>
+            <span>اختر تصميم البطاقة</span>
+        </div>
+        <div class="loading" id="framesLoading">⏳ جاري تحميل التصاميم...</div>
+        <div class="frames-grid" id="framesGrid"></div>
+    </div>
+    <div class="floating-preview" id="floatingPreview">
+        <canvas id="floatingCanvas"></canvas>
+    </div>
+    <div class="editor-layout" id="editorLayout">
+        <div class="canvas-container">
+            <canvas id="canvas"></canvas>
+        </div>
+        <div class="tabs-container">
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab('image')">📸 الصورة</button>
+                <button class="tab" onclick="switchTab('name')">✍️ الاسم</button>
+                <button class="tab" onclick="switchTab('colors')">🎨 الألوان</button>
+            </div>
+            <div id="imageTab" class="tab-content active">
+                <div class="control-group">
+                    <label>
+                        <span>🔎 التكبير والتصغير</span>
+                        <span class="control-value" id="scaleValue">50%</span>
+                    </label>
+                    <input type="range" id="scale" min="10" max="200" value="50">
+                </div>
+                <div class="control-group">
+                    <label>
+                        <span>↔️ التحريك الأفقي</span>
+                        <span class="control-value" id="posXValue">0</span>
+                    </label>
+                    <input type="range" id="posX" min="-500" max="500" value="0">
+                </div>
+                <div class="control-group">
+                    <label>
+                        <span>↕️ التحريك العمودي</span>
+                        <span class="control-value" id="posYValue">0</span>
+                    </label>
+                    <input type="range" id="posY" min="-500" max="500" value="0">
+                </div>
+                <div class="control-group">
+                    <label>
+                        <span>✨ فلتر التجميل</span>
+                        <span class="control-value" id="beautyFilterValue">0%</span>
+                    </label>
+                    <input type="range" id="beautyFilter" min="0" max="100" value="0">
+                    <p style="font-size: 0.85em; color: #6c757d; margin-top: 8px;">يجعل البشرة أكثر نعومة وإشراقاً</p>
+                </div>
+            </div>
+            <div id="nameTab" class="tab-content">
+                <div class="control-group">
+                    <label>
+                        <span>📏 حجم خط الاسم</span>
+                        <span class="control-value" id="nameSizeValue">45</span>
+                    </label>
+                    <input type="range" id="nameSize" min="20" max="80" value="45">
+                </div>
+                <div class="control-group">
+                    <label>
+                        <span>↔️ موضع الاسم أفقياً</span>
+                        <span class="control-value" id="namePosXValue">540</span>
+                    </label>
+                    <input type="range" id="namePosX" min="100" max="980" value="540">
+                </div>
+                <div class="control-group">
+                    <label>
+                        <span>↕️ المسافة من الأسفل (الاسم)</span>
+                        <span class="control-value" id="nameOffsetYValue">555</span>
+                    </label>
+                    <input type="range" id="nameOffsetY" min="400" max="700" value="555">
+                    <p style="font-size: 0.85em; color: #6c757d; margin-top: 8px;">💡 الاسم يظهر تحت الدائرة الذهبية مباشرة</p>
+                </div>
+                <div class="control-group">
+                    <label>
+                        <span>📐 المسافة بين الاسم والوظيفة</span>
+                        <span class="control-value" id="jobSpacingValue">15</span>
+                    </label>
+                    <input type="range" id="jobSpacing" min="5" max="50" value="15">
+                </div>
+                <div class="control-group">
+                    <label>🎨 لون الاسم</label>
+                    <div class="color-options" id="nameColorOptions"></div>
+                </div>
+                <div class="control-group">
+                    <label>🎨 لون الوظيفة</label>
+                    <div class="color-options" id="jobColorOptions"></div>
+                </div>
+                <div class="control-group">
+                    <label style="margin-bottom: 10px;">
+                        <span>📝 إظهار الوظيفة</span>
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; background: #f8f9fa; padding: 10px; border-radius: 10px;">
+                        <input type="checkbox" id="showJob" checked style="width: 20px; height: 20px; cursor: pointer;">
+                        <span style="font-weight: 500;">عرض الوظيفة في البطاقة</span>
+                    </label>
+                </div>
+            </div>
+            <div id="colorsTab" class="tab-content">
+                <div class="control-group">
+                    <button class="btn btn-secondary" onclick="resetControls()" style="width: 100%;">
+                        <span>🔄</span>
+                        <span>إعادة تعيين الإعدادات</span>
+                    </button>
+                </div>
+            </div>
+            <div class="button-section">
+                <div class="btn-group">
+                    <button class="btn btn-primary" onclick="downloadImage()">
+                        <span>💾</span>
+                        <span>حفظ البطاقة</span>
+                    </button>
+                    <button class="btn btn-secondary" onclick="location.reload()">
+                        <span>🔄</span>
+                        <span>بطاقة جديدة</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    const textColors = [
+        { color: '#8B1538', name: 'عنابي' },
+        { color: '#FFFFFF', name: 'أبيض' },
+        { color: '#000000', name: 'أسود' },
+        { color: '#c0392b', name: 'أحمر' },
+        { color: '#FFD700', name: 'ذهبي' },
+        { color: '#27ae60', name: 'أخضر' },
+        { color: '#2980b9', name: 'أزرق' }
+    ];
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    const floatingCanvas = document.getElementById('floatingCanvas');
+    const floatingCtx = floatingCanvas.getContext('2d');
+    canvas.width = 1080;
+    canvas.height = 1080;
+    floatingCanvas.width = 1080;
+    floatingCanvas.height = 1080;
+    let userImg = null;
+    let frameImg = new Image();
+    frameImg.crossOrigin = "anonymous";
+    let currentFrame = null;
+    let frames = [];
+    let userName = '';
+    let userJob = '';
+    let settings = { 
+        scale: 50,
+        x: 0,
+        y: 0,
+        beautyFilter: 0,
+        nameSize: 45,
+        namePosX: 540,
+        nameOffsetY: 555,
+        jobSpacing: 15,
+        nameColor: '#8B1538',
+        jobColor: '#000000',
+        showJob: true
+    };
+    function updateControlsFromSettings() {
+        document.getElementById('scale').value = settings.scale;
+        document.getElementById('posX').value = settings.x;
+        document.getElementById('posY').value = settings.y;
+        document.getElementById('beautyFilter').value = settings.beautyFilter;
+        document.getElementById('nameSize').value = settings.nameSize;
+        document.getElementById('namePosX').value = settings.namePosX;
+        document.getElementById('nameOffsetY').value = settings.nameOffsetY;
+        document.getElementById('jobSpacing').value = settings.jobSpacing;
+        document.getElementById('showJob').checked = settings.showJob;
+        document.getElementById('scaleValue').textContent = settings.scale + '%';
+        document.getElementById('posXValue').textContent = settings.x;
+        document.getElementById('posYValue').textContent = settings.y;
+        document.getElementById('beautyFilterValue').textContent = settings.beautyFilter + '%';
+        document.getElementById('nameSizeValue').textContent = settings.nameSize;
+        document.getElementById('namePosXValue').textContent = settings.namePosX;
+        document.getElementById('nameOffsetYValue').textContent = settings.nameOffsetY;
+        document.getElementById('jobSpacingValue').textContent = settings.jobSpacing;
+    }
+    function loadColors() {
+        const nameColorContainer = document.getElementById('nameColorOptions');
+        nameColorContainer.innerHTML = '';
+        textColors.forEach((tc) => {
+            const option = document.createElement('div');
+            option.className = `color-option ${tc.color === settings.nameColor ? 'active' : ''}`;
+            option.style.background = tc.color;
+            if (tc.color === '#FFFFFF') option.style.border = '2px solid #dee2e6';
+            option.title = tc.name;
+            option.onclick = () => {
+                nameColorContainer.querySelectorAll('.color-option').forEach(o => o.classList.remove('active'));
+                option.classList.add('active');
+                settings.nameColor = tc.color;
+                draw();
+            };
+            nameColorContainer.appendChild(option);
+        });
+        const jobColorContainer = document.getElementById('jobColorOptions');
+        jobColorContainer.innerHTML = '';
+        textColors.forEach((tc) => {
+            const option = document.createElement('div');
+            option.className = `color-option ${tc.color === settings.jobColor ? 'active' : ''}`;
+            option.style.background = tc.color;
+            if (tc.color === '#FFFFFF') option.style.border = '2px solid #dee2e6';
+            option.title = tc.name;
+            option.onclick = () => {
+                jobColorContainer.querySelectorAll('.color-option').forEach(o => o.classList.remove('active'));
+                option.classList.add('active');
+                settings.jobColor = tc.color;
+                draw();
+            };
+            jobColorContainer.appendChild(option);
+        });
+    }
+    document.getElementById('fileInput').onchange = function(e) {
+        if (e.target.files && e.target.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                userImg = new Image();
+                userImg.onload = function() {
+                    document.querySelector('.upload-text').textContent = '✓ تم رفع الصورة';
+                    document.querySelector('.upload-box').style.borderColor = '#27ae60';
+                };
+                userImg.src = event.target.result;
+            };
+            reader.readAsDataURL(e.target.files[0]);
         }
-        
-        body { 
-            font-family: 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-            min-height: 100vh;
-            padding: 0;
-            color: #333; 
-            user-select: none;
-            touch-action: manipulation;
+    };
+    function generateCard() {
+        userName = document.getElementById('nameInput').value.trim();
+        userJob = document.getElementById('jobInput').value.trim();
+        if (!userName || !userImg) {
+            alert('⚠️ الرجاء إدخال الاسم ورفع الصورة على الأقل');
+            return;
         }
-        
-        .container { 
-            max-width: 100%;
-            margin: 0 auto; 
-            background: white; 
-            min-height: 100vh;
+        if (!currentFrame) {
+            alert('⚠️ الرجاء الانتظار حتى يتم تحميل الإطارات');
+            return;
         }
-        
-        .header {
-            background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%);
-            padding: 20px;
-            text-align: center;
-            color: white;
-            position: relative;
-            overflow: hidden;
+        document.querySelector('.form-section').style.display = 'none';
+        document.getElementById('framesSection').style.display = 'block';
+        document.getElementById('editorLayout').style.display = '';
+        frameImg.src = currentFrame.url;
+        frameImg.onload = function() { draw(); };
+    }
+    function draw() {
+        drawOnCanvas(ctx);
+        drawOnCanvas(floatingCtx);
+    }
+    function drawOnCanvas(context) {
+        context.clearRect(0, 0, 1080, 1080);
+        if (userImg) {
+            context.save();
+            if (settings.beautyFilter > 0) context.filter = `blur(${settings.beautyFilter * 0.02}px) brightness(${1 + settings.beautyFilter * 0.001})`;
+            const scaleFactor = settings.scale / 100;
+            const imgW = 1080 * scaleFactor, imgH = 1080 * scaleFactor;
+            const centerX = 540, centerY = 540;
+            context.drawImage(userImg, centerX - imgW/2 + settings.x, centerY - imgH/2 + settings.y, imgW, imgH);
+            context.restore();
         }
-        .header::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-            animation: shimmer 3s infinite;
+        if (frameImg.complete && frameImg.naturalWidth > 0) context.drawImage(frameImg, 0, 0, 1080, 1080);
+        const nameY = 1080 - settings.nameOffsetY;
+        context.textAlign = 'center'; context.textBaseline = 'middle';
+        // الاسم مع استروك أبيض
+        context.font = `bold ${settings.nameSize}px Cairo, Arial`;
+        context.strokeStyle = '#fff'; context.lineWidth = 4;
+        context.strokeText(userName, settings.namePosX, nameY);
+        context.fillStyle = settings.nameColor;
+        context.fillText(userName, settings.namePosX, nameY);
+        // الوظيفة بدون استروك
+        if (settings.showJob && userJob) {
+            const jobY = nameY + settings.nameSize + settings.jobSpacing;
+            context.font = `26px Cairo, Arial`;
+            context.fillStyle = settings.jobColor;
+            context.fillText(userJob, settings.namePosX, jobY);
         }
-        @keyframes shimmer {
-            0%, 100% { transform: translate(0, 0); }
-            50% { transform: translate(10%, 10%); }
+    }
+    function switchTab(tabName) {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        event.target.classList.add('active');
+        document.getElementById(tabName + 'Tab').classList.add('active');
+    }
+    document.getElementById('scale').oninput = (e) => { settings.scale = parseInt(e.target.value); document.getElementById('scaleValue').textContent = settings.scale + '%'; draw(); };
+    document.getElementById('posX').oninput = (e) => { settings.x = parseInt(e.target.value); document.getElementById('posXValue').textContent = settings.x; draw(); };
+    document.getElementById('posY').oninput = (e) => { settings.y = parseInt(e.target.value); document.getElementById('posYValue').textContent = settings.y; draw(); };
+    document.getElementById('beautyFilter').oninput = (e) => { settings.beautyFilter = parseInt(e.target.value); document.getElementById('beautyFilterValue').textContent = settings.beautyFilter + '%'; draw(); };
+    document.getElementById('nameSize').oninput = (e) => { settings.nameSize = parseInt(e.target.value); document.getElementById('nameSizeValue').textContent = settings.nameSize; draw(); };
+    document.getElementById('namePosX').oninput = (e) => { settings.namePosX = parseInt(e.target.value); document.getElementById('namePosXValue').textContent = settings.namePosX; draw(); };
+    document.getElementById('nameOffsetY').oninput = (e) => { settings.nameOffsetY = parseInt(e.target.value); document.getElementById('nameOffsetYValue').textContent = settings.nameOffsetY; draw(); };
+    document.getElementById('jobSpacing').oninput = (e) => { settings.jobSpacing = parseInt(e.target.value); document.getElementById('jobSpacingValue').textContent = settings.jobSpacing; draw(); };
+    document.getElementById('showJob').onchange = (e) => { settings.showJob = e.target.checked; draw(); };
+    async function resetControls() {
+        settings = { scale: 50, x: 0, y: 0, beautyFilter: 0, nameSize: 45, namePosX: 540, nameOffsetY: 555, jobSpacing: 15, nameColor: '#8B1538', jobColor: '#000000', showJob: true };
+        updateControlsFromSettings(); draw();
+    }
+    // دعم الأصابع
+    let touchStartDist = 0, touchStartScale = 50, lastTouchPos = { x: 0, y: 0 }, touchStartPos = { x: 0, y: 0 };
+    floatingCanvas.addEventListener('touchstart', handleTouchStart, { passive: false });
+    floatingCanvas.addEventListener('touchmove', handleTouchMove, { passive: false });
+    canvas.addEventListener('touchstart', handleTouchStart, { passive: false });
+    canvas.addEventListener('touchmove', handleTouchMove, { passive: false });
+    function handleTouchStart(e) {
+        e.preventDefault(); if (e.touches.length === 2) {
+            const touch1 = e.touches[0], touch2 = e.touches[1];
+            touchStartDist = Math.hypot(touch2.clientX - touch1.clientX, touch2.clientY - touch1.clientY); touchStartScale = settings.scale; 
+        } else if (e.touches.length === 1) {
+            lastTouchPos = { x: e.touches[0].clientX, y: e.touches[0].clientY }; touchStartPos = { x: settings.x, y: settings.y };
         }
-        .header h1 { 
-            font-size: 1.5em; 
-            margin-bottom: 8px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-            position: relative;
-            z-index: 1;
+    }
+    function handleTouchMove(e) {
+        e.preventDefault();
+        if (e.touches.length === 2) {
+            const touch1 = e.touches[0], touch2 = e.touches[1];
+            const currentDist = Math.hypot(touch2.clientX - touch1.clientX, touch2.clientY - touch1.clientY);
+            const scale = (currentDist / touchStartDist) * touchStartScale;
+            settings.scale = Math.max(10, Math.min(200, scale));
+            document.getElementById('scale').value = settings.scale;
+            document.getElementById('scaleValue').textContent = settings.scale + '%';
+            draw();
+        } else if (e.touches.length === 1) {
+            const deltaX = e.touches[0].clientX - lastTouchPos.x;
+            const deltaY = e.touches[0].clientY - lastTouchPos.y;
+            settings.x = Math.max(-500, Math.min(500, touchStartPos.x + deltaX * 0.5));
+            settings.y = Math.max(-500, Math.min(500, touchStartPos.y + deltaY * 0.5));
+            document.getElementById('posX').value = settings.x; document.getElementById('posY').value = settings.y;
+            document.getElementById('posXValue').textContent = settings.x; document.getElementById('posYValue').textContent = settings.y; draw();
         }
-        .header p { 
-            font-size: 0.9em; 
-            opacity: 0.95;
-            position: relative;
-            z-index: 1;
-        }
-
-        .form-section {
-            padding: 20px;
-            background: #f8f9fa;
-        }
-        
-        .input-group {
-            margin-bottom: 20px;
-            background: white;
-            padding: 15px;
-            border-radius: 15px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }
-        
-        .input-group label {
-            display: block;
-            font-weight: 700;
-            margin-bottom: 10px;
-            color: #495057;
-            font-size: 1em;
-        }
-        
-        .input-group input[type="text"] {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e9ecef;
-            border-radius: 10px;
-            font-size: 1em;
-            font-family: 'Cairo', sans-serif;
-            transition: all 0.3s;
-            background: white;
-        }
-        
-        .input-group input[type="text"]:focus {
-            outline: none;
-            border-color: #e74c3c;
-            box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+    }
+    function downloadImage() {
+        const link = document.createElement('a'); link.download = 'election-support-card.png'; link.href = canvas.toDataURL('image/png', 1.0); link.click(); }
+    window.onload = function() { updateControlsFromSettings(); loadColors(); };
+</script>
+</body>
+</html>
             transform: translateY(-2px);
         }
 
