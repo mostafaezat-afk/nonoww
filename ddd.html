@@ -3,304 +3,362 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>محرر الإطارات الاحترافي</title>
+    <title> الاستعلام عن بيانات الناخبين الدائرة 12 </title>
     <style>
-        /* --- 1. تنسيقات عامة --- */
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f7f6; margin: 0; padding: 20px; color: #333; }
-        .container { max-width: 1100px; margin: 0 auto; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
-        h1 { text-align: center; color: #2c3e50; margin-bottom: 5px; }
-        .subtitle { text-align: center; color: #7f8c8d; margin-bottom: 30px; font-size: 0.9em; }
-
-        /* --- 2. منطقة الرفع (تم إصلاح الزر) --- */
-        .upload-box {
-            border: 3px dashed #bdc3c7;
-            background: #ecf0f1;
-            padding: 50px;
-            text-align: center;
-            border-radius: 15px;
-            cursor: pointer;
-            transition: 0.3s;
-            margin-bottom: 20px;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        .upload-box:hover { border-color: #3498db; background: #ebf5fb; }
-        .upload-icon { font-size: 50px; margin-bottom: 15px; display: block; }
-        .upload-text { font-size: 1.2em; font-weight: bold; color: #34495e; }
 
-        /* --- 3. منطقة التعديل (Grid Layout) --- */
-        .editor-area { display: none; /* مخفية حتى يتم رفع صورة */ }
-        .editor-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr; /* عمودين: يمين ويسار */
-            gap: 40px;
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
         }
-        @media (max-width: 768px) { .editor-grid { grid-template-columns: 1fr; } }
 
-        /* --- 4. الكانفاس (يمين) --- */
-        .canvas-wrapper {
-            background: #eee;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            aspect-ratio: 1; /* مربع دائماً */
-            position: relative;
-        }
-        canvas { width: 100%; height: 100%; display: block; }
-
-        /* --- 5. أدوات التحكم (يسار) --- */
-        .controls-wrapper { padding: 10px; }
-
-        /* قائمة الفريمات */
-        .frames-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
-            gap: 15px;
-            margin-bottom: 30px;
-        }
-        .frame-card {
-            text-align: center;
-            cursor: pointer;
-            padding: 8px;
-            border: 2px solid transparent;
-            border-radius: 10px;
-            background: #fff;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            transition: all 0.2s;
-        }
-        .frame-card:hover { transform: translateY(-3px); }
-        .frame-card.active { border-color: #3498db; background: #eaf6ff; }
-        
-        /* تنسيق الصور المصغرة لتظهر بشكل جيد دائماً */
-        .frame-card img {
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            max-width: 500px;
             width: 100%;
-            height: 80px;
-            object-fit: contain; /* السر هنا: يحافظ على الصورة كاملة داخل المربع */
-            margin-bottom: 8px;
         }
-        
-        /* زر الراديو */
-        .frame-radio { width: 18px; height: 18px; accent-color: #3498db; cursor: pointer; }
 
-        /* أشرطة التمرير (Sliders) */
-        .control-group { margin-bottom: 20px; }
-        .control-group label { display: flex; justify-content: space-between; font-weight: 600; margin-bottom: 8px; color: #34495e; }
-        input[type=range] { width: 100%; height: 6px; background: #bdc3c7; border-radius: 5px; outline: none; -webkit-appearance: none; cursor: pointer; }
-        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; background: #3498db; border-radius: 50%; cursor: pointer; transition: 0.2s; }
-        input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
 
-        /* الأزرار */
-        .btn-group { display: flex; gap: 10px; margin-top: 20px; }
-        .btn { flex: 1; padding: 15px; border: none; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.2s; }
-        .btn-primary { background: #3498db; color: white; }
-        .btn-primary:hover { background: #2980b9; }
-        .btn-secondary { background: #ecf0f1; color: #7f8c8d; }
-        .btn-secondary:hover { background: #bdc3c7; }
+        .form-group {
+            margin-bottom: 25px;
+        }
 
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 600;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-right: 4px solid #667eea;
+            display: none;
+        }
+
+        .result.show {
+            display: block;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-item {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .result-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .result-label {
+            color: #667eea;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .result-value {
+            color: #333;
+            font-size: 18px;
+        }
+
+        .error {
+            background: #fee;
+            color: #c33;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            display: none;
+            border-right: 4px solid #c33;
+        }
+
+        .error.show {
+            display: block;
+            animation: slideIn 0.5s ease;
+        }
+
+        .loading {
+            text-align: center;
+            color: #667eea;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .password-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .password-modal.hidden {
+            display: none;
+        }
+
+        .password-content {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .password-content h2 {
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
-
-<div class="container">
-    <h1>🎨 تصميم صورة البروفايل</h1>
-    <p class="subtitle">اختر الإطار المناسب، وارفع صورتك لتصميم بروفايل احترافي</p>
-
-    <div class="upload-box" id="uploadBox" onclick="document.getElementById('fileInput').click()">
-        <span class="upload-icon">📷</span>
-        <div class="upload-text">اضغط هنا لرفع صورتك الشخصية</div>
-        <input type="file" id="fileInput" accept="image/*" style="display: none;">
+    <!-- نافذة الرقم السري -->
+    <div id="passwordModal" class="password-modal">
+        <div class="password-content">
+            <h2>🔒 أدخل الرقم السري</h2>
+            <div class="form-group">
+                <label for="passwordInput">الرقم السري:</label>
+                <input type="password" id="passwordInput" placeholder="أدخل الرقم السري">
+            </div>
+            <button onclick="checkPassword()">دخول</button>
+            <div id="passwordError" class="error"></div>
+        </div>
     </div>
 
-    <div class="editor-area" id="editorArea">
-        <div class="editor-grid">
-            
-            <div class="canvas-wrapper">
-                <canvas id="canvas"></canvas>
+    <!-- صفحة الاستعلام الرئيسية -->
+    <div class="container">
+        <h1>🗳️ الاستعلام عن بيانات الناخبين</h1>
+        
+        <div class="form-group">
+            <label for="nationalId">الرقم القومي:</label>
+            <input 
+                type="text" 
+                id="nationalId" 
+                placeholder="أدخل الرقم القومي (14 رقم)"
+                maxlength="14"
+            >
+        </div>
+
+        <button onclick="searchVoter()">بحث</button>
+
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <p>جاري البحث...</p>
+        </div>
+
+        <div id="error" class="error"></div>
+
+        <div id="result" class="result">
+            <div class="result-item">
+                <div class="result-label">الاسم:</div>
+                <div class="result-value" id="name"></div>
             </div>
-
-            <div class="controls-wrapper">
-                
-                <div class="control-group">
-                    <label>اختر شكل الإطار:</label>
-                    <div class="frames-grid" id="framesContainer">
-                        </div>
-                </div>
-
-                <hr style="border: 0; border-top: 1px solid #e0e0e0; margin: 20px 0;">
-
-                <div class="control-group">
-                    <label>🔎 تكبير / تصغير</label>
-                    <input type="range" id="scale" min="20" max="200" value="100">
-                </div>
-
-                <div class="control-group">
-                    <label>↔️ تحريك أفقي</label>
-                    <input type="range" id="posX" min="-300" max="300" value="0">
-                </div>
-
-                <div class="control-group">
-                    <label>↕️ تحريك عمودي</label>
-                    <input type="range" id="posY" min="-300" max="300" value="0">
-                </div>
-
-                <div class="btn-group">
-                    <button class="btn btn-primary" onclick="downloadImage()">💾 حفظ الصورة</button>
-                    <button class="btn btn-secondary" onclick="location.reload()">🔄 رفع جديد</button>
-                </div>
-
+            <div class="result-item">
+                <div class="result-label">رقم اللجنة الانتخابية:</div>
+                <div class="result-value" id="committeeNumber"></div>
+            </div>
+            <div class="result-item">
+                <div class="result-label">مكان الانتخاب:</div>
+                <div class="result-value" id="location"></div>
             </div>
         </div>
     </div>
-</div>
 
-<script src="frames.js"></script>
-
-<script>
-    // --- المتغيرات الأساسية ---
-    const canvas = document.getElementById('canvas');
-    const ctx = canvas.getContext('2d');
-    
-    // لضمان جودة عالية، نجعل حجم الكانفاس الداخلي كبير
-    const canvasSize = 1080; 
-    canvas.width = canvasSize;
-    canvas.height = canvasSize;
-
-    let userImg = new Image();
-    let frameImg = new Image();
-    frameImg.crossOrigin = "anonymous"; // هام لتحميل الصور من روابط خارجية
-
-    // قيم التحكم المبدئية
-    let settings = { scale: 100, x: 0, y: 0 };
-
-    // --- 1. تحميل الفريمات عند فتح الصفحة ---
-    window.onload = function() {
-        if (typeof framesList === 'undefined') {
-            alert("خطأ: لم يتم العثور على ملف frames.js!");
-            return;
-        }
+    <script>
+        // الرقم السري - يمكنك تغييره هنا
+        const SECRET_PASSWORD = "12345";
         
-        const container = document.getElementById('framesContainer');
-        
-        framesList.forEach((frame, index) => {
-            const card = document.createElement('div');
-            card.className = `frame-card ${index === 0 ? 'active' : ''}`;
+        // رابط Google Apps Script Web App - ضع الرابط الخاص بك هنا
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwNeU_fFyYKIOJnw75bkl2uqR48h1fw6lWIGlIO_Xzcb75aAG9zuN65ulaMFnskPD7d/exec";
+
+        // التحقق من الرقم السري
+        function checkPassword() {
+            const password = document.getElementById('passwordInput').value;
+            const errorDiv = document.getElementById('passwordError');
             
-            // HTML الكارت (صورة + راديو)
-            card.innerHTML = `
-                <img src="${frame.thumb}" alt="${frame.name}">
-                <br>
-                <input type="radio" name="frameGroup" class="frame-radio" 
-                       ${index === 0 ? 'checked' : ''}>
-            `;
+            if (password === SECRET_PASSWORD) {
+                document.getElementById('passwordModal').classList.add('hidden');
+                errorDiv.classList.remove('show');
+            } else {
+                errorDiv.textContent = "❌ الرقم السري غير صحيح";
+                errorDiv.classList.add('show');
+            }
+        }
 
-            // عند الضغط على الكارت أو الراديو
-            card.onclick = () => {
-                // إزالة التحديد من الكل
-                document.querySelectorAll('.frame-card').forEach(c => c.classList.remove('active'));
-                document.querySelectorAll('.frame-radio').forEach(r => r.checked = false);
-                
-                // تحديد الحالي
-                card.classList.add('active');
-                card.querySelector('input').checked = true;
-                
-                // تغيير الفريم
-                changeFrame(frame.url);
-            };
-
-            container.appendChild(card);
+        // السماح بالضغط على Enter للدخول
+        document.getElementById('passwordInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkPassword();
+            }
         });
 
-        // تحميل أول فريم افتراضياً
-        if(framesList.length > 0) changeFrame(framesList[0].url);
-    };
+        // البحث عن الناخب
+        async function searchVoter() {
+            const nationalId = document.getElementById('nationalId').value.trim();
+            const loadingDiv = document.getElementById('loading');
+            const errorDiv = document.getElementById('error');
+            const resultDiv = document.getElementById('result');
 
-    function changeFrame(url) {
-        frameImg.src = url;
-        frameImg.onload = draw; // إعادة الرسم عند تحميل الفريم
-    }
+            // إخفاء النتائج السابقة
+            resultDiv.classList.remove('show');
+            errorDiv.classList.remove('show');
 
-    // --- 2. معالجة رفع الصورة ---
-    const fileInput = document.getElementById('fileInput');
-    
-    fileInput.onchange = function(e) {
-        if (e.target.files && e.target.files[0]) {
-            const reader = new FileReader();
-            
-            reader.onload = function(event) {
-                userImg.src = event.target.result;
-                userImg.onload = function() {
-                    // إظهار المحرر
-                    document.getElementById('uploadBox').style.display = 'none';
-                    document.getElementById('editorArea').style.display = 'block';
-                    
-                    // إعادة ضبط الإعدادات
-                    resetSettings();
-                    draw();
+            // التحقق من الرقم القومي
+            if (!nationalId) {
+                showError("⚠️ من فضلك أدخل الرقم القومي");
+                return;
+            }
+
+            if (nationalId.length !== 14 || !/^\d+$/.test(nationalId)) {
+                showError("⚠️ الرقم القومي يجب أن يكون 14 رقم");
+                return;
+            }
+
+            // إظهار مؤشر التحميل
+            loadingDiv.classList.add('show');
+
+            try {
+                // إرسال الطلب إلى Google Apps Script
+                const response = await fetch(`${SCRIPT_URL}?nationalId=${nationalId}`);
+                const data = await response.json();
+
+                loadingDiv.classList.remove('show');
+
+                if (data.success) {
+                    // إظهار النتائج
+                    document.getElementById('name').textContent = data.name || "غير متوفر";
+                    document.getElementById('committeeNumber').textContent = data.committeeNumber || "غير متوفر";
+                    document.getElementById('location').textContent = data.location || "غير متوفر";
+                    resultDiv.classList.add('show');
+                } else {
+                    showError(data.message || "❌ لم يتم العثور على بيانات لهذا الرقم القومي");
                 }
-            };
-            
-            reader.readAsDataURL(e.target.files[0]);
-        }
-    };
-
-    function resetSettings() {
-        settings = { scale: 100, x: 0, y: 0 };
-        document.getElementById('scale').value = 100;
-        document.getElementById('posX').value = 0;
-        document.getElementById('posY').value = 0;
-    }
-
-    // --- 3. دالة الرسم الرئيسية (Draw) ---
-    function draw() {
-        // مسح الكانفاس
-        ctx.clearRect(0, 0, canvasSize, canvasSize);
-
-        // أ. رسم خلفية بيضاء
-        ctx.fillStyle = "#ffffff";
-        ctx.fillRect(0, 0, canvasSize, canvasSize);
-
-        // ب. رسم صورة المستخدم
-        if (userImg.src) {
-            ctx.save();
-            ctx.translate(canvasSize/2, canvasSize/2);
-            
-            const scaleFactor = settings.scale / 100;
-            
-            // معادلة Cover (ملء المساحة)
-            const ratio = Math.max(canvasSize / userImg.width, canvasSize / userImg.height);
-            const finalW = userImg.width * ratio * scaleFactor;
-            const finalH = userImg.height * ratio * scaleFactor;
-
-            // الرسم مع الإحداثيات
-            // نضرب الإحداثيات في 4 لزيادة سرعة الحركة بما يتناسب مع حجم الكانفاس الكبير
-            ctx.drawImage(
-                userImg, 
-                -finalW/2 + (settings.x * 4), 
-                -finalH/2 + (settings.y * 4), 
-                finalW, 
-                finalH
-            );
-            
-            ctx.restore();
+            } catch (error) {
+                loadingDiv.classList.remove('show');
+                showError("❌ حدث خطأ في الاتصال. يرجى المحاولة مرة أخرى");
+                console.error('Error:', error);
+            }
         }
 
-        // ج. رسم الفريم
-        if (frameImg.src) {
-            ctx.drawImage(frameImg, 0, 0, canvasSize, canvasSize);
+        function showError(message) {
+            const errorDiv = document.getElementById('error');
+            errorDiv.textContent = message;
+            errorDiv.classList.add('show');
         }
-    }
 
-    // --- 4. تفعيل أزرار التحكم ---
-    document.getElementById('scale').oninput = (e) => { settings.scale = parseInt(e.target.value); draw(); };
-    document.getElementById('posX').oninput = (e) => { settings.x = parseInt(e.target.value); draw(); };
-    document.getElementById('posY').oninput = (e) => { settings.y = parseInt(e.target.value); draw(); };
+        // السماح بالضغط على Enter للبحث
+        document.getElementById('nationalId').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchVoter();
+            }
+        });
 
-    // --- 5. التحميل ---
-    function downloadImage() {
-        const link = document.createElement('a');
-        link.download = 'profile-picture.png';
-        link.href = canvas.toDataURL('image/png', 1.0); // 1.0 تعني أعلى جودة
-        link.click();
-    }
-</script>
-
+        // السماح فقط بإدخال الأرقام
+        document.getElementById('nationalId').addEventListener('input', function(e) {
+            this.value = this.value.replace(/[^\d]/g, '');
+        });
+    </script>
 </body>
 </html>
