@@ -15,9 +15,6 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             padding: 20px;
         }
 
@@ -26,8 +23,8 @@
             border-radius: 20px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             padding: 40px;
-            max-width: 500px;
-            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
         }
 
         h1 {
@@ -93,7 +90,7 @@
 
         .result {
             margin-top: 30px;
-            padding: 20px;
+            padding: 25px;
             background: #f8f9fa;
             border-radius: 10px;
             border-right: 4px solid #667eea;
@@ -132,11 +129,76 @@
             color: #667eea;
             font-weight: 600;
             margin-bottom: 5px;
+            font-size: 14px;
         }
 
         .result-value {
             color: #333;
             font-size: 18px;
+            font-weight: 500;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            flex: 1;
+            min-width: 140px;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-whatsapp {
+            background: #25D366;
+            color: white;
+        }
+
+        .btn-whatsapp:hover {
+            background: #20b958;
+            transform: translateY(-2px);
+        }
+
+        .btn-print {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .btn-print:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+        }
+
+        .btn-copy {
+            background: #2196F3;
+            color: white;
+        }
+
+        .btn-copy:hover {
+            background: #0b7dda;
+            transform: translateY(-2px);
+        }
+
+        .btn-download {
+            background: #FF9800;
+            color: white;
+        }
+
+        .btn-download:hover {
+            background: #e68900;
+            transform: translateY(-2px);
         }
 
         .error {
@@ -211,6 +273,118 @@
             margin-bottom: 20px;
             text-align: center;
         }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 15px;
+            text-align: center;
+            display: none;
+            border-right: 4px solid #28a745;
+        }
+
+        .success-message.show {
+            display: block;
+            animation: slideIn 0.5s ease;
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            
+            .container {
+                box-shadow: none;
+                max-width: 100%;
+            }
+            
+            .form-group, button, .action-buttons, .password-modal {
+                display: none !important;
+            }
+            
+            .result {
+                display: block !important;
+                border: 2px solid #667eea;
+                page-break-inside: avoid;
+            }
+            
+            h1 {
+                color: #000;
+                border-bottom: 3px solid #667eea;
+                padding-bottom: 10px;
+            }
+        }
+
+        .info-banner {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            border-right: 4px solid #667eea;
+        }
+
+        .info-banner p {
+            color: #555;
+            font-size: 14px;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .search-history {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .search-history.show {
+            display: block;
+        }
+
+        .search-history h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .history-item {
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-right: 3px solid #667eea;
+        }
+
+        .history-item:hover {
+            transform: translateX(-5px);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .history-item small {
+            color: #888;
+            font-size: 12px;
+        }
+
+        .clear-history {
+            background: #dc3545;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .clear-history:hover {
+            background: #c82333;
+        }
     </style>
 </head>
 <body>
@@ -231,6 +405,10 @@
     <div class="container">
         <h1>🗳️ الاستعلام عن بيانات الناخبين</h1>
         
+        <div class="info-banner">
+            <p>💡 أدخل الرقم القومي المكون من 14 رقم للحصول على بياناتك الانتخابية كاملة</p>
+        </div>
+
         <div class="form-group">
             <label for="nationalId">الرقم القومي:</label>
             <input 
@@ -241,7 +419,7 @@
             >
         </div>
 
-        <button onclick="searchVoter()">بحث</button>
+        <button onclick="searchVoter()">🔍 بحث</button>
 
         <div id="loading" class="loading">
             <div class="spinner"></div>
@@ -249,20 +427,47 @@
         </div>
 
         <div id="error" class="error"></div>
+        <div id="successMessage" class="success-message"></div>
 
         <div id="result" class="result">
             <div class="result-item">
-                <div class="result-label">الاسم:</div>
+                <div class="result-label">📋 الاسم:</div>
                 <div class="result-value" id="name"></div>
             </div>
             <div class="result-item">
-                <div class="result-label">رقم اللجنة الانتخابية:</div>
+                <div class="result-label">🔢 رقم اللجنة الانتخابية:</div>
                 <div class="result-value" id="committeeNumber"></div>
             </div>
             <div class="result-item">
-                <div class="result-label">مكان الانتخاب:</div>
+                <div class="result-label">📍 مكان الانتخاب:</div>
                 <div class="result-value" id="location"></div>
             </div>
+            <div class="result-item">
+                <div class="result-label">📊 رقمك في الكشف:</div>
+                <div class="result-value" id="listNumber"></div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="action-btn btn-whatsapp" onclick="shareWhatsApp()">
+                    📱 مشاركة واتساب
+                </button>
+                <button class="action-btn btn-print" onclick="printResult()">
+                    🖨️ طباعة
+                </button>
+                <button class="action-btn btn-copy" onclick="copyResult()">
+                    📋 نسخ البيانات
+                </button>
+                <button class="action-btn btn-download" onclick="downloadPDF()">
+                    📥 تحميل PDF
+                </button>
+            </div>
+        </div>
+
+        <!-- سجل البحث -->
+        <div id="searchHistory" class="search-history">
+            <h3>📜 آخر عمليات البحث</h3>
+            <div id="historyList"></div>
+            <button class="clear-history" onclick="clearHistory()">🗑️ مسح السجل</button>
         </div>
     </div>
 
@@ -271,7 +476,9 @@
         const SECRET_PASSWORD = "12345";
         
         // رابط Google Apps Script Web App - ضع الرابط الخاص بك هنا
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwj2oBFLQFDogy1WYgCbmzGHjbXakwmpemXt0G9G_nIiCx7zpJFl_8enjbjo91VcXsU/exec";
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwystTZhuvqaGnAB18n5_YehOS_6rflSmc3h0ZRHHgoD_ik35rSGUu3mLJxaeCrXmoe/exec";
+
+        let currentResult = null;
 
         // التحقق من الرقم السري
         function checkPassword() {
@@ -281,6 +488,7 @@
             if (password === SECRET_PASSWORD) {
                 document.getElementById('passwordModal').classList.add('hidden');
                 errorDiv.classList.remove('show');
+                loadSearchHistory();
             } else {
                 errorDiv.textContent = "❌ الرقم السري غير صحيح";
                 errorDiv.classList.add('show');
@@ -300,10 +508,12 @@
             const loadingDiv = document.getElementById('loading');
             const errorDiv = document.getElementById('error');
             const resultDiv = document.getElementById('result');
+            const successDiv = document.getElementById('successMessage');
 
             // إخفاء النتائج السابقة
             resultDiv.classList.remove('show');
             errorDiv.classList.remove('show');
+            successDiv.classList.remove('show');
 
             // التحقق من الرقم القومي
             if (!nationalId) {
@@ -342,18 +552,31 @@
                 loadingDiv.classList.remove('show');
 
                 if (data.success) {
+                    // حفظ النتيجة الحالية
+                    currentResult = {
+                        nationalId: nationalId,
+                        name: data.name || "غير متوفر",
+                        committeeNumber: data.committeeNumber || "غير متوفر",
+                        location: data.location || "غير متوفر",
+                        listNumber: data.listNumber || "غير متوفر"
+                    };
+
                     // إظهار النتائج
-                    document.getElementById('name').textContent = data.name || "غير متوفر";
-                    document.getElementById('committeeNumber').textContent = data.committeeNumber || "غير متوفر";
-                    document.getElementById('location').textContent = data.location || "غير متوفر";
+                    document.getElementById('name').textContent = currentResult.name;
+                    document.getElementById('committeeNumber').textContent = currentResult.committeeNumber;
+                    document.getElementById('location').textContent = currentResult.location;
+                    document.getElementById('listNumber').textContent = currentResult.listNumber;
                     resultDiv.classList.add('show');
+
+                    // إضافة إلى سجل البحث
+                    addToHistory(currentResult);
                 } else {
                     showError(data.message || "❌ لم يتم العثور على بيانات لهذا الرقم القومي");
                 }
             } catch (error) {
                 loadingDiv.classList.remove('show');
                 console.error('Error details:', error);
-                showError("❌ حدث خطأ في الاتصال. تفاصيل: " + error.message + "\n\nتأكد من:\n1. نشر Apps Script بشكل صحيح\n2. اختيار 'الجميع' في إعدادات النشر\n3. صحة رابط السكريبت");
+                showError("❌ حدث خطأ في الاتصال. تأكد من نشر Apps Script بشكل صحيح");
             }
         }
 
@@ -361,6 +584,155 @@
             const errorDiv = document.getElementById('error');
             errorDiv.textContent = message;
             errorDiv.classList.add('show');
+        }
+
+        function showSuccess(message) {
+            const successDiv = document.getElementById('successMessage');
+            successDiv.textContent = message;
+            successDiv.classList.add('show');
+            setTimeout(() => {
+                successDiv.classList.remove('show');
+            }, 3000);
+        }
+
+        // مشاركة على واتساب
+        function shareWhatsApp() {
+            if (!currentResult) return;
+            
+            const text = `🗳️ *بيانات الناخب*\n\n` +
+                        `📋 الاسم: ${currentResult.name}\n` +
+                        `🔢 رقم اللجنة: ${currentResult.committeeNumber}\n` +
+                        `📍 مكان الانتخاب: ${currentResult.location}\n` +
+                        `📊 رقمك في الكشف: ${currentResult.listNumber}`;
+            
+            const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
+            window.open(whatsappUrl, '_blank');
+        }
+
+        // طباعة النتيجة
+        function printResult() {
+            if (!currentResult) return;
+            window.print();
+        }
+
+        // نسخ البيانات
+        function copyResult() {
+            if (!currentResult) return;
+            
+            const text = `بيانات الناخب:\n\n` +
+                        `الاسم: ${currentResult.name}\n` +
+                        `رقم اللجنة الانتخابية: ${currentResult.committeeNumber}\n` +
+                        `مكان الانتخاب: ${currentResult.location}\n` +
+                        `رقمك في الكشف: ${currentResult.listNumber}`;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                showSuccess("✅ تم نسخ البيانات بنجاح!");
+            }).catch(() => {
+                showError("❌ فشل نسخ البيانات");
+            });
+        }
+
+        // تحميل PDF (محاكاة - يمكن تطويره لاحقاً)
+        function downloadPDF() {
+            if (!currentResult) return;
+            
+            // إنشاء محتوى HTML للطباعة
+            const content = `
+                <html dir="rtl">
+                <head>
+                    <meta charset="UTF-8">
+                    <style>
+                        body { font-family: Arial; padding: 40px; }
+                        h1 { color: #667eea; border-bottom: 3px solid #667eea; padding-bottom: 10px; }
+                        .info { margin: 20px 0; padding: 15px; background: #f8f9fa; border-right: 4px solid #667eea; }
+                        .label { font-weight: bold; color: #667eea; margin-top: 15px; }
+                        .value { font-size: 18px; margin-top: 5px; }
+                    </style>
+                </head>
+                <body>
+                    <h1>🗳️ بيانات الناخب</h1>
+                    <div class="info">
+                        <div class="label">📋 الاسم:</div>
+                        <div class="value">${currentResult.name}</div>
+                        
+                        <div class="label">🔢 رقم اللجنة الانتخابية:</div>
+                        <div class="value">${currentResult.committeeNumber}</div>
+                        
+                        <div class="label">📍 مكان الانتخاب:</div>
+                        <div class="value">${currentResult.location}</div>
+                        
+                        <div class="label">📊 رقمك في الكشف:</div>
+                        <div class="value">${currentResult.listNumber}</div>
+                    </div>
+                </body>
+                </html>
+            `;
+            
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(content);
+            printWindow.document.close();
+            printWindow.print();
+        }
+
+        // إضافة إلى سجل البحث
+        function addToHistory(result) {
+            let history = JSON.parse(localStorage.getItem('searchHistory') || '[]');
+            
+            // إضافة الوقت
+            result.timestamp = new Date().toLocaleString('ar-EG');
+            
+            // إزالة التكرار
+            history = history.filter(item => item.nationalId !== result.nationalId);
+            
+            // إضافة في البداية
+            history.unshift(result);
+            
+            // الاحتفاظ بآخر 5 عمليات بحث فقط
+            if (history.length > 5) {
+                history = history.slice(0, 5);
+            }
+            
+            localStorage.setItem('searchHistory', JSON.stringify(history));
+            loadSearchHistory();
+        }
+
+        // تحميل سجل البحث
+        function loadSearchHistory() {
+            const history = JSON.parse(localStorage.getItem('searchHistory') || '[]');
+            const historyDiv = document.getElementById('searchHistory');
+            const historyList = document.getElementById('historyList');
+            
+            if (history.length === 0) {
+                historyDiv.classList.remove('show');
+                return;
+            }
+            
+            historyDiv.classList.add('show');
+            historyList.innerHTML = '';
+            
+            history.forEach(item => {
+                const historyItem = document.createElement('div');
+                historyItem.className = 'history-item';
+                historyItem.innerHTML = `
+                    <div><strong>${item.name}</strong></div>
+                    <small>🔢 لجنة: ${item.committeeNumber} | 📊 رقم: ${item.listNumber}</small><br>
+                    <small>🕐 ${item.timestamp}</small>
+                `;
+                historyItem.onclick = () => {
+                    document.getElementById('nationalId').value = item.nationalId;
+                    searchVoter();
+                };
+                historyList.appendChild(historyItem);
+            });
+        }
+
+        // مسح سجل البحث
+        function clearHistory() {
+            if (confirm('هل أنت متأكد من مسح سجل البحث؟')) {
+                localStorage.removeItem('searchHistory');
+                document.getElementById('searchHistory').classList.remove('show');
+                showSuccess("✅ تم مسح السجل بنجاح");
+            }
         }
 
         // السماح بالضغط على Enter للبحث
@@ -377,4 +749,3 @@
     </script>
 </body>
 </html>
-
