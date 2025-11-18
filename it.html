@@ -719,6 +719,12 @@
                     <button class="support-btn" onclick="showVolunteerForm()">
                         ✋ تطوع معنا
                     </button>
+                    <button class="support-btn" onclick="requestTransport()">
+                        🚗 اطلب توصيلة
+                    </button>
+                    <button class="support-btn" onclick="confirmVoting()">
+                        ✅ أكّد حضورك
+                    </button>
                     <button class="support-btn" onclick="shareCandidate()">
                         📢 انشر الكلمة
                     </button>
@@ -800,7 +806,7 @@
                 tab.classList.remove('active');
             });
             
-            // إظه التبويب المحدد
+            // إظهار التبويب المحدد
             if (tabName === 'lookup') {
                 document.getElementById('lookupTab').classList.add('active');
                 document.querySelectorAll('.tab')[0].classList.add('active');
