@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> الاستعلام عن بيانات الناخبين الدائرة 12 </title>
+    <title>الاستعلام عن بيانات الناخبين</title>
     <style>
         * {
             margin: 0;
@@ -320,8 +320,23 @@
             loadingDiv.classList.add('show');
 
             try {
+                // التحقق من وجود رابط السكريبت
+                if (!SCRIPT_URL || SCRIPT_URL === "YOUR_GOOGLE_APPS_SCRIPT_URL_HERE") {
+                    loadingDiv.classList.remove('show');
+                    showError("❌ خطأ: لم يتم تعيين رابط Google Apps Script. يرجى التحقق من الإعدادات.");
+                    return;
+                }
+
                 // إرسال الطلب إلى Google Apps Script
-                const response = await fetch(`${SCRIPT_URL}?nationalId=${nationalId}`);
+                const response = await fetch(`${SCRIPT_URL}?nationalId=${nationalId}`, {
+                    method: 'GET',
+                    redirect: 'follow'
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
                 const data = await response.json();
 
                 loadingDiv.classList.remove('show');
@@ -337,8 +352,8 @@
                 }
             } catch (error) {
                 loadingDiv.classList.remove('show');
-                showError("❌ حدث خطأ في الاتصال. يرجى المحاولة مرة أخرى");
-                console.error('Error:', error);
+                console.error('Error details:', error);
+                showError("❌ حدث خطأ في الاتصال. تفاصيل: " + error.message + "\n\nتأكد من:\n1. نشر Apps Script بشكل صحيح\n2. اختيار 'الجميع' في إعدادات النشر\n3. صحة رابط السكريبت");
             }
         }
 
