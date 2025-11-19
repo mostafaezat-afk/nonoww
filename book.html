@@ -2,99 +2,144 @@
 <html dir="rtl" lang="ar">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>نظام حجز المواعيد - متعدد المراحل</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>حجز موعد طبي</title>
   <style>
-    body {
-      font-family: 'Cairo', sans-serif;
-      background: #f5f8fa;
-      margin: 0; padding: 1.5rem;
-      color: #1a1a2e;
-      direction: rtl;
+    /* استيراد كامل التنسيقات الأصلية من الملف المرفق (مثل :root وتعريف الألوان، الخطوط، الحجوم، الأنيميشن...) */
+    :root {
+      --primary: #0d7ea2;
+      --primary-light: #1094c0;
+      --primary-dark: #085a77;
+      --secondary: #00bfa5;
+      --accent: #ff6b6b;
+      --success: #26c281;
+      --background: #f5f8fa;
+      --card-bg: #ffffff;
+      --text-primary: #1a1a2e;
+      --text-secondary: #6c757d;
+      --border: #e1e8ed;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+    html, body {
+      width: 100%;
+      height: 100%;
+      font-family: 'Cairo', 'Segoe UI', Tahoma, sans-serif;
+      background: var(--background);
+      color: var(--text-primary);
+      line-height: 1.6;
+      overflow-x: hidden;
     }
     h1, h2 {
       text-align: center;
-      color: #0d7ea2;
+      color: var(--primary);
+      margin-bottom: 1.25rem;
     }
+    /* قالب المراحل */
     .step {
-      max-width: 400px;
-      margin: 1.5rem auto;
-      background: white;
-      padding: 2rem;
+      max-width: 480px;
+      margin: 3rem auto 4rem;
+      background: var(--card-bg);
       border-radius: 16px;
-      box-shadow: 0 10px 30px rgba(13, 126, 162, 0.2);
+      box-shadow: 0 12px 40px rgba(0, 92, 133, 0.18);
+      padding: 3rem 2rem 3rem 2rem;
       display: none;
+      transition: opacity 0.3s ease;
     }
     .step.active {
       display: block;
+      opacity: 1;
     }
     label {
       display: block;
-      margin-bottom: 0.4rem;
+      margin-bottom: 0.6rem;
       font-weight: 600;
+      font-size: 1.6rem;
+      color: var(--text-primary);
     }
     select, input[type="text"], input[type="tel"] {
       width: 100%;
-      padding: 0.8rem 1rem;
-      font-size: 1rem;
-      border: 2px solid #e1e8ed;
-      border-radius: 10px;
-      margin-bottom: 1.5rem;
+      padding: 1.2rem 1.5rem;
+      font-size: 1.6rem;
+      border: 3px solid var(--border);
+      border-radius: 24px;
       font-family: inherit;
+      background: var(--background);
+      color: var(--text-primary);
+      margin-bottom: 2rem;
+      transition: all 0.3s ease;
     }
     select:focus, input:focus {
+      border-color: var(--primary);
+      background: white;
       outline: none;
-      border-color: #0d7ea2;
-      box-shadow: 0 0 5px rgba(13,126,162,0.3);
+      box-shadow: 0 0 0 6px rgba(13, 126, 162, 0.2);
     }
     button {
-      background: #0d7ea2;
-      color: white;
+      display: inline-block;
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
       border: none;
-      padding: 1rem 1.5rem;
-      border-radius: 12px;
-      cursor: pointer;
+      border-radius: 24px;
+      color: white;
+      font-size: 1.8rem;
       font-weight: 700;
-      font-size: 1rem;
-      margin: 0 0.3rem 0.5rem 0.3rem;
-      width: auto;
+      padding: 1.4rem 3.2rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      user-select: none;
       font-family: 'Cairo', sans-serif;
+      margin-right: 1rem;
+      margin-bottom: 1rem;
     }
     button:disabled {
-      background: #999;
+      opacity: 0.5;
       cursor: not-allowed;
     }
+    button:hover:not(:disabled) {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 40px rgba(13, 126, 162, 0.45);
+    }
     #daysContainer, #timesContainer {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      justify-content: center;
-      margin-bottom: 1.5rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 1.2rem;
+      margin-bottom: 2rem;
     }
     #daysContainer button, #timesContainer button {
-      background: #00bfa5;
-      color: white;
-      border: none;
-      padding: 0.6rem 1.2rem;
-      border-radius: 12px;
-      cursor: pointer;
+      background: var(--secondary);
+      padding: 1rem;
+      font-size: 2rem;
       font-weight: 700;
-      transition: background 0.3s ease;
+      color: white;
+      border-radius: 24px;
+      border: none;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.3s ease;
     }
     #daysContainer button.selected, #timesContainer button.selected {
-      background: #26c281;
+      background: var(--success);
+      box-shadow: 0 12px 40px rgba(38, 194, 129, 0.45);
+      color: white;
+      transform: translateY(-3px);
     }
     #message {
+      font-size: 1.7rem;
+      font-weight: 700;
+      color: var(--accent);
       text-align: center;
       margin-top: 1rem;
-      font-weight: 700;
-      color: #ff6b6b;
+      min-height: 2.5rem;
     }
   </style>
 </head>
 <body>
 
-<h1>نظام حجز المواعيد</h1>
+<h1>نظام حجز المواعيد الطبية</h1>
 
 <!-- المرحلة 1 -->
 <div class="step active" id="step1">
@@ -116,6 +161,7 @@
 <!-- المرحلة 2 -->
 <div class="step" id="step2">
   <h2>الخطوة 2: اختر اليوم والموعد</h2>
+
   <label>اختر اليوم:</label>
   <div id="daysContainer">جارٍ التحميل...</div>
 
@@ -140,7 +186,7 @@ let selectedDay = null; // YYYY-MM-DD
 let selectedTime = null; // HH:mm
 let slotsByDate = {};
 
-// تحميل قائمة الأطباء عند بدء الصفحة
+// جلب الأطباء عند تحميل الصفحة
 async function loadDoctors() {
   try {
     const res = await fetch(BASE_URL + '?action=getDoctors');
@@ -152,16 +198,17 @@ async function loadDoctors() {
       option.textContent = doc.name;
       select.appendChild(option);
     });
-  } catch (e) {
-    alert('خطأ في تحميل قائمة الأطباء');
+  } catch(e) {
+    alert('حدث خطأ أثناء تحميل قائمة الأطباء');
   }
 }
 
-// تحميل المواعيد المتاحة للطبيب
+// جلب المواعيد المتاحة للطبيب وتجميعها حسب الأيام
 async function loadAvailableSlots(doctorName) {
   const daysContainer = document.getElementById('daysContainer');
   const timesContainer = document.getElementById('timesContainer');
-  daysContainer.textContent = 'جارٍ التحميل...';
+
+  daysContainer.textContent = 'جارٍ تحميل المواعيد...';
   timesContainer.textContent = 'يُرجى اختيار اليوم أولاً';
   selectedDay = null;
   selectedTime = null;
@@ -172,15 +219,15 @@ async function loadAvailableSlots(doctorName) {
     const slots = await res.json();
 
     if (!slots.length) {
-      daysContainer.innerHTML = '<p>لا توجد مواعيد متاحة حالياً.</p>';
+      daysContainer.innerHTML = '<p style="text-align:center;color:#999;">لا توجد مواعيد متاحة حالياً.</p>';
       timesContainer.innerHTML = '';
       return;
     }
 
     slotsByDate = processSlots(slots);
     renderDays();
-  } catch (e) {
-    daysContainer.innerHTML = '<p>خطأ في تحميل المواعيد.</p>';
+  } catch(e) {
+    daysContainer.innerHTML = '<p style="text-align:center;color:#999;">خطأ في تحميل المواعيد.</p>';
     timesContainer.innerHTML = '';
   }
 }
@@ -199,14 +246,11 @@ function processSlots(slotsArray) {
       grouped[dateKey].push({ time: timeString, isoString: isoStr });
     } catch(e) {}
   });
-  // ترتيب المواعيد داخل كل يوم
-  Object.keys(grouped).forEach(k => {
-    grouped[k].sort((a,b) => a.time.localeCompare(b.time));
-  });
+  Object.keys(grouped).forEach(k => grouped[k].sort((a,b) => a.time.localeCompare(b.time)));
   return grouped;
 }
 
-// عرض أيام المواعيد المتاحة
+// عرض الأيام المتاحة
 function renderDays() {
   const daysContainer = document.getElementById('daysContainer');
   daysContainer.innerHTML = '';
@@ -224,26 +268,30 @@ function renderDays() {
     btn.onclick = () => selectDay(dateStr, btn);
     daysContainer.appendChild(btn);
   });
+
   document.getElementById('timesContainer').textContent = 'يُرجى اختيار اليوم أولاً';
 }
 
-// اختيار يوم وعرض المواعيد في ذلك اليوم
+// اختيار اليوم وعرض المواعيد المتاحة لذلك اليوم
 function selectDay(dateStr, btn) {
   selectedDay = dateStr;
   selectedTime = null;
   document.getElementById('confirmBookingBtn').disabled = true;
+
   document.querySelectorAll('#daysContainer button').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
+
   renderTimesForDay(dateStr);
 }
 
-// عرض الأوقات في اليوم المختار
+// عرض المواعيد المتاحة لليوم المختار
 function renderTimesForDay(dateStr) {
   const timesContainer = document.getElementById('timesContainer');
   timesContainer.innerHTML = '';
   const slots = slotsByDate[dateStr] || [];
-  if (slots.length === 0) {
-    timesContainer.innerHTML = '<p>لا توجد أوقات متاحة</p>';
+
+  if (!slots.length) {
+    timesContainer.innerHTML = '<p style="text-align:center;color:#999;">لا توجد أوقات متاحة</p>';
     return;
   }
 
@@ -256,7 +304,7 @@ function renderTimesForDay(dateStr) {
   });
 }
 
-// اختيار الوقت
+// اختيار الموعد الزمني
 function selectTime(time, btn) {
   selectedTime = time;
   document.getElementById('confirmBookingBtn').disabled = false;
@@ -264,11 +312,12 @@ function selectTime(time, btn) {
   btn.classList.add('selected');
 }
 
-// الانتقال للمرحلة الثانية (عرض الأيام) من المرحلة الأولى
+// الانتقال للمرحلة الثانية
 document.getElementById('toStep2Btn').addEventListener('click', () => {
   const doctor = document.getElementById('selectDoctor').value;
   const name = document.getElementById('inputName').value.trim();
   const phone = document.getElementById('inputPhone').value.trim();
+
   if (!doctor) {
     alert('يرجى اختيار الطبيب');
     return;
@@ -281,12 +330,14 @@ document.getElementById('toStep2Btn').addEventListener('click', () => {
     alert('يرجى إدخال رقم الهاتف');
     return;
   }
+
   selectedDoctor = doctor;
   selectedName = name;
   selectedPhone = phone;
 
   document.getElementById('step1').classList.remove('active');
   document.getElementById('step2').classList.add('active');
+
   loadAvailableSlots(doctor);
 });
 
@@ -296,13 +347,14 @@ document.getElementById('backToStep1Btn').addEventListener('click', () => {
   document.getElementById('step1').classList.add('active');
 });
 
-// تأكيد الحجز مع إرسال البيانات للـ Google Apps Script باستخدام POST
+// تأكيد الحجز وارساله للـ Google Apps Script
 document.getElementById('confirmBookingBtn').addEventListener('click', async () => {
   if (!selectedTime || !selectedDay || !selectedDoctor || !selectedName || !selectedPhone) {
     alert('يرجى إكمال جميع البيانات واختيار الموعد');
     return;
   }
-  const appointmentISO = selectedDay + 'T' + selectedTime + ':00';
+
+  const appointmentISO = `${selectedDay}T${selectedTime}:00`;
 
   const formData = new URLSearchParams();
   formData.append('action', 'bookAppointmentWithDoctor');
@@ -318,44 +370,36 @@ document.getElementById('confirmBookingBtn').addEventListener('click', async () 
       body: formData.toString()
     });
     const result = await res.json();
-    if(result.success) {
+    if (result.success) {
       alert('تم الحجز بنجاح!');
-      // إعادة تعيين وإرجاع للمرحلة الأولى
+      // إعادة تعيين القيم والعودة للخطوة الأولى
       selectedDoctor = null;
       selectedName = null;
       selectedPhone = null;
       selectedDay = null;
       selectedTime = null;
       slotsByDate = {};
+
       document.getElementById('selectDoctor').value = '';
       document.getElementById('inputName').value = '';
       document.getElementById('inputPhone').value = '';
-      document.getElementById('step2').classList.remove('active');
-      document.getElementById('step1').classList.add('active');
       document.getElementById('daysContainer').innerHTML = '';
       document.getElementById('timesContainer').innerHTML = '';
       document.getElementById('confirmBookingBtn').disabled = true;
+
+      document.getElementById('step2').classList.remove('active');
+      document.getElementById('step1').classList.add('active');
     } else {
       alert('فشل الحجز: ' + (result.message || 'خطأ غير معروف'));
     }
-  } catch(e) {
+  } catch (e) {
     alert('خطأ في الاتصال بالخادم');
   }
 });
 
-// تحميل الأطباء فور بدء الصفحة
+// تحميل الأطباء عند بداية الصفحة
 loadDoctors();
 </script>
-
-<!-- خطوات -->
-<div style="max-width:400px;margin:20px auto;text-align:center;font-size:1.2rem;color:#666;font-weight:600;">
-  <p>خطوات الحجز:</p>
-  <ol style="text-align:right;">
-    <li>اختيار الطبيب وادخال المعلومات</li>
-    <li>اختيار اليوم والموعد</li>
-    <li>تأكيد الحجز</li>
-  </ol>
-</div>
 
 </body>
 </html>
