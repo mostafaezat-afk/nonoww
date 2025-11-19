@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>عرض الحجوزات</title>
+    <style>
+        :root {
+            --primary: #0d7ea2;
+            --primary-light: #1094c0;
+            --secondary: #00bfa5;
+            --accent: #ff6b6b;
+            --success: #26c281;
+            --background: #f5f8fa;
+            --card-bg: #ffffff;
+            --text-primary: #1a1a2e;
+            --text-secondary: #6c757d;
+            --border: #e1e8ed;
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Cairo', 'Segoe UI', Tahoma, sans-serif;
+            background: var(--background);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 2rem;
+        }
+        h1, h2 {
+            text-align: center;
+            color: var(--primary);
+        }
+        .step {
+            max-width: 500px;
+            margin: 1rem auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(13, 126, 162, 0.2);
+            display: none;
+        }
+        .step.active {
+            display: block;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        select, input[type="text"], input[type="tel"] {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            font-size: 1rem;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-family: inherit;
+            margin-bottom: 1.5rem;
+        }
+        select:focus, input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(13, 126, 162, 0.1);
+        }
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            margin: 0.3rem;
+            font-family: 'Cairo', sans-serif;
+        }
+        button:hover {
+            background: var(--primary-light);
+        }
+        #availableSlots button {
+            background: var(--secondary);
+            margin: 0.3rem;
+            font-weight: 700;
+            padding: 0.6rem 1.2rem;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+        }
+        #availableSlots button.selected {
+            background: var(--success);
+            color: white;
+        }
+        #message {
+            color: var(--accent);
+            font-weight: 700;
+            text-align: center;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <h1>📅 حجز موعد الطبيب</h1>
+
+    <!-- المرحلة 1: اختيار الطبيب والبيانات -->
+    <div class="step active" id="step1">
+        <h2>البيانات الأساسية</h2>
+        <label for="selectDoctor">اختر الطبيب</label>
+        <select id="selectDoctor" required>
+            <option value="">-- اختر الطبيب --</option>
+            <option value="الدكتور أحمد">الدكتور أحمد</option>
+            <option value="الدكتور سارة">الدكتور سارة</option>
+            <option value="الدكتور مروان">الدكتور مروان</option>
+        </select>
+
+        <label for="inputName">الاسم</label>
+        <input type="text" id="inputName" placeholder="أدخل اسمك" required autocomplete="off" />
+
+        <label for="inputPhone">رقم الهاتف</label>
+        <input type="tel" id="inputPhone" placeholder="أدخل رقم هاتفك" required autocomplete="off" />
+
+        <button onclick="goToStep2()">التالي</button>
+    </div>
+
+    <!-- المرحلة 2: اختيار الموعد -->
+    <div class="step" id="step2">
+        <h2>المواعيد المتاحة</h2>
+        <div id="availableSlots">جارٍ تحميل المواعيد...</div>
+
+        <div style="text-align:center; margin-top: 2rem;">
+            <button onclick="goToStep1()">السابق</button>
+            <button onclick="confirmAppointment()" id="confirmBtn" disabled>تأكيد الحجز</button>
+        </div>
+
+        <div id="message"></div>
+    </div>
+
+    <script>
+        let selectedTime = null;
+
+        function goToStep2() {
+            const doctor = document.getElementById('selectDoctor').value;
+            const name = document.getElementById('inputName').value.trim();
+            const phone = document.getElementById('inputPhone').value.trim();
+
+            if (!doctor) {
+                alert('يرجى اختيار الطبيب');
+                return;
+            }
+            if (!name) {
+                alert('يرجى إدخال الاسم');
+                return;
+            }
+            if (!phone) {
+                alert('يرجى إدخال رقم الهاتف');
+                return;
+            }
+
+            // إظهار المرحلة الثانية وإخفاء الأولى
+            document.getElementById('step1').classList.remove('active');
+            document.getElementById('step2').classList.add('active');
+            selectedTime = null;
+            document.getElementById('confirmBtn').disabled = true;
+            document.getElementById('message').textContent = '';
+
+            // تحميل المواعيد المتاحة للطبيب المختار - هنا مثال وهمي
+            loadAvailableSlots(doctor);
+        }
+
+        function goToStep1() {
+            document.getElementById('step2').classList.remove('active');
+            document.getElementById('step1').classList.add('active');
+        }
+
+        function loadAvailableSlots(doctor) {
+            // هنا يمكن استبدال هذه البيانات بمحرك جلب المواعيد من السيرفر أو Google Apps Script
+            const exampleSlots = {
+                "الدكتور أحمد": ["09:00", "10:00", "11:00", "14:00"],
+                "الدكتور سارة": ["10:30", "13:00", "15:00"],
+                "الدكتور مروان": ["08:00", "09:30", "11:30", "16:00"]
+            };
+
+            const slotsContainer = document.getElementById('availableSlots');
+            const slots = exampleSlots[doctor] || [];
+
+            if (slots.length === 0) {
+                slotsContainer.innerHTML = "<p>لا توجد مواعيد متاحة حالياً.</p>";
+                return;
+            }
+
+            slotsContainer.innerHTML = slots.map(time => 
+                `<button type="button" onclick="selectSlot(this, '${time}')">${time}</button>`
+            ).join('');
+        }
+
+        function selectSlot(button, time) {
+            // إزالة تمييز الزر السابق
+            const btns = document.querySelectorAll('#availableSlots button');
+            btns.forEach(btn => btn.classList.remove('selected'));
+
+            // تمييز الزر الحالي
+            button.classList.add('selected');
+            selectedTime = time;
+            document.getElementById('confirmBtn').disabled = false;
+        }
+
+        function confirmAppointment() {
+            if (!selectedTime) {
+                alert('يرجى اختيار موعد');
+                return;
+            }
+
+            // جمع البيانات
+            const doctor = document.getElementById('selectDoctor').value;
+            const name = document.getElementById('inputName').value.trim();
+            const phone = document.getElementById('inputPhone').value.trim();
+
+            // هنا يمكن استدعاء Google Apps Script أو أي API لتأكيد الحجز
+            // مثال وهمي:
+            alert(`تم تأكيد الحجز\nالطبيب: ${doctor}\nالاسم: ${name}\nالهاتف: ${phone}\nالموعد: ${selectedTime}`);
+
+            // إعادة تعيين النموذج للمرحلة الأولى
+            document.getElementById('selectDoctor').value = '';
+            document.getElementById('inputName').value = '';
+            document.getElementById('inputPhone').value = '';
+            goToStep1();
+        }
+    </script>
+</body>
+</html>
