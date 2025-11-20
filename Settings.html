@@ -6,18 +6,18 @@
     <title>إعدادات النظام الطبي</title>
     <style>
         :root {
-            --primary: #00897B;
-            --primary-light: #4DB6AC;
-            --primary-dark: #00695C;
-            --secondary: #26A69A;
-            --accent: #FF5252;
-            --success: #66BB6A;
-            --warning: #FF9800;
-            --background: #E8F5E9;
+            --primary: #00B4D8;
+            --primary-light: #48CAE4;
+            --primary-dark: #0096C7;
+            --secondary: #90E0EF;
+            --accent: #FF6B6B;
+            --success: #06D6A0;
+            --warning: #FFB703;
+            --background: #CAF0F8;
             --card-bg: #FFFFFF;
-            --text-primary: #1B5E20;
-            --text-secondary: #558B2F;
-            --border: #C8E6C9;
+            --text-primary: #023E8A;
+            --text-secondary: #0077B6;
+            --border: #ADE8F4;
         }
 
         * {
@@ -28,7 +28,7 @@
 
         body {
             font-family: 'Cairo', 'Segoe UI', Tahoma, sans-serif;
-            background: linear-gradient(135deg, var(--background) 0%, #B9F6CA 100%);
+            background: linear-gradient(135deg, #CAF0F8 0%, #90E0EF 100%);
             color: var(--text-primary);
             line-height: 1.6;
             min-height: 100vh;
@@ -870,8 +870,12 @@
 
         function loadGeneralSettings() {
             fetch(BASE_URL + '?action=getSettings')
-                .then(res => res.json())
+                .then(res => {
+                    if (!res.ok) throw new Error('Network response was not ok');
+                    return res.json();
+                })
                 .then(data => {
+                    console.log('Settings loaded:', data);
                     document.getElementById('placeName').value = data['اسم المكان'] || '';
                     document.getElementById('shortDesc').value = data['نبذة مختصرة'] || '';
                     document.getElementById('logo').value = data['اللوجو'] || '🏥';
@@ -899,26 +903,36 @@
                 'وصف الترحيب': document.getElementById('greetingDesc').value.trim()
             };
 
+            console.log('Saving settings:', settings);
+
             const formData = new URLSearchParams();
             formData.append('action', 'saveSettings');
-            formData.append('settings', JSON.stringify(settings));
+            
+            // إرسال كل إعداد على حدة
+            for (const [key, value] of Object.entries(settings)) {
+                formData.append(key, value);
+            }
 
             fetch(BASE_URL, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: formData.toString()
             })
-            .then(res => res.json())
+            .then(res => {
+                console.log('Response status:', res.status);
+                if (!res.ok) throw new Error('Network response was not ok');
+                return res.json();
+            })
             .then(response => {
+                console.log('Save response:', response);
                 if (response && response.success) {
                     showAlert('✅ تم حفظ الإعدادات بنجاح', 'success');
                 } else {
-                    showAlert('❌ حدث خطأ أثناء الحفظ', 'error');
+                    showAlert('❌ حدث خطأ: ' + (response.message || 'خطأ غير معروف'), 'error');
                 }
             })
             .catch(error => {
-                showAlert('❌ فشل الحفظ', 'error');
                 console.error('Save error:', error);
+                showAlert('❌ فشل الحفظ - تحقق من الاتصال', 'error');
             });
         });
 
@@ -1071,12 +1085,17 @@
             }
 
             const formData = new URLSearchParams();
-            const action = currentDoctorName ? 'updateDoctorWithSettings' : 'addDoctorWithSettings';
+            const action = currentDoctorName ? 'updateDoctor' : 'addDoctor';
             formData.append('action', action);
-            if (currentDoctorName) {
+            formData.append('name', doctorData.name);
+            formData.append('specialty', doctorData.specialty);
+            formData.append('phone', doctorData.phone);
+            formData.append('status', doctorData.status);
+            formData.append('settings', JSON.stringify(doctorData.settings));
+            
+            if (currentDoctorName && currentDoctorName !== doctorData.name) {
                 formData.append('oldName', currentDoctorName);
             }
-            formData.append('doctorData', JSON.stringify(doctorData));
 
             fetch(BASE_URL, {
                 method: 'POST',
