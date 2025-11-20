@@ -1,122 +1,838 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html dir="rtl" lang="ar">
 <head>
   <meta charset="UTF-8" />
-  <title>إعدادات النظام</title>
-  <script>
-    // استدعاء البيانات من السيرفر
-    async function loadSettings() {
-      const response = await fetch('?action=getSettings');
-      const settings = await response.json();
-      document.getElementById('placeName').value = settings['اسم المكان'] || '';
-      document.getElementById('shortDesc').value = settings['نبذة مختصرة'] || '';
-      // يمكن إضافة المزيد من الحقول هنا حسب الحاجة
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>حجز موعد طبي</title>
+  <style>
+    :root {
+      --primary: #00A9CE;
+      --primary-light: #4FC3E8;
+      --primary-dark: #0086A8;
+      --secondary: #3ABAE3;
+      --accent: #FF5252;
+      --success: #4DD4AC;
+      --background: #E3F6FC;
+      --card-bg: #FFFFFF;
+      --text-primary: #0B4F6C;
+      --text-secondary: #147C9E;
+      --border: #B8E5F3;
+      --shadow: rgba(0, 169, 206, 0.15);
     }
 
-    // حفظ إعدادات النظام
-    async function saveSettings() {
-      const settings = {
-        'اسم المكان': document.getElementById('placeName').value,
-        'نبذة مختصرة': document.getElementById('shortDesc').value,
-      };
-
-      const response = await fetch('', {
-        method: 'POST',
-        body: new URLSearchParams({
-          action: 'saveSettings',
-          settingsData: JSON.stringify(settings),
-        })
-      });
-
-      const result = await response.json();
-      alert(result.message || 'تم الحفظ');
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
     }
 
-    // مثال لحفظ إعدادات طبيب
-    async function saveDoctorSettings() {
-      const doctorData = {
-        oldName: 'اسم الطبيب القديم',
-        name: document.getElementById('doctorName').value,
-        specialty: document.getElementById('doctorSpecialty').value,
-        phone: document.getElementById('doctorPhone').value,
-        status: document.getElementById('doctorStatus').value,
-        settings: {
-          workDays: document.getElementById('workDays').value,
-          startHour: document.getElementById('startHour').value,
-          endHour: document.getElementById('endHour').value,
-          duration: document.getElementById('duration').value,
-          breakStart: document.getElementById('breakStart').value,
-          breakEnd: document.getElementById('breakEnd').value,
-          minBooking: document.getElementById('minBooking').value,
-          maxBooking: document.getElementById('maxBooking').value
-        }
-      };
-
-      const response = await fetch('', {
-        method: 'POST',
-        body: new URLSearchParams({
-          action: 'saveDoctorSettings',
-          doctorData: JSON.stringify(doctorData),
-        })
-      });
-
-      const result = await response.json();
-      alert(result.message || 'تم تحديث الطبيب');
+    html, body {
+      width: 100%;
+      min-height: 100vh;
+      font-family: 'Cairo', 'Segoe UI', Tahoma, sans-serif;
+      background: linear-gradient(135deg, #E3F6FC 0%, #C0EFFE 100%);
+      color: var(--text-primary);
+      line-height: 1.6;
+      overflow-x: hidden;
     }
 
-    window.onload = loadSettings;
-  </script>
+    /* Header الطبي */
+    .medical-header {
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      padding: 2rem 1rem;
+      text-align: center;
+      box-shadow: 0 4px 20px var(--shadow);
+      margin-bottom: 2rem;
+    }
+
+    .medical-header h1 {
+      color: white;
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .medical-icon {
+      width: 40px;
+      height: 40px;
+      background: white;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+    }
+
+    .medical-header p {
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 1.1rem;
+    }
+
+    /* Container رئيسي */
+    .main-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem 3rem;
+    }
+
+    /* تصميم responsive للخطوات */
+    .step {
+      background: var(--card-bg);
+      border-radius: 24px;
+      box-shadow: 0 10px 40px var(--shadow);
+      padding: 2.5rem 2rem;
+      display: none;
+      transition: all 0.3s ease;
+      border: 3px solid var(--border);
+    }
+
+    .step.active {
+      display: block;
+      animation: slideIn 0.4s ease;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    h2 {
+      text-align: center;
+      color: var(--primary);
+      margin-bottom: 2rem;
+      font-size: 1.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .step-indicator {
+      background: var(--primary-light);
+      color: white;
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.8rem;
+      font-weight: 600;
+      font-size: 1.3rem;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    input[type="text"], input[type="tel"] {
+      width: 100%;
+      padding: 1.2rem 1.5rem;
+      font-size: 1.4rem;
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      font-family: inherit;
+      background: #E3F6FC;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    input[type="text"]:focus, input[type="tel"]:focus {
+      border-color: var(--primary);
+      background: white;
+      outline: none;
+      box-shadow: 0 0 0 4px rgba(0, 169, 206, 0.1);
+    }
+
+    #phoneError {
+      font-size: 1.1rem;
+      color: var(--accent);
+      margin-bottom: 1rem;
+      display: none;
+      padding: 0.5rem 1rem;
+      background: #FFEBEE;
+      border-radius: 8px;
+      border-right: 4px solid var(--accent);
+    }
+
+    /* أزرار الأطباء */
+    #doctorsContainer {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    #doctorsContainer button {
+      background: linear-gradient(135deg, var(--secondary), var(--primary-light));
+      padding: 1.2rem 1rem;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: white;
+      border-radius: 16px;
+      border: none;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    #doctorsContainer button::before {
+      content: '🩺';
+      display: block;
+      font-size: 2rem;
+      margin-bottom: 0.3rem;
+    }
+
+    #doctorsContainer button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px var(--shadow);
+    }
+
+    #doctorsContainer button.selected {
+      background: linear-gradient(135deg, var(--success), #81C784);
+      box-shadow: 0 8px 25px rgba(77, 212, 172, 0.4);
+      transform: translateY(-3px);
+    }
+
+    #doctorsContainer button.selected::after {
+      content: '✓';
+      position: absolute;
+      top: 5px;
+      left: 5px;
+      background: white;
+      color: var(--success);
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      font-weight: bold;
+    }
+
+    /* أزرار الأيام والأوقات */
+    #daysContainer, #timesContainer {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    #daysContainer button, #timesContainer button {
+      background: linear-gradient(135deg, #B2DFDB, var(--secondary));
+      padding: 1rem;
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      border-radius: 12px;
+      border: 2px solid transparent;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.3s ease;
+      box-shadow: 0 3px 10px var(--shadow);
+    }
+
+    #daysContainer button:hover, #timesContainer button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px var(--shadow);
+    }
+
+    #daysContainer button.selected, #timesContainer button.selected {
+      background: linear-gradient(135deg, var(--success), #81C784);
+      color: white;
+      border-color: var(--success);
+      box-shadow: 0 6px 20px rgba(77, 212, 172, 0.4);
+      transform: translateY(-2px);
+    }
+
+    /* أزرار التنقل */
+    .button-group {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 2rem;
+    }
+
+    button {
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      border: none;
+      border-radius: 16px;
+      color: white;
+      font-size: 1.5rem;
+      font-weight: 700;
+      padding: 1.2rem 2.5rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      user-select: none;
+      font-family: 'Cairo', sans-serif;
+      box-shadow: 0 4px 15px var(--shadow);
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    button:hover:not(:disabled) {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px var(--shadow);
+    }
+
+    #backToStep1Btn {
+      background: linear-gradient(135deg, #78909C, #90A4AE);
+    }
+
+    #confirmBookingBtn {
+      background: linear-gradient(135deg, var(--success), #81C784);
+    }
+
+    /* نافذة التأكيد */
+    .confirmation-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(5px);
+    }
+
+    .confirmation-modal.active {
+      display: flex;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .confirmation-content {
+      background: white;
+      border-radius: 24px;
+      padding: 3rem 2rem;
+      max-width: 500px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      animation: scaleIn 0.3s ease;
+    }
+
+    @keyframes scaleIn {
+      from {
+        opacity: 0;
+        transform: scale(0.9);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .success-icon {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, var(--success), #81C784);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+      font-size: 3rem;
+      animation: bounce 0.6s ease;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
+    .confirmation-content h3 {
+      color: var(--primary);
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .booking-details {
+      background: var(--background);
+      padding: 1.5rem;
+      border-radius: 16px;
+      margin: 1.5rem 0;
+      text-align: right;
+      border: 2px solid var(--border);
+    }
+
+    .booking-details p {
+      margin: 0.7rem 0;
+      font-size: 1.2rem;
+      color: var(--text-secondary);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .booking-details strong {
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    .close-modal-btn {
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      margin-top: 1rem;
+    }
+
+    /* Desktop Layout */
+    @media (min-width: 768px) {
+      .main-container {
+        padding: 2rem;
+      }
+
+      .step {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 3rem;
+      }
+
+      #doctorsContainer {
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      }
+
+      #daysContainer, #timesContainer {
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      }
+    }
+
+    @media (max-width: 767px) {
+      .medical-header h1 {
+        font-size: 1.5rem;
+      }
+
+      h2 {
+        font-size: 1.4rem;
+      }
+
+      .step {
+        border-radius: 16px;
+        padding: 1.5rem 1rem;
+      }
+    }
+  </style>
 </head>
 <body>
-  <h2>إعدادات النظام</h2>
-  <label>اسم المكان:</label><br />
-  <input id="placeName" type="text" /><br />
 
-  <label>نبذة مختصرة:</label><br />
-  <input id="shortDesc" type="text" /><br />
+<div class="medical-header">
+  <h1>
+    <span class="medical-icon">🏥</span>
+    <span id="appTitle">نظام حجز المواعيد الطبية</span>
+  </h1>
+  <p>احجز موعدك مع أفضل الأطباء</p>
+</div>
 
-  <button onclick="saveSettings()">حفظ الإعدادات</button>
+<div class="main-container">
+  <!-- المرحلة 1 -->
+  <div class="step active" id="step1">
+    <h2>
+      <span class="step-indicator">1</span>
+      اختر الطبيب وأدخل بياناتك
+    </h2>
 
-  <hr />
+    <label>🩺 اختر الطبيب</label>
+    <div id="doctorsContainer">جارٍ التحميل...</div>
 
-  <h2>إعدادات الطبيب</h2>
-  <label>اسم الطبيب:</label><br />
-  <input id="doctorName" type="text" /><br />
-  
-  <label>التخصص:</label><br />
-  <input id="doctorSpecialty" type="text" /><br />
-  
-  <label>رقم الهاتف:</label><br />
-  <input id="doctorPhone" type="text" /><br />
-  
-  <label>الحالة:</label><br />
-  <input id="doctorStatus" type="text" value="نشط" /><br />
-  
-  <label>أيام العمل (مثال: 6,0,1,2,3,4):</label><br />
-  <input id="workDays" type="text" /><br />
-  
-  <label>ساعة البداية:</label><br />
-  <input id="startHour" type="text" /><br />
-  
-  <label>ساعة النهاية:</label><br />
-  <input id="endHour" type="text" /><br />
-  
-  <label>مدة الموعد (دقائق):</label><br />
-  <input id="duration" type="text" /><br />
-  
-  <label>فترة الراحة من:</label><br />
-  <input id="breakStart" type="text" /><br />
-  
-  <label>فترة الراحة إلى:</label><br />
-  <input id="breakEnd" type="text" /><br />
-  
-  <label>الحد الأدنى للحجز (دقائق):</label><br />
-  <input id="minBooking" type="text" /><br />
-  
-  <label>الحد الأقصى للحجز (أيام):</label><br />
-  <input id="maxBooking" type="text" /><br />
-  
-  <button onclick="saveDoctorSettings()">حفظ بيانات الطبيب</button>
-  
+    <label for="inputName">👤 الاسم الكامل</label>
+    <input type="text" id="inputName" placeholder="أدخل اسمك الكامل" autocomplete="name" />
+
+    <label for="inputPhone">📱 رقم الهاتف</label>
+    <input type="tel" id="inputPhone" placeholder="مثال: 01012345678" autocomplete="tel" />
+    <div id="phoneError">⚠️ رقم الهاتف يجب أن يكون 11 رقم ويبدأ بـ صفر</div>
+
+    <div class="button-group">
+      <button id="toStep2Btn" disabled>التالي ←</button>
+    </div>
+  </div>
+
+  <!-- المرحلة 2 -->
+  <div class="step" id="step2">
+    <h2>
+      <span class="step-indicator">2</span>
+      اختر اليوم والموعد
+    </h2>
+
+    <label>📅 اختر اليوم:</label>
+    <div id="daysContainer">جارٍ التحميل...</div>
+
+    <label>🕐 اختر الوقت المناسب:</label>
+    <div id="timesContainer">يُرجى اختيار اليوم أولاً</div>
+
+    <div class="button-group">
+      <button id="backToStep1Btn">→ السابق</button>
+      <button id="confirmBookingBtn" disabled>✓ تأكيد الحجز</button>
+    </div>
+  </div>
+</div>
+
+<!-- نافذة التأكيد -->
+<div class="confirmation-modal" id="confirmationModal">
+  <div class="confirmation-content">
+    <div class="success-icon">✓</div>
+    <h3>تم الحجز بنجاح!</h3>
+    <p style="color: var(--text-secondary); margin-bottom: 1rem;">تم تأكيد موعدك الطبي</p>
+
+    <div class="booking-details" id="bookingDetails"></div>
+
+    <button class="close-modal-btn" onclick="closeConfirmation()">حسناً</button>
+  </div>
+</div>
+
+<script>
+const BASE_URL = 'https://script.google.com/macros/s/AKfycbxMjAsx0rjMu4LLC1m2cTBWV8l43qdEo2Dc-MSXoGnfpx9iFh9u-SEEvLjEaW-N-Ccu/exec';
+// متغيرات التخزين المؤقت لتسريع الأداء
+let doctorsCache = null;
+let slotsCache = {};
+
+let selectedDoctor = null;
+let selectedName = '';
+let selectedPhone = '';
+let selectedDay = null;
+let selectedTime = null;
+let slotsByDate = {};
+
+// تحميل إعدادات التطبيق
+async function loadAppSettings() {
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 3000); // 3 ثوانٍ timeout
+
+    const res = await fetch(BASE_URL + '?action=getSettings', {
+      signal: controller.signal
+    });
+    clearTimeout(timeoutId);
+
+    const settings = await res.json();
+    if (settings && settings.appTitle) {
+      document.getElementById('appTitle').textContent = settings.appTitle;
+      document.title = settings.appTitle;
+    }
+  } catch(e) {
+    console.log('استخدام الإعدادات الافتراضية');
+    // استمر في العمل حتى لو فشل تحميل الإعدادات
+  }
+}
+
+async function loadDoctors() {
+  try {
+    // استخدام التخزين المؤقت إذا كان متاحاً
+    if (doctorsCache) {
+      renderDoctors(doctorsCache);
+      return;
+    }
+
+    const res = await fetch(BASE_URL + '?action=getDoctors');
+    const doctors = await res.json();
+    doctorsCache = doctors; // حفظ في الذاكرة المؤقتة
+    renderDoctors(doctors);
+  } catch(e) {
+    document.getElementById('doctorsContainer').innerHTML = '<p style="text-align:center;color:#999;">خطأ في تحميل قائمة الأطباء</p>';
+  }
+}
+
+function renderDoctors(doctors) {
+  const container = document.getElementById('doctorsContainer');
+  container.innerHTML = '';
+  doctors.forEach(doc => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.textContent = doc.name;
+    btn.onclick = () => selectDoctor(btn, doc.name);
+    container.appendChild(btn);
+  });
+}
+
+function selectDoctor(btn, doctorName) {
+  selectedDoctor = doctorName;
+  document.querySelectorAll('#doctorsContainer button').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  validateStep1();
+}
+
+const phoneInput = document.getElementById('inputPhone');
+const phoneError = document.getElementById('phoneError');
+
+function validatePhone() {
+  const val = phoneInput.value.trim();
+  const regex = /^0\d{10}$/;
+  if (regex.test(val)) {
+    phoneError.style.display = 'none';
+    selectedPhone = val;
+    return true;
+  } else if (val.length > 0) {
+    phoneError.style.display = 'block';
+    selectedPhone = '';
+    return false;
+  } else {
+    phoneError.style.display = 'none';
+    selectedPhone = '';
+    return false;
+  }
+}
+
+phoneInput.addEventListener('input', () => {
+  validatePhone();
+  validateStep1();
+});
+
+function validateStep1() {
+  selectedName = document.getElementById('inputName').value.trim();
+  const valid = selectedDoctor && selectedName.length > 0 && validatePhone();
+  document.getElementById('toStep2Btn').disabled = !valid;
+}
+
+document.getElementById('inputName').addEventListener('input', validateStep1);
+
+document.getElementById('toStep2Btn').addEventListener('click', () => {
+  if (!selectedDoctor || !selectedName || !selectedPhone) {
+    alert('يرجى استكمال بياناتك.');
+    return;
+  }
+  document.getElementById('step1').classList.remove('active');
+  document.getElementById('step2').classList.add('active');
+  loadAvailableSlots(selectedDoctor);
+});
+
+document.getElementById('backToStep1Btn').addEventListener('click', () => {
+  document.getElementById('step2').classList.remove('active');
+  document.getElementById('step1').classList.add('active');
+});
+
+async function loadAvailableSlots(doctorName) {
+  const daysContainer = document.getElementById('daysContainer');
+  const timesContainer = document.getElementById('timesContainer');
+  daysContainer.textContent = 'جارٍ تحميل المواعيد...';
+  timesContainer.textContent = 'يُرجى اختيار اليوم أولاً';
+  selectedDay = null;
+  selectedTime = null;
+  document.getElementById('confirmBookingBtn').disabled = true;
+
+  try {
+    // استخدام التخزين المؤقت إذا كان متاحاً
+    if (slotsCache[doctorName]) {
+      processAndRenderSlots(slotsCache[doctorName]);
+      return;
+    }
+
+    const res = await fetch(BASE_URL + `?action=getAvailableSlotsForDoctor&doctorName=${encodeURIComponent(doctorName)}`);
+    const slots = await res.json();
+
+    slotsCache[doctorName] = slots; // حفظ في الذاكرة المؤقتة
+    processAndRenderSlots(slots);
+  } catch(e) {
+    daysContainer.innerHTML = '<p style="text-align:center;color:#999;">خطأ في تحميل المواعيد.</p>';
+    timesContainer.innerHTML = '';
+  }
+}
+
+function processAndRenderSlots(slots) {
+  const daysContainer = document.getElementById('daysContainer');
+  const timesContainer = document.getElementById('timesContainer');
+
+  if (!slots.length) {
+    daysContainer.innerHTML = '<p style="text-align:center;color:#999;">لا توجد مواعيد متاحة حالياً.</p>';
+    timesContainer.innerHTML = '';
+    return;
+  }
+
+  slotsByDate = processSlots(slots);
+  renderDays();
+}
+
+function processSlots(slotsArray) {
+  const grouped = {};
+  slotsArray.forEach(isoStr => {
+    try {
+      const date = new Date(isoStr);
+      const dateKey = date.toISOString().split('T')[0];
+      const hours = date.getHours().toString().padStart(2, '0');
+      const minutes = date.getMinutes().toString().padStart(2, '0');
+      const timeString = `${hours}:${minutes}`;
+      if (!grouped[dateKey]) grouped[dateKey] = [];
+      grouped[dateKey].push({ time: timeString, isoString: isoStr });
+    } catch(e) {}
+  });
+  Object.keys(grouped).forEach(k => grouped[k].sort((a,b) => a.time.localeCompare(b.time)));
+  return grouped;
+}
+
+function renderDays() {
+  const container = document.getElementById('daysContainer');
+  container.innerHTML = '';
+  const dates = Object.keys(slotsByDate).sort();
+
+  dates.forEach(dateStr => {
+    const date = new Date(dateStr + 'T00:00:00');
+    const dayName = date.toLocaleDateString('ar-EG', { weekday: 'long' });
+    const dayNum = date.getDate();
+    const monthName = date.toLocaleDateString('ar-EG', { month: 'long' });
+
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.textContent = `${dayName}\n${dayNum} ${monthName}`;
+    btn.onclick = () => selectDay(dateStr, btn);
+    container.appendChild(btn);
+  });
+  document.getElementById('timesContainer').textContent = 'يُرجى اختيار اليوم أولاً';
+}
+
+function selectDay(dateStr, btn) {
+  selectedDay = dateStr;
+  selectedTime = null;
+  document.getElementById('confirmBookingBtn').disabled = true;
+
+  document.querySelectorAll('#daysContainer button').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+
+  renderTimesForDay(dateStr);
+}
+
+function renderTimesForDay(dateStr) {
+  const container = document.getElementById('timesContainer');
+  container.innerHTML = '';
+  const times = slotsByDate[dateStr] || [];
+
+  if (!times.length) {
+    container.innerHTML = '<p style="text-align:center;color:#999;">لا توجد أوقات متاحة</p>';
+    return;
+  }
+
+  times.forEach(slot => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.textContent = slot.time;
+    btn.onclick = () => selectTime(slot.time, btn);
+    container.appendChild(btn);
+  });
+}
+
+function selectTime(time, btn) {
+  selectedTime = time;
+  document.getElementById('confirmBookingBtn').disabled = false;
+
+  document.querySelectorAll('#timesContainer button').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+}
+
+document.getElementById('confirmBookingBtn').addEventListener('click', async () => {
+  if (!selectedTime || !selectedDay || !selectedDoctor || !selectedName || !selectedPhone) {
+    alert('يرجى إكمال جميع البيانات واختيار الموعد');
+    return;
+  }
+
+  const appointmentISO = `${selectedDay}T${selectedTime}:00`;
+
+  const formData = new URLSearchParams();
+  formData.append('action', 'bookAppointmentWithDoctor');
+  formData.append('doctorName', selectedDoctor);
+  formData.append('name', selectedName);
+  formData.append('phone', selectedPhone);
+  formData.append('appointmentTime', appointmentISO);
+
+  try {
+    const res = await fetch(BASE_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: formData.toString()
+    });
+    const result = await res.json();
+    if (result.success) {
+      showConfirmation();
+    } else {
+      alert('فشل الحجز: ' + (result.message || 'خطأ غير معروف'));
+    }
+  } catch(e) {
+    alert('خطأ في الاتصال بالخادم');
+  }
+});
+
+function showConfirmation() {
+  const date = new Date(selectedDay + 'T00:00:00');
+  const dayName = date.toLocaleDateString('ar-EG', { weekday: 'long' });
+  const dayNum = date.getDate();
+  const monthName = date.toLocaleDateString('ar-EG', { month: 'long' });
+  const year = date.getFullYear();
+
+  const details = `
+    <p><strong>الطبيب:</strong> <span>د. ${selectedDoctor}</span></p>
+    <p><strong>الاسم:</strong> <span>${selectedName}</span></p>
+    <p><strong>الهاتف:</strong> <span>${selectedPhone}</span></p>
+    <p><strong>التاريخ:</strong> <span>${dayName} ${dayNum} ${monthName} ${year}</span></p>
+    <p><strong>الوقت:</strong> <span>${selectedTime}</span></p>
+  `;
+
+  document.getElementById('bookingDetails').innerHTML = details;
+  document.getElementById('confirmationModal').classList.add('active');
+}
+
+function closeConfirmation() {
+  document.getElementById('confirmationModal').classList.remove('active');
+
+  // إعادة تعيين القيم
+  selectedDoctor = null;
+  selectedName = '';
+  selectedPhone = '';
+  selectedDay = null;
+  selectedTime = null;
+  slotsByDate = {};
+  slotsCache = {}; // مسح الذاكرة المؤقتة للمواعيد
+
+  document.getElementById('inputName').value = '';
+  document.getElementById('inputPhone').value = '';
+  phoneError.style.display = 'none';
+  document.querySelectorAll('#doctorsContainer button').forEach(b => b.classList.remove('selected'));
+  document.getElementById('daysContainer').innerHTML = '';
+  document.getElementById('timesContainer').innerHTML = '';
+  document.getElementById('confirmBookingBtn').disabled = true;
+  document.getElementById('toStep2Btn').disabled = true;
+
+  document.getElementById('step2').classList.remove('active');
+  document.getElementById('step1').classList.add('active');
+
+  // استخدام الأطباء المحفوظين مسبقاً
+  if (doctorsCache) {
+    renderDoctors(doctorsCache);
+  } else {
+    loadDoctors();
+  }
+}
+
+// تحميل الإعدادات والأطباء عند بدء التطبيق
+Promise.all([loadAppSettings(), loadDoctors()]);
+</script>
+
 </body>
 </html>
