@@ -906,40 +906,29 @@
             console.log('Saving settings:', settings);
             showAlert('⏳ جاري الحفظ...', 'success');
 
-            const formData = new URLSearchParams();
-            formData.append('action', 'updateSettings');
-            
-            // إرسال كل إعداد على حدة
-            for (const [key, value] of Object.entries(settings)) {
-                formData.append(key, value);
-            }
+            // إنشاء URL مع المعاملات
+            const params = new URLSearchParams();
+            params.append('action', 'saveSettings');
+            params.append('اسم المكان', settings['اسم المكان']);
+            params.append('نبذة مختصرة', settings['نبذة مختصرة']);
+            params.append('اللوجو', settings['اللوجو']);
+            params.append('رسالة الترحيب', settings['رسالة الترحيب']);
+            params.append('وصف الترحيب', settings['وصف الترحيب']);
 
-            fetch(BASE_URL, {
-                method: 'POST',
-                headers: { 
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: formData.toString(),
-                mode: 'no-cors'
+            fetch(BASE_URL + '?' + params.toString(), {
+                method: 'GET',
+                redirect: 'follow'
             })
-            .then(() => {
-                // في وضع no-cors لا نستطيع قراءة الاستجابة
-                // لذلك نفترض النجاح ونتحقق بعد ثانية
-                setTimeout(() => {
-                    fetch(BASE_URL + '?action=getSettings')
-                        .then(res => res.json())
-                        .then(data => {
-                            // نتحقق إذا تم الحفظ
-                            if (data['اسم المكان'] === settings['اسم المكان']) {
-                                showAlert('✅ تم حفظ الإعدادات بنجاح', 'success');
-                            } else {
-                                showAlert('✅ تم إرسال البيانات', 'success');
-                            }
-                        })
-                        .catch(() => {
-                            showAlert('✅ تم إرسال البيانات', 'success');
-                        });
-                }, 1000);
+            .then(res => res.json())
+            .then(response => {
+                console.log('Save response:', response);
+                if (response && response.success) {
+                    showAlert('✅ تم حفظ الإعدادات بنجاح', 'success');
+                    // إعادة تحميل الإعدادات للتأكد
+                    setTimeout(() => loadGeneralSettings(), 500);
+                } else {
+                    showAlert('❌ حدث خطأ: ' + (response.message || 'فشل الحفظ'), 'error');
+                }
             })
             .catch(error => {
                 console.error('Save error:', error);
