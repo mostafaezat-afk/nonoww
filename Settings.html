@@ -923,7 +923,7 @@
         });
 
         function loadDoctors() {
-            fetch(BASE_URL + '?action=getAllDoctorsForSettings')
+            fetch(BASE_URL + '?action=getDoctors')
                 .then(res => res.json())
                 .then(doctors => {
                     allDoctors = doctors || [];
@@ -932,6 +932,7 @@
                 .catch(error => {
                     showAlert('❌ خطأ في تحميل الأطباء', 'error');
                     console.error('Load doctors error:', error);
+                    document.getElementById('doctorsTableBody').innerHTML = '<tr><td colspan="5" style="text-align:center;padding:2rem;color:#999;">خطأ في تحميل البيانات</td></tr>';
                 });
         }
 
@@ -942,20 +943,27 @@
                 return;
             }
 
-            tbody.innerHTML = doctors.map(doc => `
-                <tr>
-                    <td>${doc.name}</td>
-                    <td>${doc.specialty || '-'}</td>
-                    <td>${doc.phone || '-'}</td>
-                    <td><span class="status-badge ${doc.status === 'نشط' ? 'status-active' : 'status-inactive'}">${doc.status}</span></td>
-                    <td>
-                        <div class="action-buttons">
-                            <button class="btn btn-sm btn-primary" onclick='editDoctor(${JSON.stringify(doc.name)})'>✏️ تعديل</button>
-                            <button class="btn btn-sm btn-danger" onclick='deleteDoctor(${JSON.stringify(doc.name)})'>🗑️ حذف</button>
-                        </div>
-                    </td>
-                </tr>
-            `).join('');
+            tbody.innerHTML = doctors.map(doc => {
+                const docName = typeof doc === 'string' ? doc : doc.name;
+                const docSpecialty = doc.specialty || doc.التخصص || '-';
+                const docPhone = doc.phone || doc.الهاتف || '-';
+                const docStatus = doc.status || doc.الحالة || 'نشط';
+                
+                return `
+                    <tr>
+                        <td>${docName}</td>
+                        <td>${docSpecialty}</td>
+                        <td>${docPhone}</td>
+                        <td><span class="status-badge ${docStatus === 'نشط' ? 'status-active' : 'status-inactive'}">${docStatus}</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-sm btn-primary" onclick='editDoctor(${JSON.stringify(docName)})'>✏️ تعديل</button>
+                                <button class="btn btn-sm btn-danger" onclick='deleteDoctor(${JSON.stringify(docName)})'>🗑️ حذف</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
         }
 
         function showAddDoctorModal() {
@@ -972,15 +980,43 @@
         }
 
         function editDoctor(doctorName) {
-            const doctor = allDoctors.find(d => d.name === doctorName);
-            if (!doctor) return;
+            // محاولة البحث في البيانات المحملة
+            let doctor = allDoctors.find(d => {
+                const name = typeof d === 'string' ? d : d.name;
+                return name === doctorName;
+            });
+            
+            // إذا لم نجد البيانات، نحمل من السيرفر
+            if (!doctor || typeof doctor === 'string') {
+                showAlert('⏳ جاري تحميل بيانات الطبيب...', 'success');
+                
+                fetch(BASE_URL + '?action=getDoctorSettings&doctorName=' + encodeURIComponent(doctorName))
+                    .then(res => res.json())
+                    .then(docData => {
+                        if (docData) {
+                            fillDoctorForm(doctorName, docData);
+                        } else {
+                            // إذا لم تتوفر البيانات، نستخدم القيم الافتراضية
+                            fillDoctorForm(doctorName, { name: doctorName });
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error loading doctor:', error);
+                        fillDoctorForm(doctorName, { name: doctorName });
+                    });
+                return;
+            }
 
+            fillDoctorForm(doctorName, doctor);
+        }
+
+        function fillDoctorForm(doctorName, doctor) {
             currentDoctorName = doctorName;
             document.getElementById('doctorModalTitle').textContent = 'تعديل بيانات الطبيب';
-            document.getElementById('doctorName').value = doctor.name;
-            document.getElementById('doctorSpecialty').value = doctor.specialty || '';
-            document.getElementById('doctorPhone').value = doctor.phone || '';
-            document.getElementById('doctorStatus').value = doctor.status;
+            document.getElementById('doctorName').value = doctorName;
+            document.getElementById('doctorSpecialty').value = doctor.specialty || doctor.التخصص || '';
+            document.getElementById('doctorPhone').value = doctor.phone || doctor.الهاتف || '';
+            document.getElementById('doctorStatus').value = doctor.status || doctor.الحالة || 'نشط';
 
             const settings = doctor.settings || {};
             
