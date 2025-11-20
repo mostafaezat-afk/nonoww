@@ -812,3 +812,346 @@
                     <button type="submit" class="btn btn-primary" style="flex:1;">💾 حفظ</button>
                     <button type="button" class="btn btn-danger" style="flex:1;" onclick="closeDoctorModal()">❌ إلغاء</button>
                 </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const BASE_URL = 'https://script.google.com/macros/s/AKfycbwSbETIi5LMZe8LTLSRDKxp8ovjOWGX3cWMYIj9kAInkps9G4qFH7hofhtn1o0fANf4/exec';
+        
+        let isLoggedIn = false;
+        let currentDoctorName = null;
+        let allDoctors = [];
+
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                document.getElementById('loadingScreen').style.display = 'none';
+            }, 1500);
+        });
+
+        function checkLogin() {
+            const password = document.getElementById('loginPassword').value;
+            if (!password) {
+                showAlert('❌ يرجى إدخال كلمة المرور', 'error');
+                return;
+            }
+            
+            fetch(BASE_URL + '?action=checkAdminPassword&password=' + encodeURIComponent(password))
+                .then(res => res.json())
+                .then(result => {
+                    if (result) {
+                        isLoggedIn = true;
+                        document.getElementById('loginModal').style.display = 'none';
+                        document.getElementById('mainContainer').classList.add('active');
+                        loadGeneralSettings();
+                        loadDoctors();
+                    } else {
+                        showAlert('❌ كلمة المرور غير صحيحة', 'error');
+                        document.getElementById('loginPassword').value = '';
+                    }
+                })
+                .catch(error => {
+                    showAlert('❌ خطأ في الاتصال', 'error');
+                    console.error('Login error:', error);
+                });
+        }
+
+        document.getElementById('loginPassword').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') checkLogin();
+        });
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById(tabName + 'Tab').classList.add('active');
+            if (tabName === 'doctors' && allDoctors.length === 0) loadDoctors();
+        }
+
+        function loadGeneralSettings() {
+            fetch(BASE_URL + '?action=getSettings')
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById('placeName').value = data['اسم المكان'] || '';
+                    document.getElementById('shortDesc').value = data['نبذة مختصرة'] || '';
+                    document.getElementById('logo').value = data['اللوجو'] || '🏥';
+                    document.getElementById('greeting').value = data['رسالة الترحيب'] || 'أهلاً وسهلاً';
+                    document.getElementById('greetingDesc').value = data['وصف الترحيب'] || 'جاري تحضير التطبيق...';
+                })
+                .catch(error => {
+                    console.error('Error loading settings:', error);
+                    showAlert('❌ خطأ في تحميل الإعدادات', 'error');
+                });
+        }
+
+        document.getElementById('generalForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            if (!isLoggedIn) {
+                showAlert('❌ يجب تسجيل الدخول أولاً', 'error');
+                return;
+            }
+
+            const settings = {
+                'اسم المكان': document.getElementById('placeName').value.trim(),
+                'نبذة مختصرة': document.getElementById('shortDesc').value.trim(),
+                'اللوجو': document.getElementById('logo').value.trim() || '🏥',
+                'رسالة الترحيب': document.getElementById('greeting').value.trim(),
+                'وصف الترحيب': document.getElementById('greetingDesc').value.trim()
+            };
+
+            const formData = new URLSearchParams();
+            formData.append('action', 'saveSettings');
+            formData.append('settings', JSON.stringify(settings));
+
+            fetch(BASE_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: formData.toString()
+            })
+            .then(res => res.json())
+            .then(response => {
+                if (response && response.success) {
+                    showAlert('✅ تم حفظ الإعدادات بنجاح', 'success');
+                } else {
+                    showAlert('❌ حدث خطأ أثناء الحفظ', 'error');
+                }
+            })
+            .catch(error => {
+                showAlert('❌ فشل الحفظ', 'error');
+                console.error('Save error:', error);
+            });
+        });
+
+        function loadDoctors() {
+            fetch(BASE_URL + '?action=getAllDoctorsForSettings')
+                .then(res => res.json())
+                .then(doctors => {
+                    allDoctors = doctors || [];
+                    displayDoctors(doctors);
+                })
+                .catch(error => {
+                    showAlert('❌ خطأ في تحميل الأطباء', 'error');
+                    console.error('Load doctors error:', error);
+                });
+        }
+
+        function displayDoctors(doctors) {
+            const tbody = document.getElementById('doctorsTableBody');
+            if (!doctors || doctors.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:2rem;color:#999;">لا يوجد أطباء</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = doctors.map(doc => `
+                <tr>
+                    <td>${doc.name}</td>
+                    <td>${doc.specialty || '-'}</td>
+                    <td>${doc.phone || '-'}</td>
+                    <td><span class="status-badge ${doc.status === 'نشط' ? 'status-active' : 'status-inactive'}">${doc.status}</span></td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn btn-sm btn-primary" onclick='editDoctor(${JSON.stringify(doc.name)})'>✏️ تعديل</button>
+                            <button class="btn btn-sm btn-danger" onclick='deleteDoctor(${JSON.stringify(doc.name)})'>🗑️ حذف</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function showAddDoctorModal() {
+            currentDoctorName = null;
+            document.getElementById('doctorModalTitle').textContent = 'إضافة طبيب جديد';
+            document.getElementById('doctorForm').reset();
+            document.getElementById('doctorStatus').value = 'نشط';
+            
+            document.querySelectorAll('.workday-check').forEach(cb => {
+                cb.checked = ['6','0','1','2','3','4'].includes(cb.value);
+            });
+            
+            document.getElementById('doctorModal').classList.add('active');
+        }
+
+        function editDoctor(doctorName) {
+            const doctor = allDoctors.find(d => d.name === doctorName);
+            if (!doctor) return;
+
+            currentDoctorName = doctorName;
+            document.getElementById('doctorModalTitle').textContent = 'تعديل بيانات الطبيب';
+            document.getElementById('doctorName').value = doctor.name;
+            document.getElementById('doctorSpecialty').value = doctor.specialty || '';
+            document.getElementById('doctorPhone').value = doctor.phone || '';
+            document.getElementById('doctorStatus').value = doctor.status;
+
+            const settings = doctor.settings || {};
+            
+            const workDaysArray = (settings.workDays || '6,0,1,2,3,4').split(',').map(d => d.trim());
+            document.querySelectorAll('.workday-check').forEach(checkbox => {
+                checkbox.checked = workDaysArray.includes(checkbox.value);
+            });
+            
+            document.getElementById('doctorStartHour').value = settings.startHour || '';
+            document.getElementById('doctorEndHour').value = settings.endHour || '';
+            document.getElementById('doctorDuration').value = settings.duration || '';
+            document.getElementById('doctorBreakStart').value = settings.breakStart || '';
+            document.getElementById('doctorBreakEnd').value = settings.breakEnd || '';
+            document.getElementById('doctorMinBooking').value = settings.minBooking || '';
+            document.getElementById('doctorMaxBooking').value = settings.maxBooking || '';
+
+            document.getElementById('doctorModal').classList.add('active');
+        }
+
+        function closeDoctorModal() {
+            document.getElementById('doctorModal').classList.remove('active');
+            currentDoctorName = null;
+        }
+
+        document.getElementById('doctorForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const selectedDays = Array.from(document.querySelectorAll('.workday-check:checked'))
+                .map(cb => cb.value)
+                .join(',');
+
+            const doctorData = {
+                name: document.getElementById('doctorName').value.trim(),
+                specialty: document.getElementById('doctorSpecialty').value.trim(),
+                phone: document.getElementById('doctorPhone').value.trim(),
+                status: document.getElementById('doctorStatus').value,
+                settings: {
+                    workDays: selectedDays || '6,0,1,2,3,4',
+                    startHour: document.getElementById('doctorStartHour').value.trim(),
+                    endHour: document.getElementById('doctorEndHour').value.trim(),
+                    duration: document.getElementById('doctorDuration').value.trim(),
+                    breakStart: document.getElementById('doctorBreakStart').value.trim(),
+                    breakEnd: document.getElementById('doctorBreakEnd').value.trim(),
+                    minBooking: document.getElementById('doctorMinBooking').value.trim(),
+                    maxBooking: document.getElementById('doctorMaxBooking').value.trim()
+                }
+            };
+
+            if (!doctorData.name) {
+                showAlert('❌ اسم الطبيب مطلوب', 'error');
+                return;
+            }
+
+            const formData = new URLSearchParams();
+            const action = currentDoctorName ? 'updateDoctorWithSettings' : 'addDoctorWithSettings';
+            formData.append('action', action);
+            if (currentDoctorName) {
+                formData.append('oldName', currentDoctorName);
+            }
+            formData.append('doctorData', JSON.stringify(doctorData));
+
+            fetch(BASE_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: formData.toString()
+            })
+            .then(res => res.json())
+            .then(response => {
+                if (response && response.success) {
+                    showAlert('✅ تم ' + (currentDoctorName ? 'تحديث' : 'إضافة') + ' الطبيب بنجاح', 'success');
+                    closeDoctorModal();
+                    setTimeout(() => loadDoctors(), 1000);
+                } else {
+                    showAlert('❌ ' + (response.message || 'حدث خطأ'), 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Save doctor error:', error);
+                showAlert('❌ فشل الاتصال بالخادم', 'error');
+            });
+        });
+
+        function deleteDoctor(doctorName) {
+            if (!confirm('هل أنت متأكد من حذف الطبيب: ' + doctorName + '؟')) return;
+
+            const formData = new URLSearchParams();
+            formData.append('action', 'deleteDoctor');
+            formData.append('doctorName', doctorName);
+
+            fetch(BASE_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: formData.toString()
+            })
+            .then(res => res.json())
+            .then(response => {
+                if (response && response.success) {
+                    showAlert('✅ تم حذف الطبيب', 'success');
+                    loadDoctors();
+                } else {
+                    showAlert('❌ ' + (response.message || 'حدث خطأ'), 'error');
+                }
+            })
+            .catch(error => {
+                showAlert('❌ فشل الحذف', 'error');
+                console.error('Delete error:', error);
+            });
+        }
+
+        document.getElementById('securityForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const currentPassword = document.getElementById('currentPassword').value.trim();
+            const newPassword = document.getElementById('newPassword').value.trim();
+            const confirmPassword = document.getElementById('confirmPassword').value.trim();
+
+            if (!currentPassword || !newPassword) {
+                showAlert('❌ يرجى ملء جميع الحقول', 'error');
+                return;
+            }
+
+            if (newPassword !== confirmPassword) {
+                showAlert('❌ كلمتا المرور غير متطابقتين', 'error');
+                return;
+            }
+
+            if (newPassword.length < 6) {
+                showAlert('❌ كلمة المرور يجب أن تكون 6 أحرف على الأقل', 'error');
+                return;
+            }
+
+            fetch(BASE_URL + '?action=checkAdminPassword&password=' + encodeURIComponent(currentPassword))
+                .then(res => res.json())
+                .then(isValid => {
+                    if (!isValid) {
+                        showAlert('❌ كلمة المرور الحالية غير صحيحة', 'error');
+                        return;
+                    }
+
+                    const formData = new URLSearchParams();
+                    formData.append('action', 'saveSettings');
+                    formData.append('settings', JSON.stringify({ 'كلمة المرور': newPassword }));
+
+                    return fetch(BASE_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: formData.toString()
+                    });
+                })
+                .then(res => res ? res.json() : null)
+                .then(response => {
+                    if (response && response.success) {
+                        showAlert('✅ تم تغيير كلمة المرور بنجاح', 'success');
+                        document.getElementById('securityForm').reset();
+                    } else if (response) {
+                        showAlert('❌ فشل تغيير كلمة المرور', 'error');
+                    }
+                })
+                .catch(error => {
+                    showAlert('❌ خطأ في العملية', 'error');
+                    console.error('Password change error:', error);
+                });
+        });
+
+        function showAlert(message, type) {
+            const alert = document.getElementById('alert');
+            alert.textContent = message;
+            alert.className = 'alert alert-' + type;
+            alert.style.display = 'block';
+            setTimeout(() => { alert.style.display = 'none'; }, 4000);
+        }
+    </script>
+</body>
+</html>
