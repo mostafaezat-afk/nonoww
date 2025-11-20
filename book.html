@@ -528,7 +528,14 @@ let slotsByDate = {};
 // تحميل إعدادات التطبيق
 async function loadAppSettings() {
   try {
-    const res = await fetch(BASE_URL + '?action=getSettings');
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 3000); // 3 ثوانٍ timeout
+    
+    const res = await fetch(BASE_URL + '?action=getSettings', {
+      signal: controller.signal
+    });
+    clearTimeout(timeoutId);
+    
     const settings = await res.json();
     if (settings && settings.appTitle) {
       document.getElementById('appTitle').textContent = settings.appTitle;
@@ -536,6 +543,7 @@ async function loadAppSettings() {
     }
   } catch(e) {
     console.log('استخدام الإعدادات الافتراضية');
+    // استمر في العمل حتى لو فشل تحميل الإعدادات
   }
 }
 
