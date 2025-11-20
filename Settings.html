@@ -817,7 +817,7 @@
     </div>
 
     <script>
-        const BASE_URL = 'https://script.google.com/macros/s/AKfycbxMjAsx0rjMu4LLC1m2cTBWV8l43qdEo2Dc-MSXoGnfpx9iFh9u-SEEvLjEaW-N-Ccu/exec';
+        const BASE_URL = 'https://script.google.com/macros/s/AKfycbwSbETIi5LMZe8LTLSRDKxp8ovjOWGX3cWMYIj9kAInkps9G4qFH7hofhtn1o0fANf4/exec';
         
         let isLoggedIn = false;
         let currentDoctorName = null;
@@ -888,52 +888,61 @@
                 });
         }
 
-        document.getElementById('generalForm').addEventListener('submit', function(e) {
+        document.getElementById('generalForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             if (!isLoggedIn) {
                 showAlert('❌ يجب تسجيل الدخول أولاً', 'error');
                 return;
             }
 
-            const settings = {
-                'اسم المكان': document.getElementById('placeName').value.trim(),
-                'نبذة مختصرة': document.getElementById('shortDesc').value.trim(),
-                'اللوجو': document.getElementById('logo').value.trim() || '🏥',
-                'رسالة الترحيب': document.getElementById('greeting').value.trim(),
-                'وصف الترحيب': document.getElementById('greetingDesc').value.trim()
-            };
-
-            console.log('Saving settings:', settings);
             showAlert('⏳ جاري الحفظ...', 'success');
 
-            // إنشاء URL مع المعاملات
-            const params = new URLSearchParams();
-            params.append('action', 'saveSettings');
-            params.append('اسم المكان', settings['اسم المكان']);
-            params.append('نبذة مختصرة', settings['نبذة مختصرة']);
-            params.append('اللوجو', settings['اللوجو']);
-            params.append('رسالة الترحيب', settings['رسالة الترحيب']);
-            params.append('وصف الترحيب', settings['وصف الترحيب']);
+            // حفظ كل إعداد على حدة
+            const settings = [
+                { key: 'اسم المكان', value: document.getElementById('placeName').value.trim() },
+                { key: 'نبذة مختصرة', value: document.getElementById('shortDesc').value.trim() },
+                { key: 'اللوجو', value: document.getElementById('logo').value.trim() || '🏥' },
+                { key: 'رسالة الترحيب', value: document.getElementById('greeting').value.trim() },
+                { key: 'وصف الترحيب', value: document.getElementById('greetingDesc').value.trim() }
+            ];
 
-            fetch(BASE_URL + '?' + params.toString(), {
-                method: 'GET',
-                redirect: 'follow'
-            })
-            .then(res => res.json())
-            .then(response => {
-                console.log('Save response:', response);
-                if (response && response.success) {
-                    showAlert('✅ تم حفظ الإعدادات بنجاح', 'success');
-                    // إعادة تحميل الإعدادات للتأكد
-                    setTimeout(() => loadGeneralSettings(), 500);
-                } else {
-                    showAlert('❌ حدث خطأ: ' + (response.message || 'فشل الحفظ'), 'error');
+            let successCount = 0;
+            let errorCount = 0;
+
+            for (const setting of settings) {
+                try {
+                    const params = new URLSearchParams();
+                    params.append('action', 'updateSetting');
+                    params.append('key', setting.key);
+                    params.append('value', setting.value);
+
+                    const res = await fetch(BASE_URL + '?' + params.toString(), {
+                        method: 'GET',
+                        redirect: 'follow'
+                    });
+                    
+                    const response = await res.json();
+                    
+                    if (response && response.success) {
+                        successCount++;
+                    } else {
+                        errorCount++;
+                        console.error('Failed to save:', setting.key, response);
+                    }
+                } catch (error) {
+                    errorCount++;
+                    console.error('Error saving:', setting.key, error);
                 }
-            })
-            .catch(error => {
-                console.error('Save error:', error);
-                showAlert('❌ فشل الحفظ - تحقق من الاتصال', 'error');
-            });
+            }
+
+            if (errorCount === 0) {
+                showAlert('✅ تم حفظ جميع الإعدادات بنجاح', 'success');
+                setTimeout(() => loadGeneralSettings(), 500);
+            } else if (successCount > 0) {
+                showAlert(`⚠️ تم حفظ ${successCount} من ${settings.length} إعدادات`, 'error');
+            } else {
+                showAlert('❌ فشل حفظ الإعدادات - تحقق من الاتصال', 'error');
+            }
         });
 
         function loadDoctors() {
@@ -1062,53 +1071,51 @@
                 .map(cb => cb.value)
                 .join(',');
 
-            const doctorData = {
-                name: document.getElementById('doctorName').value.trim(),
-                specialty: document.getElementById('doctorSpecialty').value.trim(),
-                phone: document.getElementById('doctorPhone').value.trim(),
-                status: document.getElementById('doctorStatus').value,
-                settings: {
-                    workDays: selectedDays || '6,0,1,2,3,4',
-                    startHour: document.getElementById('doctorStartHour').value.trim(),
-                    endHour: document.getElementById('doctorEndHour').value.trim(),
-                    duration: document.getElementById('doctorDuration').value.trim(),
-                    breakStart: document.getElementById('doctorBreakStart').value.trim(),
-                    breakEnd: document.getElementById('doctorBreakEnd').value.trim(),
-                    minBooking: document.getElementById('doctorMinBooking').value.trim(),
-                    maxBooking: document.getElementById('doctorMaxBooking').value.trim()
-                }
-            };
+            const doctorName = document.getElementById('doctorName').value.trim();
+            const doctorSpecialty = document.getElementById('doctorSpecialty').value.trim();
+            const doctorPhone = document.getElementById('doctorPhone').value.trim();
+            const doctorStatus = document.getElementById('doctorStatus').value;
 
-            if (!doctorData.name) {
+            if (!doctorName) {
                 showAlert('❌ اسم الطبيب مطلوب', 'error');
                 return;
             }
 
             showAlert('⏳ جاري الحفظ...', 'success');
 
-            const formData = new URLSearchParams();
-            const action = currentDoctorName ? 'updateDoctor' : 'addDoctor';
-            formData.append('action', action);
-            formData.append('name', doctorData.name);
-            formData.append('specialty', doctorData.specialty);
-            formData.append('phone', doctorData.phone);
-            formData.append('status', doctorData.status);
-            formData.append('settings', JSON.stringify(doctorData.settings));
+            const params = new URLSearchParams();
+            params.append('action', currentDoctorName ? 'updateDoctor' : 'addDoctor');
+            params.append('name', doctorName);
+            params.append('specialty', doctorSpecialty);
+            params.append('phone', doctorPhone);
+            params.append('status', doctorStatus);
+            params.append('workDays', selectedDays || '6,0,1,2,3,4');
+            params.append('startHour', document.getElementById('doctorStartHour').value.trim());
+            params.append('endHour', document.getElementById('doctorEndHour').value.trim());
+            params.append('duration', document.getElementById('doctorDuration').value.trim());
+            params.append('breakStart', document.getElementById('doctorBreakStart').value.trim());
+            params.append('breakEnd', document.getElementById('doctorBreakEnd').value.trim());
+            params.append('minBooking', document.getElementById('doctorMinBooking').value.trim());
+            params.append('maxBooking', document.getElementById('doctorMaxBooking').value.trim());
             
-            if (currentDoctorName && currentDoctorName !== doctorData.name) {
-                formData.append('oldName', currentDoctorName);
+            if (currentDoctorName && currentDoctorName !== doctorName) {
+                params.append('oldName', currentDoctorName);
             }
 
-            fetch(BASE_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: formData.toString(),
-                mode: 'no-cors'
+            fetch(BASE_URL + '?' + params.toString(), {
+                method: 'GET',
+                redirect: 'follow'
             })
-            .then(() => {
-                showAlert('✅ تم ' + (currentDoctorName ? 'تحديث' : 'إضافة') + ' الطبيب بنجاح', 'success');
-                closeDoctorModal();
-                setTimeout(() => loadDoctors(), 1500);
+            .then(res => res.json())
+            .then(response => {
+                console.log('Doctor save response:', response);
+                if (response && response.success) {
+                    showAlert('✅ تم ' + (currentDoctorName ? 'تحديث' : 'إضافة') + ' الطبيب بنجاح', 'success');
+                    closeDoctorModal();
+                    setTimeout(() => loadDoctors(), 1000);
+                } else {
+                    showAlert('❌ ' + (response.message || 'حدث خطأ'), 'error');
+                }
             })
             .catch(error => {
                 console.error('Save doctor error:', error);
@@ -1119,19 +1126,22 @@
         function deleteDoctor(doctorName) {
             if (!confirm('هل أنت متأكد من حذف الطبيب: ' + doctorName + '؟')) return;
 
-            const formData = new URLSearchParams();
-            formData.append('action', 'deleteDoctor');
-            formData.append('doctorName', doctorName);
+            const params = new URLSearchParams();
+            params.append('action', 'deleteDoctor');
+            params.append('doctorName', doctorName);
 
-            fetch(BASE_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: formData.toString(),
-                mode: 'no-cors'
+            fetch(BASE_URL + '?' + params.toString(), {
+                method: 'GET',
+                redirect: 'follow'
             })
-            .then(() => {
-                showAlert('✅ تم حذف الطبيب', 'success');
-                setTimeout(() => loadDoctors(), 1000);
+            .then(res => res.json())
+            .then(response => {
+                if (response && response.success) {
+                    showAlert('✅ تم حذف الطبيب', 'success');
+                    setTimeout(() => loadDoctors(), 1000);
+                } else {
+                    showAlert('❌ ' + (response.message || 'حدث خطأ'), 'error');
+                }
             })
             .catch(error => {
                 showAlert('❌ فشل الحذف', 'error');
@@ -1171,20 +1181,27 @@
                         return;
                     }
 
-                    const formData = new URLSearchParams();
-                    formData.append('action', 'updateSettings');
-                    formData.append('كلمة المرور', newPassword);
+                    const params = new URLSearchParams();
+                    params.append('action', 'updateSetting');
+                    params.append('key', 'كلمة المرور');
+                    params.append('value', newPassword);
 
-                    return fetch(BASE_URL, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                        body: formData.toString(),
-                        mode: 'no-cors'
+                    return fetch(BASE_URL + '?' + params.toString(), {
+                        method: 'GET',
+                        redirect: 'follow'
                     });
                 })
-                .then(() => {
-                    showAlert('✅ تم تغيير كلمة المرور بنجاح', 'success');
-                    document.getElementById('securityForm').reset();
+                .then(res => res ? res.json() : null)
+                .then(response => {
+                    if (response && response.success) {
+                        showAlert('✅ تم تغيير كلمة المرور بنجاح', 'success');
+                        document.getElementById('securityForm').reset();
+                    } else if (response === null) {
+                        // لم يتم التحقق من كلمة المرور
+                        return;
+                    } else {
+                        showAlert('❌ فشل تغيير كلمة المرور', 'error');
+                    }
                 })
                 .catch(error => {
                     showAlert('❌ خطأ في العملية', 'error');
