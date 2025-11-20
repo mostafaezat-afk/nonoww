@@ -19,14 +19,14 @@
       --border: #B8E5F3;
       --shadow: rgba(0, 169, 206, 0.15);
     }
-
+    
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
       -webkit-tap-highlight-color: transparent;
     }
-
+    
     html, body {
       width: 100%;
       min-height: 100vh;
@@ -36,7 +36,7 @@
       line-height: 1.6;
       overflow-x: hidden;
     }
-
+    
     /* Header الطبي */
     .medical-header {
       background: linear-gradient(135deg, var(--primary), var(--primary-light));
@@ -45,7 +45,7 @@
       box-shadow: 0 4px 20px var(--shadow);
       margin-bottom: 2rem;
     }
-
+    
     .medical-header h1 {
       color: white;
       font-size: 2rem;
@@ -55,7 +55,7 @@
       justify-content: center;
       gap: 0.5rem;
     }
-
+    
     .medical-icon {
       width: 40px;
       height: 40px;
@@ -66,19 +66,19 @@
       justify-content: center;
       font-size: 1.5rem;
     }
-
+    
     .medical-header p {
       color: rgba(255, 255, 255, 0.9);
       font-size: 1.1rem;
     }
-
+    
     /* Container رئيسي */
     .main-container {
       max-width: 1200px;
       margin: 0 auto;
       padding: 0 1rem 3rem;
     }
-
+    
     /* تصميم responsive للخطوات */
     .step {
       background: var(--card-bg);
@@ -89,12 +89,12 @@
       transition: all 0.3s ease;
       border: 3px solid var(--border);
     }
-
+    
     .step.active {
       display: block;
       animation: slideIn 0.4s ease;
     }
-
+    
     @keyframes slideIn {
       from {
         opacity: 0;
@@ -105,7 +105,7 @@
         transform: translateY(0);
       }
     }
-
+    
     h2 {
       text-align: center;
       color: var(--primary);
@@ -116,7 +116,7 @@
       justify-content: center;
       gap: 0.5rem;
     }
-
+    
     .step-indicator {
       background: var(--primary-light);
       color: white;
@@ -129,7 +129,7 @@
       font-weight: bold;
       font-size: 1.2rem;
     }
-
+    
     label {
       display: block;
       margin-bottom: 0.8rem;
@@ -140,7 +140,7 @@
       align-items: center;
       gap: 0.5rem;
     }
-
+    
     input[type="text"], input[type="tel"] {
       width: 100%;
       padding: 1.2rem 1.5rem;
@@ -153,14 +153,14 @@
       margin-bottom: 1rem;
       transition: all 0.3s ease;
     }
-
+    
     input[type="text"]:focus, input[type="tel"]:focus {
       border-color: var(--primary);
       background: white;
       outline: none;
       box-shadow: 0 0 0 4px rgba(0, 169, 206, 0.1);
     }
-
+    
     #phoneError {
       font-size: 1.1rem;
       color: var(--accent);
@@ -171,7 +171,7 @@
       border-radius: 8px;
       border-right: 4px solid var(--accent);
     }
-
+    
     /* أزرار الأطباء */
     #doctorsContainer {
       display: grid;
@@ -179,7 +179,7 @@
       gap: 1rem;
       margin-bottom: 2rem;
     }
-
+    
     #doctorsContainer button {
       background: linear-gradient(135deg, var(--secondary), var(--primary-light));
       padding: 1.2rem 1rem;
@@ -195,25 +195,25 @@
       position: relative;
       overflow: hidden;
     }
-
+    
     #doctorsContainer button::before {
       content: '🩺';
       display: block;
       font-size: 2rem;
       margin-bottom: 0.3rem;
     }
-
+    
     #doctorsContainer button:hover {
       transform: translateY(-3px);
       box-shadow: 0 8px 20px var(--shadow);
     }
-
+    
     #doctorsContainer button.selected {
       background: linear-gradient(135deg, var(--success), #81C784);
       box-shadow: 0 8px 25px rgba(77, 212, 172, 0.4);
       transform: translateY(-3px);
     }
-
+    
     #doctorsContainer button.selected::after {
       content: '✓';
       position: absolute;
@@ -230,7 +230,7 @@
       font-size: 1rem;
       font-weight: bold;
     }
-
+    
     /* أزرار الأيام والأوقات */
     #daysContainer, #timesContainer {
       display: grid;
@@ -238,7 +238,7 @@
       gap: 1rem;
       margin-bottom: 2rem;
     }
-
+    
     #daysContainer button, #timesContainer button {
       background: linear-gradient(135deg, #B2DFDB, var(--secondary));
       padding: 1rem;
@@ -252,12 +252,12 @@
       transition: all 0.3s ease;
       box-shadow: 0 3px 10px var(--shadow);
     }
-
+    
     #daysContainer button:hover, #timesContainer button:hover {
       transform: translateY(-2px);
       box-shadow: 0 6px 16px var(--shadow);
     }
-
+    
     #daysContainer button.selected, #timesContainer button.selected {
       background: linear-gradient(135deg, var(--success), #81C784);
       color: white;
@@ -265,7 +265,7 @@
       box-shadow: 0 6px 20px rgba(77, 212, 172, 0.4);
       transform: translateY(-2px);
     }
-
+    
     /* أزرار التنقل */
     .button-group {
       display: flex;
@@ -274,7 +274,7 @@
       flex-wrap: wrap;
       margin-top: 2rem;
     }
-
+    
     button {
       background: linear-gradient(135deg, var(--primary), var(--primary-light));
       border: none;
@@ -289,26 +289,26 @@
       font-family: 'Cairo', sans-serif;
       box-shadow: 0 4px 15px var(--shadow);
     }
-
+    
     button:disabled {
       opacity: 0.5;
       cursor: not-allowed;
       transform: none !important;
     }
-
+    
     button:hover:not(:disabled) {
       transform: translateY(-3px);
       box-shadow: 0 8px 25px var(--shadow);
     }
-
+    
     #backToStep1Btn {
       background: linear-gradient(135deg, #78909C, #90A4AE);
     }
-
+    
     #confirmBookingBtn {
       background: linear-gradient(135deg, var(--success), #81C784);
     }
-
+    
     /* نافذة التأكيد */
     .confirmation-modal {
       display: none;
@@ -323,17 +323,17 @@
       justify-content: center;
       backdrop-filter: blur(5px);
     }
-
+    
     .confirmation-modal.active {
       display: flex;
       animation: fadeIn 0.3s ease;
     }
-
+    
     @keyframes fadeIn {
       from { opacity: 0; }
       to { opacity: 1; }
     }
-
+    
     .confirmation-content {
       background: white;
       border-radius: 24px;
@@ -344,7 +344,7 @@
       box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
       animation: scaleIn 0.3s ease;
     }
-
+    
     @keyframes scaleIn {
       from {
         opacity: 0;
@@ -355,7 +355,7 @@
         transform: scale(1);
       }
     }
-
+    
     .success-icon {
       width: 80px;
       height: 80px;
@@ -368,18 +368,18 @@
       font-size: 3rem;
       animation: bounce 0.6s ease;
     }
-
+    
     @keyframes bounce {
       0%, 100% { transform: scale(1); }
       50% { transform: scale(1.1); }
     }
-
+    
     .confirmation-content h3 {
       color: var(--primary);
       font-size: 2rem;
       margin-bottom: 1.5rem;
     }
-
+    
     .booking-details {
       background: var(--background);
       padding: 1.5rem;
@@ -388,7 +388,7 @@
       text-align: right;
       border: 2px solid var(--border);
     }
-
+    
     .booking-details p {
       margin: 0.7rem 0;
       font-size: 1.2rem;
@@ -397,47 +397,47 @@
       justify-content: space-between;
       align-items: center;
     }
-
+    
     .booking-details strong {
       color: var(--primary);
       font-weight: 700;
     }
-
+    
     .close-modal-btn {
       background: linear-gradient(135deg, var(--primary), var(--primary-light));
       margin-top: 1rem;
     }
-
+    
     /* Desktop Layout */
     @media (min-width: 768px) {
       .main-container {
         padding: 2rem;
       }
-
+      
       .step {
         max-width: 900px;
         margin: 0 auto;
         padding: 3rem;
       }
-
+      
       #doctorsContainer {
         grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
       }
-
+      
       #daysContainer, #timesContainer {
         grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
       }
     }
-
+    
     @media (max-width: 767px) {
       .medical-header h1 {
         font-size: 1.5rem;
       }
-
+      
       h2 {
         font-size: 1.4rem;
       }
-
+      
       .step {
         border-radius: 16px;
         padding: 1.5rem 1rem;
@@ -462,7 +462,7 @@
       <span class="step-indicator">1</span>
       اختر الطبيب وأدخل بياناتك
     </h2>
-
+    
     <label>🩺 اختر الطبيب</label>
     <div id="doctorsContainer">جارٍ التحميل...</div>
 
@@ -504,15 +504,16 @@
     <div class="success-icon">✓</div>
     <h3>تم الحجز بنجاح!</h3>
     <p style="color: var(--text-secondary); margin-bottom: 1rem;">تم تأكيد موعدك الطبي</p>
-
+    
     <div class="booking-details" id="bookingDetails"></div>
-
+    
     <button class="close-modal-btn" onclick="closeConfirmation()">حسناً</button>
   </div>
 </div>
 
 <script>
 const BASE_URL = 'https://script.google.com/macros/s/AKfycbxMjAsx0rjMu4LLC1m2cTBWV8l43qdEo2Dc-MSXoGnfpx9iFh9u-SEEvLjEaW-N-Ccu/exec';
+
 // متغيرات التخزين المؤقت لتسريع الأداء
 let doctorsCache = null;
 let slotsCache = {};
@@ -529,12 +530,12 @@ async function loadAppSettings() {
   try {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 3000); // 3 ثوانٍ timeout
-
+    
     const res = await fetch(BASE_URL + '?action=getSettings', {
       signal: controller.signal
     });
     clearTimeout(timeoutId);
-
+    
     const settings = await res.json();
     if (settings && settings.appTitle) {
       document.getElementById('appTitle').textContent = settings.appTitle;
@@ -649,7 +650,7 @@ async function loadAvailableSlots(doctorName) {
 
     const res = await fetch(BASE_URL + `?action=getAvailableSlotsForDoctor&doctorName=${encodeURIComponent(doctorName)}`);
     const slots = await res.json();
-
+    
     slotsCache[doctorName] = slots; // حفظ في الذاكرة المؤقتة
     processAndRenderSlots(slots);
   } catch(e) {
@@ -785,7 +786,7 @@ function showConfirmation() {
   const dayNum = date.getDate();
   const monthName = date.toLocaleDateString('ar-EG', { month: 'long' });
   const year = date.getFullYear();
-
+  
   const details = `
     <p><strong>الطبيب:</strong> <span>د. ${selectedDoctor}</span></p>
     <p><strong>الاسم:</strong> <span>${selectedName}</span></p>
@@ -793,14 +794,14 @@ function showConfirmation() {
     <p><strong>التاريخ:</strong> <span>${dayName} ${dayNum} ${monthName} ${year}</span></p>
     <p><strong>الوقت:</strong> <span>${selectedTime}</span></p>
   `;
-
+  
   document.getElementById('bookingDetails').innerHTML = details;
   document.getElementById('confirmationModal').classList.add('active');
 }
 
 function closeConfirmation() {
   document.getElementById('confirmationModal').classList.remove('active');
-
+  
   // إعادة تعيين القيم
   selectedDoctor = null;
   selectedName = '';
@@ -821,7 +822,7 @@ function closeConfirmation() {
 
   document.getElementById('step2').classList.remove('active');
   document.getElementById('step1').classList.add('active');
-
+  
   // استخدام الأطباء المحفوظين مسبقاً
   if (doctorsCache) {
     renderDoctors(doctorsCache);
