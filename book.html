@@ -767,7 +767,9 @@ function renderTimesForDay(dateStr) {
     const btn = document.createElement('button');
     btn.type = 'button';
     btn.textContent = slot.time;
-    btn.onclick = () => selectTime(slot.time, btn);
+    btn.addEventListener('click', function() {
+      selectTime(slot.time, this);
+    });
     container.appendChild(btn);
   });
 }
@@ -780,7 +782,7 @@ function selectTime(time, btn) {
   btn.classList.add('selected');
 }
 
-document.getElementById('confirmBookingBtn').addEventListener('click', async () => {
+document.getElementById('confirmBookingBtn').addEventListener('click', async function() {
   if (!selectedTime || !selectedDay || !selectedDoctor || !selectedName || !selectedPhone) {
     alert('يرجى إكمال جميع البيانات واختيار الموعد');
     return;
@@ -1347,7 +1349,7 @@ function closeConfirmation() {
 </div>
 
 <script>
-const BASE_URL = 'https://script.google.com/macros/s/AKfycbwSbETIi5LMZe8LTLSRDKxp8ovjOWGX3cWMYIj9kAInkps9G4qFH7hofhtn1o0fANf4/exec';
+const BASE_URL = 'https://script.google.com/macros/s/AKfycbxduonFydVRyBGbAPUU6zyBtOc8zF_pGCBv4WBj0aUP7NMwpTrrQtV-rNvSSp8-qO9S/exec';
 
 let selectedDoctor = null;
 let selectedName = '';
@@ -1359,17 +1361,40 @@ let slotsByDate = {};
 async function loadDoctors() {
   try {
     const res = await fetch(BASE_URL + '?action=getDoctors');
-    const doctors = await res.json();
+    const data = await res.json();
+    
+    console.log('Doctors response:', data); // للتصحيح
+    
+    // التعامل مع صيغ مختلفة من الاستجابة
+    let doctors = [];
+    if (Array.isArray(data)) {
+      doctors = data;
+    } else if (data.success && Array.isArray(data.doctors)) {
+      doctors = data.doctors;
+    } else if (data.success && Array.isArray(data.data)) {
+      doctors = data.data;
+    }
+    
     const container = document.getElementById('doctorsContainer');
+    
+    if (!doctors || doctors.length === 0) {
+      container.innerHTML = '<p style="text-align:center;color:#999;">لا يوجد أطباء متاحين حالياً</p>';
+      return;
+    }
+    
     container.innerHTML = '';
     doctors.forEach(doc => {
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.textContent = doc.name;
-      btn.onclick = () => selectDoctor(btn, doc.name);
-      container.appendChild(btn);
+      const docName = typeof doc === 'string' ? doc : (doc.name || doc.اسم || '');
+      if (docName) {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.textContent = docName;
+        btn.onclick = () => selectDoctor(btn, docName);
+        container.appendChild(btn);
+      }
     });
   } catch(e) {
+    console.error('Load doctors error:', e);
     document.getElementById('doctorsContainer').innerHTML = '<p style="text-align:center;color:#999;">خطأ في تحميل قائمة الأطباء</p>';
   }
 }
@@ -1441,9 +1466,21 @@ async function loadAvailableSlots(doctorName) {
 
   try {
     const res = await fetch(BASE_URL + `?action=getAvailableSlotsForDoctor&doctorName=${encodeURIComponent(doctorName)}`);
-    const slots = await res.json();
+    const data = await res.json();
+    
+    console.log('Slots response:', data); // للتصحيح
+    
+    // التعامل مع صيغ مختلفة من الاستجابة
+    let slots = [];
+    if (Array.isArray(data)) {
+      slots = data;
+    } else if (data.success && Array.isArray(data.slots)) {
+      slots = data.slots;
+    } else if (data.success && Array.isArray(data.data)) {
+      slots = data.data;
+    }
 
-    if (!slots.length) {
+    if (!slots || slots.length === 0) {
       daysContainer.innerHTML = '<p style="text-align:center;color:#999;">لا توجد مواعيد متاحة حالياً.</p>';
       timesContainer.innerHTML = '';
       return;
@@ -1452,6 +1489,7 @@ async function loadAvailableSlots(doctorName) {
     slotsByDate = processSlots(slots);
     renderDays();
   } catch(e) {
+    console.error('Load slots error:', e);
     daysContainer.innerHTML = '<p style="text-align:center;color:#999;">خطأ في تحميل المواعيد.</p>';
     timesContainer.innerHTML = '';
   }
@@ -1488,7 +1526,9 @@ function renderDays() {
     const btn = document.createElement('button');
     btn.type = 'button';
     btn.textContent = `${dayName}\n${dayNum} ${monthName}`;
-    btn.onclick = () => selectDay(dateStr, btn);
+    btn.addEventListener('click', function() {
+      selectDay(dateStr, this);
+    });
     container.appendChild(btn);
   });
   document.getElementById('timesContainer').textContent = 'يُرجى اختيار اليوم أولاً';
@@ -1608,8 +1648,6 @@ function closeConfirmation() {
   
   loadDoctors();
 }
-
-loadDoctors();
 </script>
 
 </body>
