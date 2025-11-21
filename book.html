@@ -450,9 +450,9 @@
 <div class="medical-header">
   <h1>
     <span class="medical-icon">🏥</span>
-    نظام حجز المواعيد الطبية
+    <span id="headerTitle">نظام حجز المواعيد الطبية</span>
   </h1>
-  <p>احجز موعدك مع أفضل الأطباء</p>
+  <p id="headerSubtitle">احجز موعدك مع أفضل الأطباء</p>
 </div>
 
 <div class="main-container">
@@ -520,6 +520,27 @@ let selectedPhone = '';
 let selectedDay = null;
 let selectedTime = null;
 let slotsByDate = {};
+let systemSettings = {};
+
+// تحميل إعدادات النظام من الشيت
+async function loadSystemSettings() {
+  try {
+    const res = await fetch(BASE_URL + '?action=getSettings');
+    const settings = await res.json();
+    
+    // تطبيق الإعدادات على الواجهة
+    if (settings.headerTitle) {
+      document.getElementById('headerTitle').textContent = settings.headerTitle;
+    }
+    if (settings.headerSubtitle) {
+      document.getElementById('headerSubtitle').textContent = settings.headerSubtitle;
+    }
+    
+    systemSettings = settings;
+  } catch(e) {
+    console.error('خطأ في تحميل إعدادات النظام:', e);
+  }
+}
 
 async function loadDoctors() {
   try {
@@ -774,7 +795,13 @@ function closeConfirmation() {
   loadDoctors();
 }
 
-loadDoctors();
+// تحميل الإعدادات والأطباء عند بدء التطبيق
+async function initialize() {
+  await loadSystemSettings();
+  await loadDoctors();
+}
+
+initialize();
 </script>
 
 </body>
