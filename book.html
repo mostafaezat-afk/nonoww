@@ -6,18 +6,18 @@
   <title>حجز موعد طبي</title>
   <style>
     :root {
-      --primary: #00897B;
-      --primary-light: #4DB6AC;
-      --primary-dark: #00695C;
-      --secondary: #26A69A;
+      --primary: #00BCD4;
+      --primary-light: #4DD0E1;
+      --primary-dark: #0097A7;
+      --secondary: #00ACC1;
       --accent: #FF5252;
-      --success: #66BB6A;
-      --background: #E8F5E9;
+      --success: #00BCD4;
+      --background: #E0F7FA;
       --card-bg: #FFFFFF;
-      --text-primary: #1B5E20;
-      --text-secondary: #558B2F;
-      --border: #C8E6C9;
-      --shadow: rgba(0, 105, 92, 0.15);
+      --text-primary: #006064;
+      --text-secondary: #00838F;
+      --border: #B2EBF2;
+      --shadow: rgba(0, 151, 167, 0.15);
     }
     
     * {
@@ -31,7 +31,7 @@
       width: 100%;
       min-height: 100vh;
       font-family: 'Cairo', 'Segoe UI', Tahoma, sans-serif;
-      background: linear-gradient(135deg, #E8F5E9 0%, #B9F6CA 100%);
+      background: linear-gradient(135deg, #E0F7FA 0%, #B2EBF2 100%);
       color: var(--text-primary);
       line-height: 1.6;
       overflow-x: hidden;
@@ -148,7 +148,7 @@
       border: 2px solid var(--border);
       border-radius: 16px;
       font-family: inherit;
-      background: #F1F8E9;
+      background: #E0F7FA;
       color: var(--text-primary);
       margin-bottom: 1rem;
       transition: all 0.3s ease;
@@ -209,8 +209,8 @@
     }
     
     #doctorsContainer button.selected {
-      background: linear-gradient(135deg, var(--success), #81C784);
-      box-shadow: 0 8px 25px rgba(102, 187, 106, 0.4);
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      box-shadow: 0 8px 25px rgba(0, 188, 212, 0.4);
       transform: translateY(-3px);
     }
     
@@ -220,7 +220,7 @@
       top: 5px;
       left: 5px;
       background: white;
-      color: var(--success);
+      color: var(--primary);
       width: 25px;
       height: 25px;
       border-radius: 50%;
@@ -240,7 +240,7 @@
     }
     
     #daysContainer button, #timesContainer button {
-      background: linear-gradient(135deg, #B2DFDB, var(--secondary));
+      background: linear-gradient(135deg, #B2EBF2, var(--secondary));
       padding: 1rem;
       font-size: 1.4rem;
       font-weight: 600;
@@ -259,10 +259,10 @@
     }
     
     #daysContainer button.selected, #timesContainer button.selected {
-      background: linear-gradient(135deg, var(--success), #81C784);
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
       color: white;
-      border-color: var(--success);
-      box-shadow: 0 6px 20px rgba(102, 187, 106, 0.4);
+      border-color: var(--primary);
+      box-shadow: 0 6px 20px rgba(0, 188, 212, 0.4);
       transform: translateY(-2px);
     }
     
@@ -306,7 +306,7 @@
     }
     
     #confirmBookingBtn {
-      background: linear-gradient(135deg, var(--success), #81C784);
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
     }
     
     /* نافذة التأكيد */
@@ -359,7 +359,7 @@
     .success-icon {
       width: 80px;
       height: 80px;
-      background: linear-gradient(135deg, var(--success), #81C784);
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
       border-radius: 50%;
       display: flex;
       align-items: center;
