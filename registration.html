@@ -184,53 +184,48 @@
         </div>
     </div>
 
-    <script>
-        const API_URL = 'https://script.google.com/macros/s/AKfycbz2MbLUvSEwGQdwVKYBm1a0FCyo_yNMdFHjgKIoYq5RDL0pXrP1mjhFsSl1ftXl0nFSug/exec';
+  const API_URL = 'https://script.google.com/macros/s/AKfycbymd3Ae6XsIT2bEZlBgwYAiodvK53N5CUTQUEIRHOfmXlY77wWsSomF_3WVKSE2sRJZBw/exec';
 
-        document.getElementById('registrationForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
+document.getElementById('registrationForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
 
-            const btn = document.querySelector('.btn-submit');
-            const originalText = btn.innerHTML;
-            btn.disabled = true;
-            btn.innerHTML = '⏳ جاري التسجيل...';
+  const btn = document.querySelector('.btn-submit');
+  const originalText = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = '⏳ جاري التسجيل...';
 
-            const formData = {
-                id: Date.now(),
-                name: document.getElementById('name').value.trim(),
-                phone: document.getElementById('phone').value.trim(),
-                address: document.getElementById('address').value.trim(),
-                expertise: document.getElementById('expertise').value,
-                notes: document.getElementById('notes').value.trim(),
-                registrationDate: new Date().toLocaleDateString('ar-EG'),
-                status: 'قيد الانتظار'
-            };
+  const formData = new URLSearchParams();
+  formData.append('id', Date.now().toString());
+  formData.append('name', document.getElementById('name').value.trim());
+  formData.append('phone', document.getElementById('phone').value.trim());
+  formData.append('address', document.getElementById('address').value.trim());
+  formData.append('expertise', document.getElementById('expertise').value);
+  formData.append('notes', document.getElementById('notes').value.trim());
+  formData.append('registrationDate', new Date().toLocaleDateString('ar-EG'));
+  formData.append('status', 'قيد الانتظار');
 
-            try {
-                const res = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(formData)
-                });
-                const result = await res.json();
+  try {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: formData.toString()
+    });
+    const result = await res.json();
 
-                if (result.status === 'success') {
-                    const msg = document.getElementById('successMessage');
-                    msg.style.display = 'block';
-                    msg.textContent = '✨ ' + (result.message || 'تم التسجيل بنجاح!');
-                    this.reset();
-                    setTimeout(() => msg.style.display = 'none', 4000);
-                } else {
-                    alert('حدث خطأ أثناء التسجيل: ' + (result.message || 'خطأ غير معروف'));
-                }
-            } catch (err) {
-                alert('عذراً، حدث خطأ أثناء التسجيل: ' + err.message);
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = originalText;
-            }
-        });
-    </script>
-</body>
-</html>
+    if (result.success) {
+      const msg = document.getElementById('successMessage');
+      msg.style.display = 'block';
+      msg.textContent = '✨ ' + (result.message || 'تم التسجيل بنجاح!');
+      this.reset();
+      setTimeout(() => msg.style.display = 'none', 4000);
+    } else {
+      alert('حدث خطأ أثناء التسجيل: ' + (result.message || 'خطأ غير معروف'));
+    }
+  } catch (err) {
+    alert('خطأ في الاتصال بالخادم: ' + err.message);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = originalText;
+  }
+});
 
