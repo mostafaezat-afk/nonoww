@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>صفحة الريكويست - طلبات الانضمام</title>
+    <title>صفحة الطلبات المسجلة - ملتقى خبراء أوسيم والوراق</title>
     <style>
         * {
             margin: 0;
@@ -250,28 +250,6 @@
             margin-bottom: 20px;
         }
 
-        .loading {
-            text-align: center;
-            padding: 40px;
-            color: white;
-            font-size: 1.2em;
-        }
-
-        .loading-spinner {
-            border: 4px solid rgba(255,255,255,0.3);
-            border-top: 4px solid white;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 1s linear infinite;
-            margin: 20px auto;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
         @media (max-width: 768px) {
             .header h1 {
                 font-size: 1.8em;
@@ -289,7 +267,7 @@
             <div class="logo-container">
                 <img src="https://i.imgur.com/placeholder.png" alt="شعار ملتقى خبراء أوسيم والوراق">
             </div>
-            <h1>📋 صفحة الريكويست</h1>
+            <h1>📋 صفحة الطلبات المسجلة</h1>
             <h2>طلبات الانضمام للمبادرة</h2>
             <p>ملتقى خبراء أوسيم والوراق - التنمية مسئولية الجميع</p>
         </div>
@@ -333,12 +311,7 @@
             </div>
         </div>
 
-        <div id="loadingIndicator" class="loading">
-            <div class="loading-spinner"></div>
-            <p>جاري تحميل الطلبات...</p>
-        </div>
-
-        <div class="requests-grid" id="requestsGrid" style="display: none;">
+        <div class="requests-grid" id="requestsGrid">
         </div>
     </div>
 
@@ -347,30 +320,27 @@
         let currentFilter = 'all';
         let searchQuery = '';
 
-        async function loadRequests() {
-            const loadingIndicator = document.getElementById('loadingIndicator');
-            const requestsGrid = document.getElementById('requestsGrid');
-            
-            loadingIndicator.style.display = 'block';
-            requestsGrid.style.display = 'none';
-
+        function loadRequests() {
             try {
-                const result = await window.storage.get('membership-requests', true);
+                // قراءة الطلبات من localStorage
+                const storedRequests = localStorage.getItem('membership-requests');
                 
-                if (result && result.value) {
-                    allRequests = JSON.parse(result.value);
+                if (storedRequests) {
+                    allRequests = JSON.parse(storedRequests);
                 } else {
                     allRequests = [];
                 }
 
                 updateStats();
                 displayRequests();
-                
-                loadingIndicator.style.display = 'none';
-                requestsGrid.style.display = 'grid';
             } catch (error) {
                 console.error('خطأ في تحميل الطلبات:', error);
-                loadingIndicator.innerHTML = '<div class="no-requests"><div class="no-requests-icon">⚠️</div><p>حدث خطأ في تحميل الطلبات</p></div>';
+                document.getElementById('requestsGrid').innerHTML = `
+                    <div class="no-requests">
+                        <div class="no-requests-icon">⚠️</div>
+                        <p>حدث خطأ في تحميل الطلبات</p>
+                    </div>
+                `;
             }
         }
 
@@ -405,7 +375,7 @@
                 container.innerHTML = `
                     <div class="no-requests">
                         <div class="no-requests-icon">📭</div>
-                        <h3>لا توجد طلبات</h3>
+                        <h3>لا توجد طلبات مسجلة</h3>
                         <p>لا توجد طلبات انضمام مطابقة للبحث حالياً</p>
                     </div>
                 `;
@@ -449,8 +419,8 @@
         // تحميل الطلبات عند فتح الصفحة
         loadRequests();
 
-        // تحديث تلقائي كل 30 ثانية
-        setInterval(loadRequests, 30000);
+        // تحديث تلقائي كل 10 ثوانٍ
+        setInterval(loadRequests, 10000);
     </script>
 </body>
 </html>
