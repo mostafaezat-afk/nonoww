@@ -262,7 +262,7 @@
     </div>
 
     <script>
-        document.getElementById('registrationForm').addEventListener('submit', async function(e) {
+        document.getElementById('registrationForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
             const formData = {
@@ -277,38 +277,30 @@
             };
 
             try {
+                // قراءة الطلبات الموجودة من localStorage
                 let requests = [];
+                const storedRequests = localStorage.getItem('membership-requests');
                 
-                // محاولة قراءة الطلبات الموجودة
-                try {
-                    const existingRequests = await window.storage.get('membership-requests', true);
-                    if (existingRequests && existingRequests.value) {
-                        requests = JSON.parse(existingRequests.value);
-                    }
-                } catch (readError) {
-                    // إذا لم يوجد بيانات سابقة، نبدأ بمصفوفة فارغة
-                    console.log('لا توجد بيانات سابقة، سيتم إنشاء قائمة جديدة');
-                    requests = [];
+                if (storedRequests) {
+                    requests = JSON.parse(storedRequests);
                 }
                 
                 // إضافة الطلب الجديد
                 requests.push(formData);
                 
-                // حفظ البيانات
-                const result = await window.storage.set('membership-requests', JSON.stringify(requests), true);
+                // حفظ البيانات في localStorage
+                localStorage.setItem('membership-requests', JSON.stringify(requests));
                 
-                if (result) {
-                    const successMsg = document.getElementById('successMessage');
-                    successMsg.style.display = 'block';
-                    
-                    setTimeout(() => {
-                        successMsg.style.display = 'none';
-                    }, 3000);
+                // عرض رسالة النجاح
+                const successMsg = document.getElementById('successMessage');
+                successMsg.style.display = 'block';
+                
+                setTimeout(() => {
+                    successMsg.style.display = 'none';
+                }, 3000);
 
-                    this.reset();
-                } else {
-                    throw new Error('فشل في حفظ البيانات');
-                }
+                // إعادة تعيين النموذج
+                this.reset();
             } catch (error) {
                 console.error('خطأ في حفظ البيانات:', error);
                 alert('عذراً، حدث خطأ أثناء التسجيل. الرجاء المحاولة مرة أخرى.');
@@ -316,5 +308,4 @@
         });
     </script>
 </body>
-
 </html>
