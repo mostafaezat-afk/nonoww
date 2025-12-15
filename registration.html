@@ -5,20 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ملتقى خبراء أوسيم والوراق - التنمية مسئولية الجميع</title>
     <style>
-        /* كل الـ CSS الأصلي يبقى كما هو تماماً */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #1a5f4a 0%, #2d8659 50%, #1a5f4a 100%);
             min-height: 100vh;
             padding: 20px;
         }
-
         .container {
             max-width: 800px;
             margin: 0 auto;
@@ -27,179 +20,74 @@
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
             overflow: hidden;
         }
-
         .header {
-            background: linear-gradient(135deg, #0f3d5c 0%, #1a5f4a 100%);
+            background: linear-gradient(135deg, #0f3d5c 0%, #1a5ف4a 100%);
             color: white;
             padding: 30px 30px 40px;
             text-align: center;
             position: relative;
         }
-
-        .logo-container {
-            margin-bottom: 20px;
-        }
-
+        .logo-container { margin-bottom: 20px; }
         .logo-container img {
-            max-width: 200px;
-            height: auto;
-            border-radius: 50%;
+            max-width: 200px; height: auto; border-radius: 50%;
             border: 5px solid rgba(255,255,255,0.3);
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            background: white;
-            padding: 10px;
+            background: white; padding: 10px;
         }
-
         .header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
             background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="0.5"/></svg>');
             opacity: 0.3;
         }
+        .header h1 { font-size: 2.2em; margin-bottom: 15px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); position: relative; }
+        .header h2 { font-size: 1.4em; font-weight: 500; color: #d4af37; margin-bottom: 10px; position: relative; }
+        .header p { font-size: 1.1em; opacity: 0.95; position: relative; }
 
-        .header h1 {
-            font-size: 2.2em;
-            margin-bottom: 15px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-            position: relative;
-        }
-
-        .header h2 {
-            font-size: 1.4em;
-            font-weight: 500;
-            color: #d4af37;
-            margin-bottom: 10px;
-            position: relative;
-        }
-
-        .header p {
-            font-size: 1.1em;
-            opacity: 0.95;
-            position: relative;
-        }
-
-        .form-section {
-            padding: 40px 30px;
-        }
-
+        .form-section { padding: 40px 30px; }
         .intro-text {
-            text-align: center;
-            margin-bottom: 35px;
-            padding: 20px;
+            text-align: center; margin-bottom: 35px; padding: 20px;
             background: linear-gradient(135deg, #f0f9f6 0%, #e8f5f1 100%);
-            border-radius: 15px;
-            border-right: 5px solid #2d8659;
+            border-radius: 15px; border-right: 5px solid #2d8659;
         }
+        .intro-text h3 { color: #1a5f4a; font-size: 1.4em; margin-bottom: 10px; }
+        .intro-text p { color: #555; line-height: 1.8; font-size: 1.05em; }
 
-        .intro-text h3 {
-            color: #1a5f4a;
-            font-size: 1.4em;
-            margin-bottom: 10px;
-        }
-
-        .intro-text p {
-            color: #555;
-            line-height: 1.8;
-            font-size: 1.05em;
-        }
-
-        .form-group {
-            margin-bottom: 25px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: #333;
-            font-weight: 600;
-            font-size: 1.05em;
-        }
-
-        label span.required {
-            color: #e74c3c;
-            margin-right: 3px;
-        }
+        .form-group { margin-bottom: 25px; }
+        label { display: block; margin-bottom: 8px; color: #333; font-weight: 600; font-size: 1.05em; }
+        label span.required { color: #e74c3c; margin-right: 3px; }
 
         input, textarea, select {
-            width: 100%;
-            padding: 14px;
-            border: 2px solid #ddd;
-            border-radius: 10px;
-            font-size: 1em;
-            font-family: inherit;
-            transition: all 0.3s;
-            background: white;
+            width: 100%; padding: 14px; border: 2px solid #ddd; border-radius: 10px;
+            font-size: 1em; font-family: inherit; transition: all 0.3s; background: white;
         }
-
         input:focus, textarea:focus, select:focus {
-            outline: none;
-            border-color: #2d8659;
-            box-shadow: 0 0 0 3px rgba(45, 134, 89, 0.1);
+            outline: none; border-color: #2d8659; box-shadow: 0 0 0 3px rgba(45, 134, 89, 0.1);
         }
-
-        textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
+        textarea { resize: vertical; min-height: 100px; }
 
         .btn-submit {
-            width: 100%;
-            padding: 16px;
+            width: 100%; padding: 16px;
             background: linear-gradient(135deg, #2d8659 0%, #1a5f4a 100%);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 1.2em;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-top: 20px;
+            color: white; border: none; border-radius: 10px;
+            font-size: 1.2em; font-weight: 700; cursor: pointer;
+            transition: all 0.3s; margin-top: 20px;
             box-shadow: 0 5px 15px rgba(45, 134, 89, 0.3);
         }
-
-        .btn-submit:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(45, 134, 89, 0.4);
-        }
-
-        .btn-submit:active {
-            transform: translateY(0);
-        }
-
-        .btn-submit:disabled {
-            opacity: 0.7;
-            cursor: not-allowed;
-            transform: none;
-        }
+        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(45, 134, 89, 0.4); }
+        .btn-submit:active { transform: translateY(0); }
+        .btn-submit:disabled { opacity: .7; cursor: not-allowed; transform: none; }
 
         .success-message {
-            display: none;
-            background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
-            color: white;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            margin-top: 20px;
-            font-size: 1.1em;
+            display: none; background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+            color: white; padding: 20px; border-radius: 10px;
+            text-align: center; margin-top: 20px; font-size: 1.1em;
             box-shadow: 0 5px 15px rgba(39, 174, 96, 0.3);
         }
 
         @media (max-width: 768px) {
-            .header h1 {
-                font-size: 1.6em;
-            }
-            
-            .header h2 {
-                font-size: 1.1em;
-            }
-            
-            .form-section {
-                padding: 30px 20px;
-            }
+            .header h1 { font-size: 1.6em; }
+            .header h2 { font-size: 1.1em; }
+            .form-section { padding: 30px 20px; }
         }
     </style>
 </head>
@@ -207,7 +95,7 @@
     <div class="container">
         <div class="header">
             <div class="logo-container">
-                <img src="https://mostafaezat-afk.github.io/nonoww/unnamed%20(9).jpg" alt="شعار ملتقى خبراء أوسيم والوراق" id="logo">
+                <img src="https://mostafaezat-afk.github.io/nonoww/unnamed%20(9).jpg" alt="شعار ملتقى خبراء أوسيم والوراق">
             </div>
             <h1>🤝 ملتقى خبراء أوسيم والوراق</h1>
             <h2>التنمية مسئولية الجميع</h2>
@@ -223,22 +111,22 @@
             <form id="registrationForm">
                 <div class="form-group">
                     <label><span class="required">*</span>الاسم الكامل</label>
-                    <input type="text" id="name" name="name" required placeholder="أدخل اسمك الكامل">
+                    <input type="text" id="name" required placeholder="أدخل اسمك الكامل">
                 </div>
 
                 <div class="form-group">
                     <label><span class="required">*</span>رقم التليفون</label>
-                    <input type="tel" id="phone" name="phone" required placeholder="01xxxxxxxxx">
+                    <input type="tel" id="phone" required placeholder="01xxxxxxxxx">
                 </div>
 
                 <div class="form-group">
                     <label><span class="required">*</span>العنوان</label>
-                    <input type="text" id="address" name="address" required placeholder="المنطقة / الشارع">
+                    <input type="text" id="address" required placeholder="المنطقة / الشارع">
                 </div>
 
                 <div class="form-group">
                     <label><span class="required">*</span>الوظيفة</label>
-                    <select id="expertise" name="expertise" required>
+                    <select id="expertise" required>
                         <option value="">اختر الوظيفة</option>
                         <option value="معلم">معلم / مدرس</option>
                         <option value="طبيب">طبيب</option>
@@ -284,7 +172,7 @@
 
                 <div class="form-group">
                     <label>ملاحظات / كيف يمكنك المساهمة؟</label>
-                    <textarea id="notes" name="notes" placeholder="اكتب أي ملاحظات أو كيف تستطيع المساهمة في التنمية المجتمعية..."></textarea>
+                    <textarea id="notes" placeholder="اكتب أي ملاحظات أو كيف تستطيع المساهمة في التنمية المجتمعية..."></textarea>
                 </div>
 
                 <button type="submit" class="btn-submit">✅ تسجيل الانضمام للمبادرة</button>
@@ -297,57 +185,49 @@
     </div>
 
     <script>
-        const API_URL = 'https://script.google.com/macros/s/AKfycbyDBXhxxzIdqM5EJekrM2RF038dPL5O9oEfmfy6_oBMXu8v-WpbUWvNl8e5gWgp2SRWXg/exec';
+        const API_URL = 'https://script.google.com/macros/s/AKfycbxFfZmr-V1TXt81aEE8xpqgYZ5-y87R1BypzLt8DCCDwoBAMQSUjfIgRm3twLGE1jy6Ug/exec';
 
         document.getElementById('registrationForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            
-            const submitBtn = document.querySelector('.btn-submit');
-            const originalText = submitBtn.innerHTML;
-            submitBtn.innerHTML = '⏳ جاري التسجيل...';
-            submitBtn.disabled = true;
-            
+
+            const btn = document.querySelector('.btn-submit');
+            const originalText = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '⏳ جاري التسجيل...';
+
             const formData = {
                 id: Date.now(),
-                name: document.getElementById('name').value,
-                phone: document.getElementById('phone').value,
-                address: document.getElementById('address').value,
+                name: document.getElementById('name').value.trim(),
+                phone: document.getElementById('phone').value.trim(),
+                address: document.getElementById('address').value.trim(),
                 expertise: document.getElementById('expertise').value,
-                notes: document.getElementById('notes').value,
+                notes: document.getElementById('notes').value.trim(),
                 registrationDate: new Date().toLocaleDateString('ar-EG'),
                 status: 'قيد الانتظار'
             };
 
             try {
-                const response = await fetch(API_URL, {
+                const res = await fetch(API_URL, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(formData)
                 });
+                const result = await res.json();
 
-                const result = await response.json();
-                
                 if (result.status === 'success') {
-                    const successMsg = document.getElementById('successMessage');
-                    successMsg.innerHTML = '✨ ' + (result.message || 'تم التسجيل بنجاح!');
-                    successMsg.style.display = 'block';
-                    
-                    setTimeout(() => {
-                        successMsg.style.display = 'none';
-                    }, 4000);
-
+                    const msg = document.getElementById('successMessage');
+                    msg.style.display = 'block';
+                    msg.textContent = '✨ ' + (result.message || 'تم التسجيل بنجاح!');
                     this.reset();
+                    setTimeout(() => msg.style.display = 'none', 4000);
                 } else {
-                    throw new Error(result.message || 'خطأ غير معروف');
+                    alert('حدث خطأ أثناء التسجيل: ' + (result.message || 'خطأ غير معروف'));
                 }
-            } catch (error) {
-                console.error('خطأ في حفظ البيانات:', error);
-                alert('عذراً، حدث خطأ أثناء التسجيل:\n' + error.message);
+            } catch (err) {
+                alert('عذراً، حدث خطأ أثناء التسجيل: ' + err.message);
             } finally {
-                submitBtn.innerHTML = originalText;
-                submitBtn.disabled = false;
+                btn.disabled = false;
+                btn.innerHTML = originalText;
             }
         });
     </script>
