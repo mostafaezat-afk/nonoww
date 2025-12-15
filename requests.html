@@ -323,49 +323,50 @@
                 .join('');
         }
 
-        function showPasswordModal() {
-            const overlay = document.createElement('div');
-            overlay.className = 'password-modal-overlay';
-            overlay.innerHTML = `
-                <div class="password-modal">
-                    <h3>🔐 صفحة محمية</h3>
-                    <p>من فضلك أدخل الرقم السري للوصول إلى صفحة الطلبات</p>
-                    <input type="password" id="passwordInput" class="password-input" placeholder="أدخل الرقم السري">
-                    <div id="passwordError" class="password-error"></div>
-                    <button id="passwordBtn" class="btn-refresh" style="width:100%;margin-top:5px;">دخول</button>
-                </div>
-            `;
-            document.body.appendChild(overlay);
+       // ===== كلمة السر البسيطة بدون تشفير =====
+// الرقم السري المطلوب للدخول
+const PAGE_PASSWORD = '3030';
 
-            const inputEl = document.getElementById('passwordInput');
-            const errorEl = document.getElementById('passwordError');
+function showPasswordModal() {
+    const overlay = document.createElement('div');
+    overlay.className = 'password-modal-overlay';
+    overlay.innerHTML = `
+        <div class="password-modal">
+            <h3>🔐 صفحة محمية</h3>
+            <p>من فضلك أدخل الرقم السري للوصول إلى صفحة الطلبات</p>
+            <input type="password" id="passwordInput" class="password-input" placeholder="أدخل الرقم السري">
+            <div id="passwordError" class="password-error"></div>
+            <button id="passwordBtn" class="btn-refresh" style="width:100%;margin-top:5px;">دخول</button>
+        </div>
+    `;
+    document.body.appendChild(overlay);
 
-            document.getElementById('passwordBtn').addEventListener('click', async () => {
-                const input = inputEl.value.trim();
-                if (!input) {
-                    errorEl.textContent = 'الرجاء إدخال الرقم السري';
-                    return;
-                }
-                try {
-                    const hash = await hashText(input);
-                    if (hash === PASSWORD_HASH) {
-                        overlay.remove();
-                        initPage();
-                    } else {
-                        errorEl.textContent = 'رقم سري غير صحيح';
-                    }
-                } catch (e) {
-                    errorEl.textContent = 'حدث خطأ في التحقق';
-                }
-            });
+    const inputEl = document.getElementById('passwordInput');
+    const errorEl = document.getElementById('passwordError');
 
-            inputEl.addEventListener('keydown', e => {
-                if (e.key === 'Enter') {
-                    document.getElementById('passwordBtn').click();
-                }
-            });
+    document.getElementById('passwordBtn').addEventListener('click', () => {
+        const value = inputEl.value.trim();
+        if (!value) {
+            errorEl.textContent = 'الرجاء إدخال الرقم السري';
+            return;
+        }
+        if (value === PAGE_PASSWORD) {
+            overlay.remove();
+            initPage(); // بدء تحميل الصفحة
+        } else {
+            errorEl.textContent = 'رقم سري غير صحيح';
+        }
+    });
 
-            inputEl.focus();
+    inputEl.addEventListener('keydown', e => {
+        if (e.key === 'Enter') {
+            document.getElementById('passwordBtn').click();
+        }
+    });
+
+    inputEl.focus();
+}
+
         }
 
         async function loadRequests() {
@@ -499,4 +500,5 @@
     </script>
 </body>
 </html>
+
 
