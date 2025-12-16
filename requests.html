@@ -311,62 +311,47 @@
         let allRequests = [];
         let filteredRequests = [];
 
-        // SHA-256("3030") (محسوبة مسبقاً)
-        const PASSWORD_HASH = '3ac8ccf955f2f9930f4fbabd6ff5f9a587c9abf42a130563282b6d1f3a1a0f0f';
+        // كلمة المرور البسيطة
+        const PAGE_PASSWORD = '3030';
 
-        async function hashText(text) {
-            const encoder = new TextEncoder();
-            const data = encoder.encode(text);
-            const digest = await crypto.subtle.digest('SHA-256', data);
-            return Array.from(new Uint8Array(digest))
-                .map(b => b.toString(16).padStart(2, '0'))
-                .join('');
-        }
+        function showPasswordModal() {
+            const overlay = document.createElement('div');
+            overlay.className = 'password-modal-overlay';
+            overlay.innerHTML = `
+                <div class="password-modal">
+                    <h3>🔐 صفحة محمية</h3>
+                    <p>من فضلك أدخل الرقم السري للوصول إلى صفحة الطلبات</p>
+                    <input type="password" id="passwordInput" class="password-input" placeholder="أدخل الرقم السري">
+                    <div id="passwordError" class="password-error"></div>
+                    <button id="passwordBtn" class="btn-refresh" style="width:100%;margin-top:5px;">دخول</button>
+                </div>
+            `;
+            document.body.appendChild(overlay);
 
-       // ===== كلمة السر البسيطة بدون تشفير =====
-// الرقم السري المطلوب للدخول
-const PAGE_PASSWORD = '3030';
+            const inputEl = document.getElementById('passwordInput');
+            const errorEl = document.getElementById('passwordError');
 
-function showPasswordModal() {
-    const overlay = document.createElement('div');
-    overlay.className = 'password-modal-overlay';
-    overlay.innerHTML = `
-        <div class="password-modal">
-            <h3>🔐 صفحة محمية</h3>
-            <p>من فضلك أدخل الرقم السري للوصول إلى صفحة الطلبات</p>
-            <input type="password" id="passwordInput" class="password-input" placeholder="أدخل الرقم السري">
-            <div id="passwordError" class="password-error"></div>
-            <button id="passwordBtn" class="btn-refresh" style="width:100%;margin-top:5px;">دخول</button>
-        </div>
-    `;
-    document.body.appendChild(overlay);
+            document.getElementById('passwordBtn').addEventListener('click', () => {
+                const value = inputEl.value.trim();
+                if (!value) {
+                    errorEl.textContent = 'الرجاء إدخال الرقم السري';
+                    return;
+                }
+                if (value === PAGE_PASSWORD) {
+                    overlay.remove();
+                    initPage();
+                } else {
+                    errorEl.textContent = 'رقم سري غير صحيح';
+                }
+            });
 
-    const inputEl = document.getElementById('passwordInput');
-    const errorEl = document.getElementById('passwordError');
+            inputEl.addEventListener('keydown', e => {
+                if (e.key === 'Enter') {
+                    document.getElementById('passwordBtn').click();
+                }
+            });
 
-    document.getElementById('passwordBtn').addEventListener('click', () => {
-        const value = inputEl.value.trim();
-        if (!value) {
-            errorEl.textContent = 'الرجاء إدخال الرقم السري';
-            return;
-        }
-        if (value === PAGE_PASSWORD) {
-            overlay.remove();
-            initPage(); // بدء تحميل الصفحة
-        } else {
-            errorEl.textContent = 'رقم سري غير صحيح';
-        }
-    });
-
-    inputEl.addEventListener('keydown', e => {
-        if (e.key === 'Enter') {
-            document.getElementById('passwordBtn').click();
-        }
-    });
-
-    inputEl.focus();
-}
-
+            inputEl.focus();
         }
 
         async function loadRequests() {
@@ -500,5 +485,3 @@ function showPasswordModal() {
     </script>
 </body>
 </html>
-
-
