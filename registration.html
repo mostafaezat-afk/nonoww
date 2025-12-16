@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ملتقى الجمهورية الجديدة - التنمية مسئولية الجميع</title>
+    <title>ملتقى شباب الجمهورية الجديدة ببشتيل - التنمية مسئولية الجميع</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1a5f4a 0%, #2d8659 50%, #1a5ف4a 100%);
+            background: linear-gradient(135deg, #1a5f4a 0%, #2d8659 50%, #1a5f4a 100%);
             min-height: 100vh;
             padding: 20px;
         }
@@ -82,7 +82,6 @@
             font-size: 1.05em;
         }
         label span.required { color: #e74c3c; margin-right: 3px; }
-
         input, textarea, select {
             width: 100%;
             padding: 14px;
@@ -99,7 +98,6 @@
             box-shadow: 0 0 0 3px rgba(45, 134, 89, 0.1);
         }
         textarea { resize: vertical; min-height: 100px; }
-
         .btn-submit {
             width: 100%;
             padding: 16px;
@@ -117,7 +115,6 @@
         .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(45, 134, 89, 0.4); }
         .btn-submit:active { transform: translateY(0); }
         .btn-submit:disabled { opacity: .7; cursor: not-allowed; transform: none; }
-
         .success-message {
             display: none;
             background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
@@ -129,7 +126,6 @@
             font-size: 1.1em;
             box-shadow: 0 5px 15px rgba(39, 174, 96, 0.3);
         }
-
         @media (max-width: 768px) {
             .header h1 { font-size: 1.6em; }
             .header h2 { font-size: 1.1em; }
@@ -141,9 +137,9 @@
     <div class="container">
         <div class="header">
             <div class="logo-container">
-                <img src="https://mostafaezat-afk.github.io/nonoww/unnam20(9).jpg" alt="شعار ملتقى خبراء أوسيم والوراق">
+                <img src="https://mostafaezat-afk.github.io/nonoww/unnamed%20(9).jpg" alt="شعار ملتقى شباب الجمهورية الجديدة ببشتيل">
             </div>
-            
+            <h1>🤝 ملتقى شباب الجمهورية الجديدة ببشتيل</h1>
             <h2>التنمية مسئولية الجميع</h2>
             <p>معاً نبني مستقبلاً أفضل لمجتمعنا</p>
         </div>
@@ -151,7 +147,7 @@
         <div class="form-section">
             <div class="intro-text">
                 <h3>انضم إلى مبادرتنا</h3>
-                <p>نسعى لتجميع الخبرات والكفاءات من أبناء بشتيل1 للمساهمة في التنمية المجتمعية. سجل بياناتك وكن جزءاً من التغيير الإيجابي!</p>
+                <p>نسعى لتجميع الخبرات والكفاءات من أبناء بشتيل والمناطق المجاورة للمساهمة في التنمية المجتمعية. سجل بياناتك وكن جزءاً من التغيير الإيجابي!</p>
             </div>
 
             <form id="registrationForm">
@@ -172,7 +168,7 @@
 
                 <div class="form-group">
                     <label><span class="required">*</span>الوظيفة</label>
-                    <select id1"expertise" required>
+                    <select id="expertise" required>
                         <option value="">اختر الوظيفة</option>
                         <option value="معلم">معلم / مدرس</option>
                         <option value="طبيب">طبيب</option>
@@ -225,8 +221,7 @@
             </form>
 
             <div id="successMessage" class="success-message">
-                 تم التسجيل بنجاح ق
-    
+                ✨ تم التسجيل بنجاح! شكراً لانضمامك لمبادرة ملتقى شباب الجمهورية الجديدة ببشتيل
             </div>
         </div>
     </div>
@@ -278,4 +273,27 @@
         });
     </script>
 </body>
+</html>                    body: formData.toString()
+                });
+                const result = await res.json();
+
+                if (result.success) {
+                    const msg = document.getElementById('successMessage');
+                    msg.style.display = 'block';
+                    msg.textContent = '✨ ' + (result.message || 'تم التسجيل بنجاح!');
+                    this.reset();
+                    setTimeout(() => msg.style.display = 'none', 4000);
+                } else {
+                    alert('حدث خطأ أثناء التسجيل: ' + (result.message || 'خطأ غير معروف'));
+                }
+            } catch (err) {
+                alert('خطأ في الاتصال بالخادم: ' + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+            }
+        });
+    </script>
+</body>
 </html>
+
