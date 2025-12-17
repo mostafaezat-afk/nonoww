@@ -137,7 +137,7 @@
     <div class="container">
         <div class="header">
             <div class="logo-container">
-                <img src="https://mostafaezat-afk.github.io/nonoww/unnamed%20(9).jpg" alt="شعار ملتقى شباب الجمهورية الجديدة ببشتيل">
+                <img src="https://mostafaezat-afk.github.io/nonoww/u-named%20(9).jpg" alt="شعار ملتقى شباب الجمهورية الجديدة ببشتيل">
             </div>
             <h1>🤝 ملتقى شباب الجمهورية الجديدة ببشتيل</h1>
             <h2>التنمية مسئولية الجميع</h2>
@@ -273,27 +273,4 @@
         });
     </script>
 </body>
-</html>                    body: formData.toString()
-                });
-                const result = await res.json();
-
-                if (result.success) {
-                    const msg = document.getElementById('successMessage');
-                    msg.style.display = 'block';
-                    msg.textContent = '✨ ' + (result.message || 'تم التسجيل بنجاح!');
-                    this.reset();
-                    setTimeout(() => msg.style.display = 'none', 4000);
-                } else {
-                    alert('حدث خطأ أثناء التسجيل: ' + (result.message || 'خطأ غير معروف'));
-                }
-            } catch (err) {
-                alert('خطأ في الاتصال بالخادم: ' + err.message);
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = originalText;
-            }
-        });
-    </script>
-</body>
 </html>
-
