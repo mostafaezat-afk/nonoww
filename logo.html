@@ -1,367 +1,92 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ملتقى شباب بشتيل - إضافة اللوجو على الصور</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-<style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: "Segoe UI", Tahoma, Arial, sans-serif; background: #f0f4f8; color: #1a2b3c; min-height: 100vh; padding: 20px; }
-  .container { max-width: 1150px; margin: 0 auto; }
-  header { text-align: center; margin-bottom: 18px; }
-  header img { width: 100px; }
-  h1 { font-size: 1.5rem; margin-top: 8px; color: #14532d; }
-  .subtitle { color: #557; font-size: .92rem; margin-top: 4px; }
-  .panel { background: #fff; border-radius: 14px; padding: 18px; box-shadow: 0 2px 10px rgba(0,0,0,.07); margin-bottom: 18px; }
-  .dropzone { border: 2px dashed #94a3b8; border-radius: 10px; padding: 24px; text-align: center; cursor: pointer; transition: .2s; background: #f8fafc; }
-  .dropzone:hover, .dropzone.drag { border-color: #16a34a; background: #f0fdf4; }
-  .dropzone p { color: #64748b; font-size: .88rem; margin-top: 6px; }
-  input[type=file] { display: none; }
-  .btn { background: #16a34a; color: #fff; border: none; border-radius: 8px; padding: 11px 24px; font-size: .95rem; cursor: pointer; font-family: inherit; transition: .2s; }
-  .btn:hover:not(:disabled) { background: #15803d; }
-  .btn:disabled { background: #cbd5e1; cursor: not-allowed; }
-  .btn.secondary { background: #0369a1; }
-  .btn.secondary:hover:not(:disabled) { background: #075985; }
-  .controls { display: flex; gap: 18px; align-items: center; justify-content: center; flex-wrap: wrap; }
-  .controls label { font-size: .9rem; color: #334155; }
-  .controls input[type=range] { vertical-align: middle; width: 160px; accent-color: #16a34a; }
-  .hint { text-align: center; color: #0369a1; font-size: .88rem; margin-top: 10px; }
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin-top: 16px; }
-  .card { background: #fff; border-radius: 10px; overflow: hidden; box-shadow: 0 1px 6px rgba(0,0,0,.1); }
-  .card canvas { width: 100%; display: block; touch-action: none; cursor: grab; }
-  .card .card-body { padding: 10px; }
-  .card .name { font-size: .75rem; color: #64748b; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: block; margin-bottom: 6px; }
-  .card .row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
-  .card .row label { font-size: .78rem; color: #334155; white-space: nowrap; }
-  .card .row input[type=range] { flex: 1; accent-color: #16a34a; }
-  .card .btns { display: flex; gap: 6px; }
-  .card .btns a { flex: 1; text-align: center; font-size: .82rem; background: #16a34a; color: #fff; text-decoration: none; padding: 7px 0; border-radius: 6px; cursor: pointer; }
-  .card .btns a.share { background: #0369a1; }
-  .count { font-size: .85rem; color: #16a34a; margin-top: 8px; display: block; }
-  #status { text-align: center; color: #64748b; margin-top: 10px; font-size: .9rem; }
-  #logoError { display: none; background: #fef2f2; color: #b91c1c; border-radius: 8px; padding: 12px; text-align: center; margin-bottom: 16px; font-size: .9rem; line-height: 1.7; }
-  .actions { text-align: center; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حماية الصور - إضافة العلامة المائية</title>
+    <!-- خطوط جوجل -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <!-- الأيقونات -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="index.css">
 </head>
 <body>
-<div class="container">
-  <header>
-    <img id="logoHeader" alt="ملتقى شباب بشتيل" style="display:none">
-    <h1>ملتقى شباب بشتيل</h1>
-    <p class="subtitle">ارفع صورك دفعة واحدة — اللوجو يوضع تلقائياً أعلى اليسار، ويمكنك سحبه وتغيير حجمه في كل صورة</p>
-  </header>
 
-  <div id="logoError">
-    تعذّر تحميل ملف اللوجو <strong>logo.png</strong>.<br>
-    تأكد أن الملف موجود بنفس المجلد وبنفس الاسم، وأنك تفتح الصفحة من رابط GitHub Pages وليس من جهازك مباشرة.
-  </div>
-
-  <div class="panel">
-    <div class="dropzone" id="imgZone">
-      <div style="font-size:1.8rem">📷</div>
-      <strong>اضغط أو اسحب الصور هنا</strong>
-      <p>يمكن اختيار عدة صور دفعة واحدة</p>
-      <span class="count" id="imgCount"></span>
+    <div class="background-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
     </div>
-    <input type="file" id="imgInput" accept="image/*" multiple>
-  </div>
 
-  <div class="panel">
-    <div class="controls">
-      <label>حجم اللوجو (لكل الصور):
-        <input type="range" id="globalSize" min="8" max="50" value="20">
-        <span id="globalSizeVal">20%</span>
-      </label>
-      <button class="btn secondary" id="resetPos">إعادة الكل لأعلى اليسار</button>
-      <button class="btn" id="zipBtn" disabled>تحميل الكل (ZIP)</button>
+    <div class="container glass-panel">
+        <header>
+            <h1><i class="fa-solid fa-shield-halved"></i> حماية الصور</h1>
+            <p>قم برفع اللوجو الخاص بك، ثم ارفع الصور لحمايتها</p>
+        </header>
+
+        <div class="main-content">
+
+            <!-- خطوة 1: رفع اللوجو -->
+            <section class="step-section">
+                <div class="step-title">
+                    <span class="step-number">1</span>
+                    <h2>ارفع اللوجو الخاص بك أولاً</h2>
+                </div>
+                <div class="logo-upload-area">
+                    <input type="file" id="logoInput" accept="image/*" hidden>
+                    <label for="logoInput" class="btn outline-btn" id="logoUploadBtn">
+                        <i class="fa-solid fa-upload"></i> اختر صورة اللوجو
+                    </label>
+                    <div id="logoPreviewWrapper" class="hidden">
+                        <img id="logoPreview" src="" alt="اللوجو">
+                        <span class="success-text"><i class="fa-solid fa-check-circle"></i> تم اختيار اللوجو بنجاح</span>
+                    </div>
+                    
+                    <div class="logo-options hidden" id="logoOptions">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="circularLogoCheck" checked>
+                            قص اللوجو بشكل دائري (لحذف الخلفية السوداء بالخارج)
+                        </label>
+                    </div>
+                </div>
+            </section>
+
+            <!-- خطوة 2: منطقة رفع وعرض الصور -->
+            <section class="step-section workspace disabled" id="imagesWorkspace">
+                <div class="step-title">
+                    <span class="step-number">2</span>
+                    <h2>ارفع الصور المراد إضافة العلامة المائية لها</h2>
+                </div>
+                <div id="dropZone" class="drop-zone">
+                    <div class="drop-zone-content">
+                        <i class="fa-solid fa-images"></i>
+                        <h3>اسحب وأفلت الصور هنا</h3>
+                        <p>أو</p>
+                        <label for="fileInput" class="btn outline-btn">تصفح الصور</label>
+                        <input type="file" id="fileInput" multiple accept="image/*" hidden>
+                    </div>
+                </div>
+
+                <div class="action-buttons global-actions hidden" id="globalActions">
+                    <button id="downloadBtn" class="btn success-btn">
+                        <i class="fa-solid fa-download"></i> تحميل الكل (مباشر)
+                    </button>
+                    <button id="clearBtn" class="btn danger-btn">
+                        <i class="fa-solid fa-trash-can"></i> مسح الكل
+                    </button>
+                </div>
+
+                <div id="previewContainer" class="preview-container hidden">
+                    <!-- سيتم عرض الصور المدمجة هنا مع أدوات التحكم الخاصة بكل منها -->
+                </div>
+            </section>
+        </div>
     </div>
-    <p class="hint">✋ اسحب اللوجو بالماوس أو بإصبعك داخل أي صورة لتغيير موضعه</p>
-    <div id="status"></div>
-  </div>
 
-  <div class="grid" id="results"></div>
-</div>
-
-<script>
-let logoCanvas = null;          // اللوجو بعد القص الدائري (بدون الخلفية السوداء)
-let logoAspect = 1;             // الارتفاع ÷ العرض
-let items = [];                 // { file, img, xFrac, yFrac, wFrac, canvas, ctx }
-
-const imgZone = document.getElementById('imgZone');
-const imgInput = document.getElementById('imgInput');
-const imgCount = document.getElementById('imgCount');
-const results = document.getElementById('results');
-const status = document.getElementById('status');
-const zipBtn = document.getElementById('zipBtn');
-const globalSize = document.getElementById('globalSize');
-const globalSizeVal = document.getElementById('globalSizeVal');
-
-/* ---------- تحميل اللوجو ---------- */
-(function loadLogo() {
-  const names = ['logo.png', 'logo.PNG', 'logo.jpg', 'logo.jpeg', 'logo.JPG'];
-  let idx = 0;
-  const raw = new Image();
-  raw.onload = function () {
-    const size = Math.min(raw.naturalWidth, raw.naturalHeight);
-    logoCanvas = document.createElement('canvas');
-    logoCanvas.width = size; logoCanvas.height = size;
-    const ctx = logoCanvas.getContext('2d');
-    ctx.beginPath();
-    ctx.arc(size / 2, size / 2, (size / 2) * 0.99, 0, Math.PI * 2);
-    ctx.closePath();
-    ctx.clip();
-    ctx.drawImage(raw, (raw.naturalWidth - size) / 2, (raw.naturalHeight - size) / 2, size, size, 0, 0, size, size);
-    logoAspect = 1;
-    try {
-      const h = document.getElementById('logoHeader');
-      h.src = logoCanvas.toDataURL('image/png');
-      h.style.display = 'inline';
-    } catch (e) { /* file:// — المعاينة فقط */ }
-    redrawAll();
-  };
-  raw.onerror = function () {
-    idx++;
-    if (idx < names.length) { raw.src = names[idx]; }
-    else { document.getElementById('logoError').style.display = 'block'; }
-  };
-  raw.src = names[0];
-})();
-
-/* ---------- رفع الصور ---------- */
-imgZone.addEventListener('click', function () { imgInput.click(); });
-imgZone.addEventListener('dragover', function (e) { e.preventDefault(); imgZone.classList.add('drag'); });
-imgZone.addEventListener('dragleave', function () { imgZone.classList.remove('drag'); });
-imgZone.addEventListener('drop', function (e) {
-  e.preventDefault(); imgZone.classList.remove('drag');
-  imgInput.files = e.dataTransfer.files;
-  imgInput.dispatchEvent(new Event('change'));
-});
-
-imgInput.addEventListener('change', async function () {
-  const files = Array.from(imgInput.files);
-  if (!files.length) return;
-  imgCount.textContent = 'تم اختيار ' + files.length + ' صورة';
-  results.innerHTML = '';
-  items = [];
-  const defSize = parseInt(globalSize.value, 10) / 100;
-  for (const file of files) {
-    try {
-      const img = await loadImage(file);
-      const item = {
-        file: file, img: img,
-        xFrac: 0.02, yFrac: 0.02, wFrac: defSize
-      };
-      buildCard(item);
-      items.push(item);
-      drawItem(item);
-    } catch (e) { console.error('تعذر فتح:', file.name, e); }
-  }
-  zipBtn.disabled = items.length === 0;
-  status.textContent = items.length + ' صورة جاهزة — عدّل الموضع والحجم ثم حمّل';
-});
-
-function loadImage(file) {
-  return new Promise(function (res, rej) {
-    const url = URL.createObjectURL(file);
-    const img = new Image();
-    img.onload = function () { res(img); };
-    img.onerror = rej;
-    img.src = url;
-  });
-}
-
-/* ---------- بطاقة كل صورة ---------- */
-function buildCard(item) {
-  const card = document.createElement('div');
-  card.className = 'card';
-
-  const canvas = document.createElement('canvas');
-  const PREVIEW_W = 560;
-  canvas.width = PREVIEW_W;
-  canvas.height = Math.round(PREVIEW_W * item.img.naturalHeight / item.img.naturalWidth);
-  item.canvas = canvas;
-  item.ctx = canvas.getContext('2d');
-
-  const body = document.createElement('div');
-  body.className = 'card-body';
-
-  const nm = document.createElement('span');
-  nm.className = 'name';
-  nm.textContent = item.file.name;
-
-  const row = document.createElement('div');
-  row.className = 'row';
-  const lbl = document.createElement('label');
-  lbl.textContent = 'الحجم:';
-  const slider = document.createElement('input');
-  slider.type = 'range'; slider.min = 8; slider.max = 50;
-  slider.value = Math.round(item.wFrac * 100);
-  slider.addEventListener('input', function () {
-    item.wFrac = parseInt(slider.value, 10) / 100;
-    clampItem(item);
-    drawItem(item);
-  });
-  item.slider = slider;
-  row.appendChild(lbl);
-  row.appendChild(slider);
-
-  const btns = document.createElement('div');
-  btns.className = 'btns';
-  const dl = document.createElement('a');
-  dl.textContent = 'تحميل';
-  dl.addEventListener('click', async function () {
-    const out = await renderFull(item);
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(out.blob);
-    a.download = out.name;
-    a.click();
-    URL.revokeObjectURL(a.href);
-  });
-  btns.appendChild(dl);
-  if (navigator.canShare) {
-    const sh = document.createElement('a');
-    sh.className = 'share';
-    sh.textContent = 'مشاركة';
-    sh.addEventListener('click', async function () {
-      const out = await renderFull(item);
-      const f = new File([out.blob], out.name, { type: out.blob.type });
-      if (navigator.canShare({ files: [f] })) navigator.share({ files: [f] });
-    });
-    btns.appendChild(sh);
-  }
-
-  body.appendChild(nm);
-  body.appendChild(row);
-  body.appendChild(btns);
-  card.appendChild(canvas);
-  card.appendChild(body);
-  results.appendChild(card);
-
-  /* سحب اللوجو */
-  let dragging = false, startX = 0, startY = 0, origX = 0, origY = 0;
-  canvas.addEventListener('pointerdown', function (e) {
-    const pos = canvasPos(canvas, e);
-    const r = logoRect(item, canvas.width, canvas.height);
-    if (pos.x >= r.x && pos.x <= r.x + r.w && pos.y >= r.y && pos.y <= r.y + r.h) {
-      dragging = true;
-      startX = pos.x; startY = pos.y;
-      origX = item.xFrac; origY = item.yFrac;
-      canvas.setPointerCapture(e.pointerId);
-      canvas.style.cursor = 'grabbing';
-    }
-  });
-  canvas.addEventListener('pointermove', function (e) {
-    if (!dragging) return;
-    const pos = canvasPos(canvas, e);
-    item.xFrac = origX + (pos.x - startX) / canvas.width;
-    item.yFrac = origY + (pos.y - startY) / canvas.height;
-    clampItem(item);
-    drawItem(item);
-  });
-  canvas.addEventListener('pointerup', function () { dragging = false; canvas.style.cursor = 'grab'; });
-  canvas.addEventListener('pointercancel', function () { dragging = false; canvas.style.cursor = 'grab'; });
-}
-
-function canvasPos(canvas, e) {
-  const rect = canvas.getBoundingClientRect();
-  return {
-    x: (e.clientX - rect.left) * canvas.width / rect.width,
-    y: (e.clientY - rect.top) * canvas.height / rect.height
-  };
-}
-
-function logoRect(item, cw, ch) {
-  const w = item.wFrac * cw;
-  const h = w * logoAspect;
-  return { x: item.xFrac * cw, y: item.yFrac * ch, w: w, h: h };
-}
-
-function clampItem(item) {
-  const cw = item.canvas.width, ch = item.canvas.height;
-  const w = item.wFrac * cw, h = w * logoAspect;
-  item.xFrac = Math.min(Math.max(item.xFrac, 0), Math.max(0, (cw - w) / cw));
-  item.yFrac = Math.min(Math.max(item.yFrac, 0), Math.max(0, (ch - h) / ch));
-}
-
-/* ---------- الرسم ---------- */
-function drawItem(item) {
-  const ctx = item.ctx, cw = item.canvas.width, ch = item.canvas.height;
-  ctx.clearRect(0, 0, cw, ch);
-  ctx.drawImage(item.img, 0, 0, cw, ch);
-  if (logoCanvas) {
-    const r = logoRect(item, cw, ch);
-    ctx.drawImage(logoCanvas, r.x, r.y, r.w, r.h);
-    // إطار خفيف يوضح مكان اللوجو أثناء التعديل
-    ctx.strokeStyle = 'rgba(22,163,74,.55)';
-    ctx.setLineDash([6, 5]);
-    ctx.lineWidth = 1.5;
-    ctx.strokeRect(r.x, r.y, r.w, r.h);
-    ctx.setLineDash([]);
-  }
-}
-
-function redrawAll() { items.forEach(drawItem); }
-
-/* ---------- الإخراج بالدقة الكاملة ---------- */
-function renderFull(item) {
-  return new Promise(function (res) {
-    const c = document.createElement('canvas');
-    c.width = item.img.naturalWidth;
-    c.height = item.img.naturalHeight;
-    const ctx = c.getContext('2d');
-    ctx.drawImage(item.img, 0, 0);
-    const r = logoRect(item, c.width, c.height);
-    ctx.drawImage(logoCanvas, r.x, r.y, r.w, r.h);
-    const isPng = item.file.type === 'image/png';
-    c.toBlob(function (blob) {
-      const dot = item.file.name.lastIndexOf('.');
-      const base = dot > 0 ? item.file.name.slice(0, dot) : item.file.name;
-      res({ blob: blob, name: base + '_بشتيل.' + (isPng ? 'png' : 'jpg') });
-    }, isPng ? 'image/png' : 'image/jpeg', 0.92);
-  });
-}
-
-/* ---------- أدوات عامة ---------- */
-globalSize.addEventListener('input', function () {
-  globalSizeVal.textContent = globalSize.value + '%';
-  const f = parseInt(globalSize.value, 10) / 100;
-  items.forEach(function (it) {
-    it.wFrac = f;
-    if (it.slider) it.slider.value = globalSize.value;
-    clampItem(it);
-    drawItem(it);
-  });
-});
-
-document.getElementById('resetPos').addEventListener('click', function () {
-  items.forEach(function (it) {
-    it.xFrac = 0.02; it.yFrac = 0.02;
-    drawItem(it);
-  });
-});
-
-zipBtn.addEventListener('click', async function () {
-  if (!logoCanvas) { alert('اللوجو غير محمّل'); return; }
-  zipBtn.disabled = true;
-  const zip = new JSZip();
-  let i = 0;
-  for (const it of items) {
-    i++;
-    status.textContent = 'جاري التجهيز... ' + i + ' / ' + items.length;
-    const out = await renderFull(it);
-    zip.file(out.name, out.blob);
-  }
-  status.textContent = 'جاري إنشاء ملف ZIP...';
-  const blob = await zip.generateAsync({ type: 'blob' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'صور_ملتقى_شباب_بشتيل.zip';
-  a.click();
-  URL.revokeObjectURL(a.href);
-  status.textContent = 'تم تحميل ملف ZIP ✔';
-  zipBtn.disabled = false;
-});
-</script>
+    <!-- مكتبة Fabric.js لتمكين التحكم باللمس والسحب داخل الـ Canvas -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
